@@ -3,7 +3,7 @@ package com.kt.component.logger;
 /**
  * CatchAndLog
  *
- * @author Frank Zhang
+ * @author Javis
  * @date 2020-11-10 10:48 AM
  */
 

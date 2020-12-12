@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Application
  *
- * @author Frank Zhang
+ * @author Javis
  * @date 2020-11-10 3:58 PM
  */
 @SpringBootApplication(scanBasePackages = {"com.kt.catchlog.*"})

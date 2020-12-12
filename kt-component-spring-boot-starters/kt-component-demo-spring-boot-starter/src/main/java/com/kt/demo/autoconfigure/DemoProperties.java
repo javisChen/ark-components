@@ -1,4 +1,4 @@
-package com.kt.demo;
+package com.kt.demo.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

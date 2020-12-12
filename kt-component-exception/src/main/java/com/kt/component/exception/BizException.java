@@ -3,7 +3,7 @@ package com.kt.component.exception;
 /**
  * BizException is known Exception, no need retry
  *
- * @author Frank Zhang
+ * @author Javis
  */
 public class BizException extends BaseException {
 

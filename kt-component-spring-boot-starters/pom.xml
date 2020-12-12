@@ -14,6 +14,9 @@
     <modules>
         <module>kt-component-demo-spring-boot-starter</module>
         <module>kt-component-logger-spring-boot-starter</module>
+        <module>kt-component-exception-spring-boot-starter</module>
+        <module>kt-component-db-spring-boot-starter</module>
+        <module>kt-component-web-spring-boot-starter</module>
     </modules>
 
 </project>

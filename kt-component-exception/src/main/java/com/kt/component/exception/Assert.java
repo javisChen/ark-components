@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * This class is empowered by  {@link org.springframework.util.Assert}
  *
- * @author Frank Zhang
+ * @author Javis
  * @date 2019-01-13 11:49 AM
  */
 public abstract class Assert {

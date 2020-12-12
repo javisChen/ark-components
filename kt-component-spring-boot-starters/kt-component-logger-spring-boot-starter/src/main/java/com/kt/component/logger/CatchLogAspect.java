@@ -1,6 +1,5 @@
 package com.kt.component.logger;
 
-import com.alibaba.fastjson.JSON;
 import com.kt.component.exception.BaseException;
 import com.kt.component.exception.BizException;
 import com.kt.component.exception.SysException;
@@ -20,6 +19,7 @@ public class CatchLogAspect {
 
     /**
      * The syntax of pointcut : https://blog.csdn.net/zhengchao1991/article/details/53391244
+     * 在类上
      */
     @Pointcut("(@within(com.kt.component.logger.CatchAndLog) && execution(public * *(..))) " +
             "|| @annotation(com.kt.component.logger.CatchAndLog) && execution(public * *(..))")
@@ -72,7 +72,7 @@ public class CatchLogAspect {
     private void logResponse(long startTime, Object response) {
         try {
             long endTime = System.currentTimeMillis();
-            log.debug("RESPONSE : " + JSON.toJSONString(response));
+//            log.debug("RESPONSE : " + JSON.toJSONString(response));
             log.debug("COST : " + (endTime - startTime) + "ms");
         } catch (Exception e) {
             //swallow it
@@ -85,7 +85,7 @@ public class CatchLogAspect {
             log.debug("START PROCESSING: " + joinPoint.getSignature().toShortString());
             Object[] args = joinPoint.getArgs();
             for (Object arg : args) {
-                log.debug("REQUEST : " + JSON.toJSONString(arg));
+//                log.debug("REQUEST : " + JSON.toJSONString(arg));
             }
         } catch (Exception e) {
             //swallow it
