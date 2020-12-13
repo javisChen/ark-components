@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @ToString
-@Accessors(chain = true)
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class ValidationResult {
