@@ -1,11 +1,13 @@
 package com.kt.component.dto;
 
+import java.io.Serializable;
+
 /**
  * Response to caller
  *
  * @author fulan.zjf 2017年10月21日 下午8:53:17
  */
-public class Response extends DTO {
+public class Response implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
