@@ -3,7 +3,6 @@ package com.kt.component.logger.autoconfigure;
 import com.kt.component.logger.CatchLogAspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
@@ -12,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-@Configuration
+//@Configuration
 @EnableAspectJAutoProxy
 public class CatchLogAutoConfiguration {
 

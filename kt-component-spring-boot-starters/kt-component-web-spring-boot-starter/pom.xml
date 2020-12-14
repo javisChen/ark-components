@@ -64,6 +64,11 @@
 
         <dependency>
             <groupId>com.kt</groupId>
+            <artifactId>kt-component-toolkit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kt</groupId>
             <artifactId>kt-component-exception-spring-boot-starter</artifactId>
         </dependency>
 
@@ -85,6 +90,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

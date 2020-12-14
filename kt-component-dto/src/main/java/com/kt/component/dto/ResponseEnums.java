@@ -16,7 +16,7 @@ public enum ResponseEnums {
      * A0001 ~ A0100是系统预留的用户端错误码
      */
     USER_ERROR("A0001", "用户端错误"),
-    USER_METHOD_NOT_ALLOWED("A0002", "不允许该Http Method"),
+    USER_METHOD_NOT_ALLOWED("A0002", "Request method not supported"),
     USER_METHOD_ARGUMENT_NOT_VALID("A0003", "用户参数不合法"),
     USER_REQUIRED_REQUEST_BODY_IS_MISSING("A0004", "Required request body is missing"),
 //    USER_PHONE_EXISTS("A0004", "用户手机已存在"),
