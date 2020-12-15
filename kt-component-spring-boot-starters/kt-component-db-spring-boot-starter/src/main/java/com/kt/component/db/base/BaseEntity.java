@@ -29,4 +29,10 @@ public abstract class BaseEntity {
     @TableField(value = "modifier", fill = FieldFill.INSERT_UPDATE)
     private Long modifier;
 
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
+
+    public BaseEntity() {
+    }
 }
