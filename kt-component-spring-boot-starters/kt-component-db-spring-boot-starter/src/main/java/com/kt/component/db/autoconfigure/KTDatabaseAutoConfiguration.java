@@ -18,24 +18,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KTDatabaseAutoConfiguration {
 
-//
-//    @Bean
-//    @ConditionalOnMissingBean(MapperScannerConfigurer.class)
-//    public MapperScannerConfigurer mapperScannerConfigurer() {
-//        MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
-//        //可以通过环境变量获取你的mapper路径,这样mapper扫描可以通过配置文件配置了
-//        scannerConfigurer.setBasePackage("noot.data.module.**.mapper");
-//        return scannerConfigurer;
-//    }
-
-    /**
-     * 分页插件
-     */
-//    @Bean
-//    @ConditionalOnMissingBean(PaginationInnerInterceptor.class)
-//    public PaginationInnerInterceptor paginationInnerInterceptor() {
-//        return new PaginationInnerInterceptor();
-//    }
     /**
      * 新的分页插件,一缓和二缓遵循mybatis的规则,需要设置 MybatisConfiguration#useDeprecatedExecutor = false 避免缓存出现问题(该属性会在旧插件移除后一同移除)
      */
