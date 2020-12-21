@@ -50,7 +50,8 @@ public class CatchLogAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         String sn = StrUtil.uuid();
-        final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
+                RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         HttpServletResponse response = requestAttributes.getResponse();
 
@@ -80,7 +81,7 @@ public class CatchLogAspect {
 
     private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request, String sn) {
         try {
-            log.debug("========================= START REQUEST PROCESSING {} =========================", sn);
+            log.debug("========================= REQUEST PROCESSING {} =========================", sn);
             log.debug("[req] url : " + request.getRequestURL().toString());
             log.debug("[req] remote_host : " + request.getRemoteHost());
             log.debug("[req] http_method: " + request.getMethod());
