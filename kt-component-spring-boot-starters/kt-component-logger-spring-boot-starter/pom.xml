@@ -50,27 +50,21 @@
 
         <!-- 测试包 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- 日志包 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.9</version>
         </dependency>
 
         <!-- 组件依赖 -->
         <dependency>
             <groupId>com.kt</groupId>
             <artifactId>kt-component-dto</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-toolkit</artifactId>
             <version>${project.version}</version>
         </dependency>
 
