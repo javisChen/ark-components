@@ -21,7 +21,7 @@ public class ServerResponse<T> implements Serializable {
     private static final long serialVersionUID = -5409913864886373072L;
     private String code;
     private String msg;
-    private T data = (T) new Object();
+    private T data;
 
     public String getCode() {
         return code;
@@ -35,11 +35,11 @@ public class ServerResponse<T> implements Serializable {
         return data;
     }
 
-    public static ServerResponse ok() {
+    public static <T> ServerResponse<Object> ok() {
         return new ServerResponse<>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg());
     }
 
-    public static <T> ServerResponse ok(T data) {
+    public static <T> ServerResponse<T> ok(T data) {
         return new ServerResponse<T>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg()).setData(data);
     }
 
