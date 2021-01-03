@@ -35,11 +35,11 @@ public class ServerResponse<T> implements Serializable {
         return data;
     }
 
-    public static ServerResponse ok() {
-        return new ServerResponse<>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg());
+    public static <T> ServerResponse<T> ok() {
+        return new ServerResponse<T>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg());
     }
 
-    public static <T> ServerResponse ok(T data) {
+    public static <T> ServerResponse<T> ok(T data) {
         return new ServerResponse<T>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg()).setData(data);
     }
 
