@@ -1,6 +1,5 @@
 package com.kt.component.web.autoconfigure;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -38,10 +37,10 @@ public class KTWebAutoConfiguration {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonConfig.setCharset(Charset.defaultCharset());
-        fastJsonConfig.setSerializerFeatures(
-                SerializerFeature.WriteNullListAsEmpty,
-                SerializerFeature.WriteNullStringAsEmpty
-        );
+//        fastJsonConfig.setSerializerFeatures(
+//                SerializerFeature.WriteNullListAsEmpty,
+//                SerializerFeature.WriteNullStringAsEmpty
+//        );
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(MediaType.APPLICATION_ATOM_XML);
