@@ -19,7 +19,7 @@ public class PageResponse<T> {
     private Collection<T> records;
 
 
-    public PageResponse(long total, long size, long current, Collection<T> records) {
+    public PageResponse(long current, long size,long total, Collection<T> records) {
         this.total = total;
         this.size = size;
         this.current = current;
@@ -30,7 +30,11 @@ public class PageResponse<T> {
     }
 
     public static <T> PageResponse<T> success(IPage<T> page) {
-        return new PageResponse<T>(page.getTotal(), page.getSize(), page.getCurrent(), page.getRecords());
+        return new PageResponse<T>(page.getCurrent(), page.getSize(), page.getTotal(), page.getRecords());
+    }
+
+    public static <T> PageResponse<T> success(long current, long size,long total, Collection<T> records) {
+        return new PageResponse<T>(current, size, total, records);
     }
 
     public static PageResponse failure() {

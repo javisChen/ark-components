@@ -1,9 +1,6 @@
 package com.kt.component.db.base;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,17 +14,21 @@ public abstract class BaseEntity {
     @TableField("status")
     private Integer status;
 
-    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create")
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified")
     private LocalDateTime gmtModified;
 
-    @TableField(value = "creator", fill = FieldFill.INSERT)
+    @TableField(value = "creator")
     private Long creator;
 
-    @TableField(value = "modifier", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "modifier")
     private Long modifier;
+
+    @TableField(value = "is_deleted")
+    @TableLogic
+    private Boolean isDeleted;
 
     public BaseEntity(Long id) {
         this.id = id;

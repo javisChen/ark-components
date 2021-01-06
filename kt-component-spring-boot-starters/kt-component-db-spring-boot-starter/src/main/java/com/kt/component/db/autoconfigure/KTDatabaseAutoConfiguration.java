@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.kt.component.db.handelr.FieldAutoFillObjectHandler;
+//import com.kt.component.db.handelr.FieldAutoFillObjectHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +31,11 @@ public class KTDatabaseAutoConfiguration {
     /**
      * 自动填充公共字段
      */
-    @Bean
-    @ConditionalOnMissingBean(MetaObjectHandler.class)
-    public MetaObjectHandler metaObjectHandler() {
-        return new FieldAutoFillObjectHandler();
-    }
+//    @Bean
+//    @ConditionalOnMissingBean(MetaObjectHandler.class)
+//    public MetaObjectHandler metaObjectHandler() {
+//        return new FieldAutoFillObjectHandler();
+//    }
 
 
 }
