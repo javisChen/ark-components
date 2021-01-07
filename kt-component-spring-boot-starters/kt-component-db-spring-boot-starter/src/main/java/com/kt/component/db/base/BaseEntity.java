@@ -28,7 +28,7 @@ public abstract class BaseEntity {
 
     @TableField(value = "is_deleted")
     @TableLogic
-    private Boolean isDeleted;
+    private Long isDeleted;
 
     public BaseEntity(Long id) {
         this.id = id;
