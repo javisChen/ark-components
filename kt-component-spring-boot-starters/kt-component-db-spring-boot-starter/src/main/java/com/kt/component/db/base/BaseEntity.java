@@ -23,10 +23,6 @@ public abstract class BaseEntity {
     @TableField(value = "modifier")
     private Long modifier;
 
-    @TableField(value = "is_deleted")
-    @TableLogic
-    private Long isDeleted;
-
     public BaseEntity(Long id) {
         this.id = id;
     }
