@@ -11,9 +11,6 @@ public abstract class BaseEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("status")
-    private Integer status;
-
     @TableField(value = "gmt_create")
     private LocalDateTime gmtCreate;
 
