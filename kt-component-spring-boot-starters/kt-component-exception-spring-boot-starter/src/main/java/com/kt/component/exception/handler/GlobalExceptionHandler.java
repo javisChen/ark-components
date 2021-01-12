@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ServerResponse<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
         return ServerResponse.error(ResponseEnums.USER_METHOD_NOT_ALLOWED);
     }
 
