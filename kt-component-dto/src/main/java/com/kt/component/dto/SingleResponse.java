@@ -1,13 +1,10 @@
 package com.kt.component.dto;
-import T;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
 
 /*
  * @author JavisChen
@@ -41,8 +38,12 @@ public class SingleResponse<T> extends ServerResponse {
         return response;
     }
 
+    public static <T> SingleResponse<T> error(String code, String msg, T data) {
+        SingleResponse<T> response = new SingleResponse<>();
+        response.setCode(code);
+        response.setMsg(msg);
+        response.setData(data);
+        return response;
+    }
 
-//    public static <T> SingleResponse<T> error(String code, String msg, T data) {
-//        return new SingleResponse<T>().setCode(code).setMsg(msg).setData(data);
-//    }
 }

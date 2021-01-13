@@ -1,7 +1,6 @@
 package com.kt.component.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -23,11 +22,6 @@ public class ServerResponse implements Serializable {
 
     public ServerResponse() {
 
-    }
-
-    public ServerResponse(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
     }
 
     public static ServerResponse ok() {
