@@ -15,47 +15,31 @@ import java.io.Serializable;
 @Data
 @ToString
 @Accessors(chain = true)
-@NoArgsConstructor
-public class ServerResponse<T> implements Serializable {
+public class ServerResponse implements Serializable {
 
     private static final long serialVersionUID = -5409913864886373072L;
     private String code;
     private String msg;
-    private T data = (T) new Object();
 
-    public String getCode() {
-        return code;
+    public ServerResponse() {
+
     }
 
-    public String getMsg() {
-        return msg;
+    public ServerResponse(String code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
-    public T getData() {
-        return data;
+    public static ServerResponse ok() {
+        return new ServerResponse().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg());
     }
 
-    public static <T> ServerResponse<T> ok() {
-        return new ServerResponse<T>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg());
+    public static ServerResponse error(ResponseEnums responseEnums) {
+        return new ServerResponse().setCode(responseEnums.getCode()).setMsg(responseEnums.getMsg());
     }
 
-    public static <T> ServerResponse<T> ok(T data) {
-        return new ServerResponse<T>().setCode(ResponseEnums.OK.getCode()).setMsg(ResponseEnums.OK.getMsg()).setData(data);
+    public static ServerResponse error(String code, String msg) {
+        return new ServerResponse().setCode(code).setMsg(msg);
     }
 
-    public static ServerResponse<String> error(ResponseEnums responseEnums) {
-        return new ServerResponse<String>().setCode(responseEnums.getCode()).setMsg(responseEnums.getMsg());
-    }
-
-    public static <T> ServerResponse<T> error(ResponseEnums responseEnums, T data) {
-        return new ServerResponse<T>().setCode(responseEnums.getCode()).setMsg(responseEnums.getMsg()).setData(data);
-    }
-
-    public static ServerResponse<String> error(String code, String msg) {
-        return new ServerResponse<String>().setCode(code).setMsg(msg);
-    }
-
-    public static <T> ServerResponse<T> error(String code, String msg, T data) {
-        return new ServerResponse<T>().setCode(code).setMsg(msg).setData(data);
-    }
 }
