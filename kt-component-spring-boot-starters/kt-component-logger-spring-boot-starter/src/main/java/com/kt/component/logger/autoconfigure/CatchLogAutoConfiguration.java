@@ -11,7 +11,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-//@Configuration
 @EnableAspectJAutoProxy
 public class CatchLogAutoConfiguration {
 

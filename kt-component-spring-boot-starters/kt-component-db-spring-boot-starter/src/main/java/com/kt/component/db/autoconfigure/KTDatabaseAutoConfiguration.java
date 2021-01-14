@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-@Configuration
 public class KTDatabaseAutoConfiguration {
 
     /**
