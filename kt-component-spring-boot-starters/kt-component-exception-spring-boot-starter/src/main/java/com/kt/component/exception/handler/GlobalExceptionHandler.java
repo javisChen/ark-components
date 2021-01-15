@@ -59,6 +59,7 @@ public class GlobalExceptionHandler {
      * @param [e]
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ServerResponse handle(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         if (bindingResult.hasErrors()) {
@@ -86,11 +87,9 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理参数校验异常（post application/x-www-form-urlencoded）就会抛出 BindException
-     *
-     * @param e
-     * @return
      */
     @ExceptionHandler(value = BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public SingleResponse<ValidationResult> handle(BindException e) {
         List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>();
         e.getFieldErrors()
@@ -109,6 +108,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public SingleResponse<ValidationResult> handle(ConstraintViolationException e) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         ValidationResult result = new ValidationResult(
                 e.getConstraintViolations().stream().findFirst().get().getMessage(), null);
         return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID, result);
