@@ -1,8 +1,6 @@
 package com.kt.component.web.base;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.kt.component.dto.PageRequest;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -27,10 +25,6 @@ public abstract class BaseController {
     public HttpServletResponse getResponse() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         return requestAttributes.getResponse();
-    }
-
-    protected Page getPage(PageRequest pageRequest) {
-        return new Page<>(pageRequest.getCurrent(), pageRequest.getSize());
     }
 
     /**
