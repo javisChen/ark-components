@@ -10,6 +10,6 @@ import java.util.Set;
 @Data
 public class LoginUser {
 
-    private String token;
+    private String accessToken;
     private Set<String> permissionCode;
 }

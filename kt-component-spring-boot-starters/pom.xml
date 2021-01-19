@@ -17,6 +17,7 @@
         <module>kt-component-exception-spring-boot-starter</module>
         <module>kt-component-db-spring-boot-starter</module>
         <module>kt-component-web-spring-boot-starter</module>
+        <module>kt-component-redis-spring-boot-starter</module>
     </modules>
 
 </project>

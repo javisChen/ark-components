@@ -21,6 +21,7 @@ public enum ResponseEnums {
     USER_REQUIRED_REQUEST_BODY_IS_MISSING("A0004", "Required request body is missing"),
     USER_NOT_LOGIN("A0005", "尚未登录"),
     USER_LOGIN_FAIL("A0006", "登录认证失败"),
+    USER_ACCESS_DENIED("A0007", "权限不足"),
 
 
     SERVER_ERROR("B0001", "系统执行错误"),
