@@ -22,6 +22,7 @@ public enum ResponseEnums {
     USER_NOT_LOGIN("A0005", "尚未登录"),
     USER_LOGIN_FAIL("A0006", "登录认证失败"),
     USER_ACCESS_DENIED("A0007", "权限不足"),
+    USER_AUTHENTICATION_FAIL("A0008", "认证失败"),
 
 
     SERVER_ERROR("B0001", "系统执行错误"),
