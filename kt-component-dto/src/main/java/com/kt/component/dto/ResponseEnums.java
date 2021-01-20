@@ -17,16 +17,16 @@ public enum ResponseEnums {
      */
     USER_ERROR("A0001", "用户端错误"),
     USER_METHOD_NOT_ALLOWED("A0002", "Request method not supported"),
-    USER_METHOD_ARGUMENT_NOT_VALID("A0003", "用户参数不合法"),
+    USER_METHOD_ARGUMENT_NOT_VALID("A0003", "Bad request：argument is invalid"),
     USER_REQUIRED_REQUEST_BODY_IS_MISSING("A0004", "Required request body is missing"),
-    USER_NOT_LOGIN("A0005", "尚未登录"),
-    USER_LOGIN_FAIL("A0006", "登录认证失败"),
-    USER_ACCESS_DENIED("A0007", "权限不足"),
-    USER_AUTHENTICATION_FAIL("A0008", "认证失败"),
+    USER_NOT_LOGIN("A0005", "Authentication failed：token is required"),
+    USER_LOGIN_FAIL("A0006", "Authentication failed：auth info is invalid"),
+    USER_ACCESS_DENIED("A0007", "Access is denied"),
+    USER_AUTHENTICATION_FAIL("A0008", "Authentication failed：token is invalid"),
 
 
-    SERVER_ERROR("B0001", "系统执行错误"),
-    THIRD_PARTY_ERROR("C00001", "调用第三方服务出错");
+    SERVER_ERROR("B0001", "Server error：unknown error"),
+    THIRD_PARTY_ERROR("C00001", "Server error：third party has error");
 
     private String code;
     private String msg;

@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = BizException.class)
     public ServerResponse handle(BizException e) {
+        log.error("BizException：", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return ServerResponse.error(e.getErrCode(), e.getMessage());
     }
