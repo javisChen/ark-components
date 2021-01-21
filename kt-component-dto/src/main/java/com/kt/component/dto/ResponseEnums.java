@@ -21,7 +21,7 @@ public enum ResponseEnums {
     USER_REQUIRED_REQUEST_BODY_IS_MISSING("A0004", "Required request body is missing"),
     USER_NOT_LOGIN("A0005", "Authentication failed：token is required"),
     USER_LOGIN_FAIL("A0006", "Authentication failed：auth info is invalid"),
-    USER_ACCESS_DENIED("A0007", "Access is denied"),
+    USER_ACCESS_DENIED("A0007", "Authorization failed: access is denied"),
     USER_AUTHENTICATION_FAIL("A0008", "Authentication failed：token is invalid"),
 
 
