@@ -24,7 +24,6 @@ public enum ResponseEnums {
     USER_ACCESS_DENIED("A0007", "Authorization failed: access is denied"),
     USER_AUTHENTICATION_FAIL("A0008", "Authentication failed：token is invalid"),
 
-
     SERVER_ERROR("B0001", "Server error：unknown error"),
     THIRD_PARTY_ERROR("C00001", "Server error：third party has error");
 
