@@ -36,7 +36,7 @@ public class RedisServiceImpl implements RedisService {
     }
 
     /**
-     * 写入缓存设置时效时间
+     * 写入缓存设置时效时间（秒）
      *
      * @param key
      * @param value
