@@ -24,6 +24,9 @@ SpringBootStarter
 | ---- | ---- | ---- | 
 |kt-component-logger-starter|日志处理（AOP日志拦截）|1.0.0|
 |kt-component-exception-spring-boot-starter|异常处理（全局异常捕捉）|1.0.0|
+|kt-component-redis-spring-boot-starter|Redis封装|1.0.0|
+|kt-component-web-spring-boot-starter|单体Web应用Starter|1.0.0|
+|kt-component-db-spring-boot-starter|数据库相关|1.0.0|
 
 #### 使用说明
 ```

@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 响应类型为Collection的响应体
+ * @param <T>
+ */
 public class MultiResponse<T> extends ServerResponse {
 
     private static final long serialVersionUID = 1L;

@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.util.Collection;
 
+/**
+ * 响应类型为分页列表的响应体
+ * @param <T>
+ */
 @Data
 public class PageResponse<T> {
 
