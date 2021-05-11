@@ -7,6 +7,13 @@ public interface RedisService {
 
     boolean set(String key, Object value);
 
+    /**
+     *
+     * @param key
+     * @param value
+     * @param expireTime 单位：秒
+     * @return
+     */
     boolean set(String key, Object value, Long expireTime);
 
     void remove(String... keys);
