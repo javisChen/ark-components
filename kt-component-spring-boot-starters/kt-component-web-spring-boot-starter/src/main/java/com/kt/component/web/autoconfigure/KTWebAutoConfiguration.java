@@ -23,12 +23,6 @@ import java.util.List;
 @AutoConfigureBefore(RequestMappingHandlerAdapter.class)
 public class KTWebAutoConfiguration {
 
-//    @Bean
-//    @ConditionalOnMissingBean(FastJsonConfiguration.class)
-//    public FastJsonConfiguration fastJsonConfiguration() {
-//        return new FastJsonConfiguration();
-//    }
-
     @Bean
     @ConditionalOnMissingBean(HttpMessageConverters.class)
     public HttpMessageConverters fastJsonHttpMessageConverters() {
@@ -37,10 +31,6 @@ public class KTWebAutoConfiguration {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonConfig.setCharset(Charset.defaultCharset());
-//        fastJsonConfig.setSerializerFeatures(
-//                SerializerFeature.WriteNullListAsEmpty,
-//                SerializerFeature.WriteNullStringAsEmpty
-//        );
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(MediaType.APPLICATION_ATOM_XML);

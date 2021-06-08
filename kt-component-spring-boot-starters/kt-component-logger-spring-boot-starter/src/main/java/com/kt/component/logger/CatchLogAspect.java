@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * @ Author        :  JavisChen
+ * @ Author:  JavisChen
  */
 @Aspect
 @Slf4j
@@ -40,8 +40,9 @@ public class CatchLogAspect {
     /**
      * The syntax of pointcut : https://blog.csdn.net/zhengchao1991/article/details/53391244
      */
-    @Pointcut("(@within(com.kt.component.logger.CatchAndLog) && execution(public * *(..))) " +
-            "|| @annotation(com.kt.component.logger.CatchAndLog) && execution(public * *(..))")
+    @Pointcut("( within(com.kt.component.web.base.BaseController+))" +
+            "||@within(com.kt.component.logger.CatchAndLog)" +
+            "|| @annotation(com.kt.component.logger.CatchAndLog)")
     public void pointcut() {
 
     }
@@ -70,26 +71,27 @@ public class CatchLogAspect {
     private void logResponse(long startTime, Object response, HttpServletResponse httpServletResponse, String sn) {
         long endTime = System.currentTimeMillis();
         try {
-            log.debug("[resp] response : " + JSON.toJSONString(response));
-            log.debug("[resp] cost : " + (endTime - startTime) + "ms");
+            log.info("[resp] response : " + JSON.toJSONString(response));
+            log.info("[resp] cost : " + (endTime - startTime) + "ms");
         } catch (Exception e) {
             log.error("logResponse error : " + e);
         } finally {
-            log.debug("========================= REQUEST FINISHED {} =========================", sn);
+            log.info("========================= REQUEST FINISHED {} =========================", sn);
         }
     }
 
     private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request, String sn) {
         try {
-            log.debug("========================= REQUEST PROCESSING {} =========================", sn);
-            log.debug("[req] url : " + request.getRequestURL().toString());
-            log.debug("[req] remote_host : " + request.getRemoteHost());
-            log.debug("[req] http_method: " + request.getMethod());
-            log.debug("[req] content_type: " + request.getContentType());
+            log.info("========================= REQUEST PROCESSING {} =========================", sn);
+            log.info("url : " + request.getRequestURL().toString());
+            log.info("remote_host : " + request.getRemoteHost());
+            log.info("http_method: " + request.getMethod());
+            log.info("content_type: " + request.getContentType());
+            log.info("user_agent : " + request.getHeader("User-Agent"));
             logArgs(request, joinPoint);
-            log.debug("[req] native_method: " + joinPoint.getSignature().toString());
+            log.info("native_method: " + joinPoint.getSignature().toString());
         } catch (Exception e) {
-            log.error("[req] log request error : " + e);
+            log.error("log request error : " + e);
         }
     }
 
@@ -102,7 +104,7 @@ public class CatchLogAspect {
         }
         if (isMatchMediaType(contentType, MediaType.APPLICATION_JSON_VALUE)) {
             if (args.length > 0) {
-                log.debug("[req] json args: " + JSON.toJSONString(args[0]));
+                log.info("json args: " + JSON.toJSONString(args[0]));
 
             }
         } else if (isMatchMediaType(contentType, MediaType.MULTIPART_FORM_DATA_VALUE)) {
@@ -112,14 +114,14 @@ public class CatchLogAspect {
                         LinkedList<?> linkedList = (LinkedList<?>) arg;
                         linkedList.forEach(item -> {
                             MultipartFile file = (MultipartFile) item;
-                            log.debug("[req] file name: " + file.getOriginalFilename());
-                            log.debug("[req] file size: " + file.getSize());
+                            log.info("file name: " + file.getOriginalFilename());
+                            log.info("file size: " + file.getSize());
                         });
                     }
                 }
             }
         } else {
-            log.debug("[req] queryString args: " + request.getQueryString());
+            log.info("queryString args: " + request.getQueryString());
         }
     }
 

@@ -4,6 +4,6 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class BaseDTO implements Serializable {
+public class BaseQuery implements Serializable {
 
 }

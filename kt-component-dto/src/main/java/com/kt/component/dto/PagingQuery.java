@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PagingDTO extends BaseDTO implements Serializable {
+public class PagingQuery extends BaseQuery implements Serializable {
 
     private Integer current = 1;
     private Integer size = 10;
