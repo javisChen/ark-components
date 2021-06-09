@@ -18,7 +18,7 @@ public enum ResponseEnums {
     OK("000000", "ok"),
 
     /**
-     * A0001 ~ A0100是系统预留的用户端错误码
+     * A0001 ~ A1000是系统预留的用户端错误码
      */
     USER_ERROR("A0001", "用户端错误"),
     USER_METHOD_NOT_ALLOWED("A0002", "Request method not supported"),
