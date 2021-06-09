@@ -1,10 +1,15 @@
 package com.kt.component.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /*
  * @author JavisChen
  * @desc 响应常量管理
  * @date 2018/5/29 下午2:55
  */
+@AllArgsConstructor
+@Getter
 public enum ResponseEnums {
 
     /**
@@ -27,27 +32,7 @@ public enum ResponseEnums {
     SERVER_ERROR("B0001", "Server error：unknown error"),
     THIRD_PARTY_ERROR("C00001", "Server error：third party has error");
 
-    private String code;
-    private String msg;
+    private final String code;
+    private final String msg;
 
-    ResponseEnums(String code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

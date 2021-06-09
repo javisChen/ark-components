@@ -1,10 +1,11 @@
 package com.kt.toolkit.log;
 
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Logs {
 
-    public static void debug(Logger log, String s, Object... args) {
+    public static void debug(String s, Object... args) {
         if (log.isDebugEnabled()) {
             log.debug(s, args);
         }
