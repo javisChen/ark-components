@@ -48,6 +48,9 @@ public class GlobalExceptionHandler {
         return ServerResponse.error(e.getErrCode(), e.getMessage());
     }
 
+    /**
+     * HTTP METHOD不匹配异常
+     */
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ServerResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         response.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
@@ -56,7 +59,6 @@ public class GlobalExceptionHandler {
 
     /*
      * @desc 处理参数校验异常
-     * @param [e]
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -113,19 +115,6 @@ public class GlobalExceptionHandler {
                 e.getConstraintViolations().stream().findFirst().get().getMessage(), null);
         return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID, result);
     }
-
-//    @ExceptionHandler(value = Exception.class)
-//    public ServerResponse handle(Exception e) {
-//        if (e.getCause() instanceof ClientArgumentNotValidException) {
-//            ClientArgumentNotValidException argumentNotValidException = (ClientArgumentNotValidException) e.getCause();
-//            List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>();
-//            validationResultErrors.add(new ValidationResult.FieldError(argumentNotValidException.getErrorField(), argumentNotValidException.getErrorMsg()));
-//            return ServerResponse.error(40001, argumentNotValidException.getErrorMsg(), new ValidationResult(argumentNotValidException.getErrorMsg(), validationResultErrors));
-//        }
-//        log.error("Exception：{}", e);
-//        e.printStackTrace();
-//        return ServerResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-//    }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ServerResponse handle(HttpMessageNotReadableException e) {
