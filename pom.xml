@@ -15,6 +15,7 @@
         <module>kt-component-exception</module>
         <module>kt-component-toolkit</module>
         <module>kt-component-validator</module>
+        <module>kt-component-openapi</module>
         <module>kt-component-spring-boot-starters</module>
     </modules>
 
