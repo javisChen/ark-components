@@ -1,0 +1,25 @@
+#spring:
+#  shardingsphere:
+#    datasource:
+#      names: ds0,ds1
+#      ds0:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        jdbc-url: jdbc:mysql://localhost:3306/lagou1
+#        username: root
+#        password: Root1234!@#$
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#      ds1:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        jdbc-url: jdbc:mysql://localhost:3306/lagou2
+#        username: root
+#        password: Root1234!@#$
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#    sharding:
+#      tables:
+#        position:
+#          database-strategy.inline.sharding-column: Id
+#          database-strategy.inline.algorithm-expression: ds${id % 2}
+#  main:
+#    allow-bean-definition-overriding: true
+#
+## sharding-database

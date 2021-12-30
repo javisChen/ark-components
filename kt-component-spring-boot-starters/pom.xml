@@ -18,6 +18,7 @@
         <module>kt-component-db-spring-boot-starter</module>
         <module>kt-component-web-spring-boot-starter</module>
         <module>kt-component-redis-spring-boot-starter</module>
+        <module>kt-component-sharding-jdbc-spring-boot-starter</module>
     </modules>
 
 </project>

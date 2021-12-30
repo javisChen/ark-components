@@ -7,7 +7,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /*
- * @author JavisChen
+ * @author jc
  * @desc 服务端响应结果封装
  * @date 2018/4/17 下午10:24
  */
@@ -19,31 +19,25 @@ import lombok.experimental.Accessors;
 public class SingleResponse<T> extends ServerResponse {
 
     private static final long serialVersionUID = -5409913864886373072L;
+
     private T data;
+
+    public SingleResponse(String code, String msg, T data) {
+        super(code, msg);
+        this.data = data;
+    }
 
 
     public static <T> SingleResponse<T> ok(T data) {
-        SingleResponse<T> response = new SingleResponse<>();
-        response.setData(data);
-        response.setCode(ResponseEnums.OK.getCode());
-        response.setMsg(ResponseEnums.OK.getMsg());
-        return response;
+        return new SingleResponse<>(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg(), data);
     }
 
     public static <T> SingleResponse<T> error(ResponseEnums responseEnums, T data) {
-        SingleResponse<T> response = new SingleResponse<>();
-        response.setData(data);
-        response.setCode(responseEnums.getCode());
-        response.setMsg(responseEnums.getMsg());
-        return response;
+        return new SingleResponse<>(responseEnums.getCode(), responseEnums.getMsg(), data);
     }
 
     public static <T> SingleResponse<T> error(String code, String msg, T data) {
-        SingleResponse<T> response = new SingleResponse<>();
-        response.setCode(code);
-        response.setMsg(msg);
-        response.setData(data);
-        return response;
+        return new SingleResponse<>(code, msg, data);
     }
 
 }

@@ -1,4 +1,5 @@
 package com.kt.component.dto;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +15,11 @@ public class MultiResponse<T> extends ServerResponse {
 
     private Collection<T> data;
 
+    public MultiResponse(String code, String msg, Collection<T> data) {
+        super(code, msg);
+        this.data = data;
+    }
+
     public List<T> getData() {
         return null == data ? Collections.emptyList() : new ArrayList<>(data);
     }
@@ -23,19 +29,11 @@ public class MultiResponse<T> extends ServerResponse {
     }
 
     public static <T> MultiResponse<T> ok(Collection<T> data) {
-        MultiResponse<T> response = new MultiResponse<>();
-        response.setData(data);
-        response.setCode(ResponseEnums.OK.getCode());
-        response.setMsg(ResponseEnums.OK.getMsg());
-        return response;
+        return new MultiResponse<>(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg(), data);
     }
 
     public static <T> MultiResponse<T> error(String code, String msg, Collection<T> data) {
-        MultiResponse<T> response = new MultiResponse<>();
-        response.setCode(code);
-        response.setMsg(msg);
-        response.setData(data);
-        return response;
+        return new MultiResponse<>(code, msg, data);
     }
 
 }

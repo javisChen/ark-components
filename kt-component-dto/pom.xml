@@ -29,6 +29,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-config</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

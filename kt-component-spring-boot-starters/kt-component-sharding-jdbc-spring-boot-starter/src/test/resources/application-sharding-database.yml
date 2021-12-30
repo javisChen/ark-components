@@ -1,0 +1,56 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/lagou1
+        password: Root1234!@#$
+        username: root
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/lagou2
+        password: Root1234!@#$
+        username: root
+    rules:
+      sharding:
+        # 分库策略
+        default-database-strategy:
+          standard:
+            sharding-algorithm-name: default-database-strategy-inline
+            sharding-column: id
+        # 分片算法
+        sharding-algorithms:
+          default-database-strategy-inline:
+            props:
+              algorithm-expression: ds$->{id % 2}
+            type: INLINE
+        tables:
+          position:
+            actual-data-nodes: ds$->{0..1}.position
+            table-strategy:
+              none:
+          position_detail:
+            actual-data-nodes: ds$->{0..1}.position_detail
+            table-strategy:
+              none: ''
+#          city:
+#            actual-data-nodes: ds$->{0..1}.city
+#            table-strategy:
+#              none: ''
+#         默认分片序列生成策略
+#        default-key-generate-strategy:
+#          column: id
+#          key-generator-name: snowflake
+##         分片序列生成器
+#        key-generators:
+#          snowflake:
+#            type: SNOWFLAKE
+#            props:
+#              worker-id: 31
+#          uuid:
+#            type: UUID
+    props:
+      sql-show: true
