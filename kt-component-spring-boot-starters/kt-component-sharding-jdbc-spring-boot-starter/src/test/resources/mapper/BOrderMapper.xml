@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kt.component.dao.BOrderMapper">
+
+
+    <select id="selectAndDetail" resultType="com.kt.component.po.Position">
+        select *
+        from b_order p
+        inner join b_order_item pd on pd.pid = p.id
+    </select>
+
+    <select id="selectOrder" resultType="java.util.Map">
+        select *
+        from b_order p
+        inner join b_order_item pd on pd.pid = p.id
+        where p.id = #{orderId}
+    </select>
+</mapper>

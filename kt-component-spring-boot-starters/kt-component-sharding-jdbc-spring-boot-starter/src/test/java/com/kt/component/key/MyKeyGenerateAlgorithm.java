@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.kt.component;
+package com.kt.component.key;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;

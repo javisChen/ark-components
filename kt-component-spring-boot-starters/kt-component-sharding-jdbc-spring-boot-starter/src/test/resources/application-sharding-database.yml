@@ -24,33 +24,85 @@ spring:
         # 分片算法
         sharding-algorithms:
           default-database-strategy-inline:
+            type: INLINE
             props:
               algorithm-expression: ds$->{id % 2}
+          position-database-strategy-inline:
             type: INLINE
+            props:
+              algorithm-expression: ds$->{pid % 2}
+          border-database-strategy-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{company_id % 2}
+          border-table-strategy-inline:
+            type: INLINE
+            props:
+              algorithm-expression: b_order_$->{id % 2}
+          border-item-database-strategy-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{company_id % 2}
+          border-item-table-strategy-inline:
+            type: INLINE
+            props:
+              algorithm-expression: b_order_item_$->{pid % 2}
+        # 数据表配置
         tables:
           position:
             actual-data-nodes: ds$->{0..1}.position
             table-strategy:
-              none:
+              none: ''
           position_detail:
             actual-data-nodes: ds$->{0..1}.position_detail
+            database-strategy:
+              standard:
+                sharding-algorithm-name: position-database-strategy-inline
+                sharding-column: pid
             table-strategy:
               none: ''
-#          city:
-#            actual-data-nodes: ds$->{0..1}.city
-#            table-strategy:
-#              none: ''
-#         默认分片序列生成策略
-#        default-key-generate-strategy:
-#          column: id
-#          key-generator-name: snowflake
-##         分片序列生成器
-#        key-generators:
-#          snowflake:
-#            type: SNOWFLAKE
-#            props:
-#              worker-id: 31
-#          uuid:
-#            type: UUID
+          b_order:
+            actual-data-nodes: ds$->{0..1}.b_order_$->{0..1}
+            database-strategy:
+              standard:
+                sharding-algorithm-name: border-database-strategy-inline
+                sharding-column: company_id
+            table-strategy:
+              standard:
+                sharding-algorithm-name: border-table-strategy-inline
+                sharding-column: id
+          b_order_item:
+            actual-data-nodes: ds$->{0..1}.b_order_item_$->{0..1}
+            database-strategy:
+              standard:
+                sharding-algorithm-name: border-item-database-strategy-inline
+                sharding-column: company_id
+            table-strategy:
+              standard:
+                sharding-algorithm-name: border-item-table-strategy-inline
+                sharding-column: pid
+          city:
+            actual-data-nodes: ds$->{0..1}.city
+            table-strategy:
+              none: ''
+        # 广播表
+        broadcast-tables:
+          - city
+        binding-tables:
+          - b_order,b_order_item
+        # 默认分片序列生成策略，如果insert语句没有指定id的话，就会使用该策略生成id
+        default-key-generate-strategy:
+          column: id
+          key-generator-name: snowflake
+        # 分片序列生成器
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+            props:
+              worker-id: 31
+          uuid:
+            type: UUID
     props:
       sql-show: true
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml

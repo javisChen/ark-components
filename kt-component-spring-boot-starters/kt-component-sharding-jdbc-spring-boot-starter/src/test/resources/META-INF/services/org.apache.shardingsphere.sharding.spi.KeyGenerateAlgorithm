@@ -15,6 +15,6 @@
 # limitations under the License.
 #
 
-com.kt.component.MyKeyGenerateAlgorithm
+com.kt.component.key.MyKeyGenerateAlgorithm
 org.apache.shardingsphere.sharding.algorithm.keygen.UUIDKeyGenerateAlgorithm
 org.apache.shardingsphere.sharding.algorithm.keygen.UUIDKeyGenerateAlgorithm

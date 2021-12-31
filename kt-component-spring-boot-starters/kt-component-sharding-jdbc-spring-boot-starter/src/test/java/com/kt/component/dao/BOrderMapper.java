@@ -2,6 +2,7 @@ package com.kt.component.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kt.component.po.BOrder;
 import com.kt.component.po.Position;
 
 import java.util.Map;
@@ -14,9 +15,10 @@ import java.util.Map;
  * @author
  * @since 2020-11-09
  */
-public interface PositionMapper extends BaseMapper<Position> {
+public interface BOrderMapper extends BaseMapper<BOrder> {
 
     Page<Position> selectAndDetail(Page page);
 
-    Map<String, String> selectPosition(Long posId);
+    Map<String, String> selectOrder(Long orderId);
+
 }
