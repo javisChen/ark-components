@@ -1,5 +1,9 @@
 package com.kt.component.dto;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +13,9 @@ import java.util.List;
  * 响应类型为Collection的响应体
  * @param <T>
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@ToString(callSuper = true)
 public class MultiResponse<T> extends ServerResponse {
 
     private static final long serialVersionUID = 1L;

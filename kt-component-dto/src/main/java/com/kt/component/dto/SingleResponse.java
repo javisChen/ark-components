@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@ToString
+@ToString(callSuper = true)
 @Accessors(chain = true)
 @NoArgsConstructor
 public class SingleResponse<T> extends ServerResponse {

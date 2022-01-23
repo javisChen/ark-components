@@ -34,8 +34,8 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <exclusions>
                 <exclusion>
+                    <artifactId>spring-cloud-netflix-ribbon</artifactId>
                     <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
