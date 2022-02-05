@@ -2,32 +2,17 @@ package com.kt.component.logger;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.kt.component.exception.BaseException;
-import com.kt.component.exception.BizException;
-import com.kt.component.exception.SysException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.core.ApplicationPart;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.MediaType;
-import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -54,7 +39,6 @@ public class CatchLogAspect {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
                 RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
-        HttpServletResponse response = requestAttributes.getResponse();
 
         logRequest(joinPoint, request, sn);
 
@@ -62,13 +46,13 @@ public class CatchLogAspect {
         try {
             result = joinPoint.proceed();
         } finally {
-            logResponse(startTime, result, response, sn);
+            logResponse(startTime, result, sn);
         }
 
         return result;
     }
 
-    private void logResponse(long startTime, Object response, HttpServletResponse httpServletResponse, String sn) {
+    private void logResponse(long startTime, Object response, String sn) {
         long endTime = System.currentTimeMillis();
         try {
             log.info("[resp] response : " + JSON.toJSONString(response));
@@ -105,7 +89,6 @@ public class CatchLogAspect {
         if (isMatchMediaType(contentType, MediaType.APPLICATION_JSON_VALUE)) {
             if (args.length > 0) {
                 log.info("json args: " + JSON.toJSONString(args[0]));
-
             }
         } else if (isMatchMediaType(contentType, MediaType.MULTIPART_FORM_DATA_VALUE)) {
             for (Object arg : args) {
@@ -128,6 +111,5 @@ public class CatchLogAspect {
     private boolean isMatchMediaType(String contentType, String applicationJsonValue) {
         return contentType.contains(applicationJsonValue);
     }
-
 
 }

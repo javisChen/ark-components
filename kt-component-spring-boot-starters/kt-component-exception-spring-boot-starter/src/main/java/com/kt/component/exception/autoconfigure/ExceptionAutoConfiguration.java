@@ -3,8 +3,6 @@ package com.kt.component.exception.autoconfigure;
 import com.kt.component.exception.handler.GlobalExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * @ Description   :
@@ -12,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-public class GlobalExceptionHandlerAutoConfiguration {
+public class ExceptionAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(GlobalExceptionHandler.class)

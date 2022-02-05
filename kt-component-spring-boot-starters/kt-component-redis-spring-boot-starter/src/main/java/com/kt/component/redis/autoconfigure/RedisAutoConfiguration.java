@@ -1,8 +1,7 @@
 package com.kt.component.redis.autoconfigure;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
-import com.kt.component.redis.RedisService;
-import com.kt.component.redis.RedisServiceImpl;
+import com.kt.component.cache.redis.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -44,6 +43,6 @@ public class RedisAutoConfiguration extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnMissingBean(name = "redisService")
     public RedisService redisService(RedisConnectionFactory factory) {
-        return new RedisServiceImpl(redisTemplate(factory));
+        return new RedisService(redisTemplate(factory));
     }
 }
