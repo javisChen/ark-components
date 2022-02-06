@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ServiceContextAutoConfiguration implements WebMvcConfigurer {
 
     public ServiceContextAutoConfiguration() {
-        log.info("enable kt-component-context-spring-boot-starter");
+        log.info("enable [kt-component-context-spring-boot-starter]");
     }
 
     @Bean

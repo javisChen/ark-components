@@ -12,6 +12,7 @@
     <artifactId>kt-component-spring-boot-starters</artifactId>
 
     <modules>
+        <module>kt-component-spring-boot-starter-tests</module>
         <module>kt-component-demo-spring-boot-starter</module>
         <module>kt-component-context-spring-boot-starter</module>
         <module>kt-component-redis-spring-boot-starter</module>
