@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.kt.component.redis.autoconfigure.ServiceContextAutoConfiguration
+  com.kt.component.context.autoconfigure.ServiceContextAutoConfiguration
