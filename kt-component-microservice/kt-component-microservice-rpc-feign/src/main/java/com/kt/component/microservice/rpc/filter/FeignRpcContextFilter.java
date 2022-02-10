@@ -11,22 +11,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 
+/**
+ * feign调用把当前请求的header透传到目标服务
+ * @author victor
+ */
 @Slf4j
 @ConditionalOnClass({RequestInterceptor.class})
-public class FeignClientContextFilter implements RequestInterceptor {
+public class FeignRpcContextFilter implements RequestInterceptor {
 
-    public FeignClientContextFilter() {
+    public FeignRpcContextFilter() {
+
     }
 
     public void apply(RequestTemplate template) {
         log.warn("请求头内容透传！Url:{},Method={}", template.url(), template.method());
-        this.delivery(template);
-    }
-
-    public void delivery(RequestTemplate template) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         if (attributes == null) {
