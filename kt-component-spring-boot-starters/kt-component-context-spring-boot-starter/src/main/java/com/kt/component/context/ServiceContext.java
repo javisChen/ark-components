@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ServiceContext {
 
-    private static final String LOGIN_USER_CONTEXT_KEY = "LOGIN_USER_CONTEXT";
+    public static final String LOGIN_USER_CONTEXT_KEY = "LOGIN_USER_CONTEXT";
+    public static final String TRACE_ID_KEY = "TRACE_ID";
 
     private static final ThreadLocal<Map<String, Object>> THREAD_LOCAL = new ThreadLocal<>();
 
@@ -27,11 +28,25 @@ public class ServiceContext {
         }
         THREAD_LOCAL.get().put(key, value);
     }
-    public static void setLoginUserContext(LoginUserContext loginUserContext) {
-        setContext(LOGIN_USER_CONTEXT_KEY, loginUserContext);
+
+
+    public static LoginUserContext getCurrentUser() {
+        Map<String, Object> context = getContext();
+        if (context != null && context.size() > 0) {
+            return (LoginUserContext) context.get(LOGIN_USER_CONTEXT_KEY);
+        }
+        return null;
     }
 
-    public static LoginUserContext getLoginUserContext() {
-        return (LoginUserContext) THREAD_LOCAL.get().get(LOGIN_USER_CONTEXT_KEY);
+    public static LoginUserContext getTraceId() {
+        Map<String, Object> context = getContext();
+        if (context != null && context.size() > 0) {
+            return (LoginUserContext) context.get(TRACE_ID_KEY);
+        }
+        return null;
+    }
+
+    public static Map<String, Object> getContext() {
+        return THREAD_LOCAL.get();
     }
 }

@@ -27,7 +27,6 @@ public class SingleResponse<T> extends ServerResponse {
         this.data = data;
     }
 
-
     public static <T> SingleResponse<T> ok(T data) {
         return new SingleResponse<>(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg(), data);
     }

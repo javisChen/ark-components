@@ -1,6 +1,5 @@
 package com.kt.component.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,8 +11,7 @@ public class AppConfig {
 
     private static String serviceName;
 
-    @Value("${spring.application.name:}")
-    public void setInstanceId(String serviceName) {
+    public static void setServiceName(String serviceName) {
         AppConfig.serviceName = serviceName;
     }
 

@@ -44,7 +44,7 @@ public class ServerResponse implements Serializable {
         return createResponse(code, msg);
     }
 
-    private static ServerResponse createResponse(String code, String msg) {
+    protected static ServerResponse createResponse(String code, String msg) {
         return new ServerResponse()
                 .setCode(code)
                 .setMsg(msg)

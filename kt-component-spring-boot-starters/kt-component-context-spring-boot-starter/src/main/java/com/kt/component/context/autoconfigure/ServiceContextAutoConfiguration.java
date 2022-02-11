@@ -1,6 +1,10 @@
 package com.kt.component.context.autoconfigure;
 
+import com.kt.component.cache.redis.RedisService;
 import com.kt.component.context.interceptor.ServiceContextInterceptor;
+import com.kt.component.context.token.AccessTokenExtractor;
+import com.kt.component.context.token.AccessTokenConfig;
+import com.kt.component.context.token.AccessTokenStandardExtractor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,8 +23,13 @@ public class ServiceContextAutoConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ServiceContextInterceptor serviceContextInterceptor() {
-        return new ServiceContextInterceptor();
+    public AccessTokenExtractor accessTokenExtractor() {
+        return new AccessTokenStandardExtractor(new AccessTokenConfig());
     }
 
+    @Bean
+    public ServiceContextInterceptor serviceContextInterceptor(RedisService redisService,
+                                                               AccessTokenExtractor accessTokenExtractor) {
+        return new ServiceContextInterceptor(redisService, accessTokenExtractor);
+    }
 }
