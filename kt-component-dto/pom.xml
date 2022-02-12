@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>com.kt</groupId>
-            <artifactId>kt-component-web-spring-boot-starter</artifactId>
+            <artifactId>kt-component-common-spring-boot-starter</artifactId>
             <scope>provided</scope>
         </dependency>
 

@@ -12,8 +12,7 @@
     <artifactId>kt-component-spring-boot-starters</artifactId>
 
     <modules>
-        <module>kt-component-spring-boot-starter-tests</module>
-        <module>kt-component-demo-spring-boot-starter</module>
+        <module>kt-component-common-spring-boot-starter</module>
         <module>kt-component-context-spring-boot-starter</module>
         <module>kt-component-redis-spring-boot-starter</module>
         <module>kt-component-logger-spring-boot-starter</module>
@@ -21,6 +20,7 @@
         <module>kt-component-db-spring-boot-starter</module>
         <module>kt-component-web-spring-boot-starter</module>
         <module>kt-component-sharding-jdbc-spring-boot-starter</module>
+        <module>kt-component-spring-boot-starter-tests</module>
     </modules>
 
 </project>
