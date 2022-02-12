@@ -38,10 +38,10 @@ public class ServiceContext {
         return null;
     }
 
-    public static LoginUserContext getTraceId() {
+    public static String getTraceId() {
         Map<String, Object> context = getContext();
         if (context != null && context.size() > 0) {
-            return (LoginUserContext) context.get(TRACE_ID_KEY);
+            return (String) context.get(TRACE_ID_KEY);
         }
         return null;
     }

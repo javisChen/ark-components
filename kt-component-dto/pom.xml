@@ -35,6 +35,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-context-spring-boot-starter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

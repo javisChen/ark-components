@@ -1,5 +1,6 @@
 package com.kt.component.dto;
 
+import com.kt.component.context.ServiceContext;
 import com.kt.component.web.util.SpringUtils;
 import lombok.Data;
 import lombok.ToString;
@@ -21,6 +22,7 @@ public class ServerResponse implements Serializable {
     private String code;
     private String msg;
     private String service;
+    private String traceId;
 
     public ServerResponse() {
 
@@ -30,6 +32,7 @@ public class ServerResponse implements Serializable {
         this.code = code;
         this.msg = msg;
         this.service = SpringUtils.getApplicationName();
+        this.traceId = ServiceContext.getTraceId();
     }
 
     public static ServerResponse ok() {
