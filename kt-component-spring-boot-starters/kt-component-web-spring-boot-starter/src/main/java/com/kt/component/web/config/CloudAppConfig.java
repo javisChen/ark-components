@@ -1,4 +1,4 @@
-package com.kt.component.config;
+package com.kt.component.web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

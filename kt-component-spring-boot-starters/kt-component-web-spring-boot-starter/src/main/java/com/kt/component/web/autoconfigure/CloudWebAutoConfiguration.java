@@ -2,6 +2,8 @@ package com.kt.component.web.autoconfigure;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.kt.component.web.util.SpringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -20,7 +22,12 @@ import java.util.List;
  * @ Version       :  1.0
  */
 @AutoConfigureBefore(RequestMappingHandlerAdapter.class)
+@Slf4j
 public class CloudWebAutoConfiguration {
+
+    public CloudWebAutoConfiguration() {
+        log.info("enable [kt-component-web-spring-boot-starter]");
+    }
 
     @Bean
     @ConditionalOnMissingBean(HttpMessageConverters.class)
@@ -30,7 +37,7 @@ public class CloudWebAutoConfiguration {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         fastJsonConfig.setCharset(Charset.defaultCharset());
-        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        List<MediaType> supportedMediaTypes = new ArrayList<>(14);
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(MediaType.APPLICATION_ATOM_XML);
         supportedMediaTypes.add(MediaType.APPLICATION_FORM_URLENCODED);
@@ -52,4 +59,8 @@ public class CloudWebAutoConfiguration {
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 
+    @Bean
+    public SpringUtils springUtils() {
+        return new SpringUtils();
+    }
 }

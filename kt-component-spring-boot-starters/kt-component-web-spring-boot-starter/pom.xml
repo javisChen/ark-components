@@ -84,12 +84,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-extension</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
     </dependencies>
 
 </project>
