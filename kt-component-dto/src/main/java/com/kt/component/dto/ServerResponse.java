@@ -1,6 +1,6 @@
 package com.kt.component.dto;
 
-import com.kt.component.config.AppConfig;
+import com.kt.component.config.CloudAppConfig;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -29,7 +29,7 @@ public class ServerResponse implements Serializable {
     public ServerResponse(String code, String msg) {
         this.code = code;
         this.msg = msg;
-        this.service = AppConfig.getServiceName();
+        this.service = CloudAppConfig.getServiceName();
     }
 
     public static ServerResponse ok() {
@@ -48,7 +48,7 @@ public class ServerResponse implements Serializable {
         return new ServerResponse()
                 .setCode(code)
                 .setMsg(msg)
-                .setService(AppConfig.getServiceName());
+                .setService(CloudAppConfig.getServiceName());
     }
 
 }

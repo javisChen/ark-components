@@ -2,12 +2,10 @@ package com.kt.component.web.autoconfigure;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -21,7 +19,6 @@ import java.util.List;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-//@Configuration
 @AutoConfigureBefore(RequestMappingHandlerAdapter.class)
 public class CloudWebAutoConfiguration {
 
@@ -53,21 +50,6 @@ public class CloudWebAutoConfiguration {
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
-    }
-
-    @Configuration
-    public static class AppConfig {
-
-        private static String serviceName;
-
-        @Value("${cloud.app.service-name:}")
-        public void setServiceName(String serviceName) {
-            AppConfig.serviceName = serviceName;
-        }
-
-        public static String getServiceName() {
-            return serviceName;
-        }
     }
 
 }
