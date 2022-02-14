@@ -1,7 +1,8 @@
 package com.kt.component.context.token;
 
+import cn.hutool.core.collection.CollUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,26 +21,22 @@ public class AccessTokenStandardExtractor implements AccessTokenExtractor {
 
     @Override
     public String extract(HttpServletRequest request) {
-        String token = extractFromParameterMap(request, properties);
-        if (!StringUtils.isEmpty(token)) {
-            return token;
+        String accessToken = extractFromParameterMap(request, properties);
+        if (StringUtils.isNotEmpty(accessToken)) {
+            return accessToken;
         }
-        String headerPrefix = properties.getTokenHeaderPrefix();
-        String header = request.getHeader(properties.getTokenHeader());
-        if (StringUtils.isEmpty(header)) {
-            return "";
-        }
-        if (!header.startsWith(headerPrefix)) {
-            return "";
-        }
-        return header.substring(headerPrefix.length());
+        String tokenHeaderPrefix = properties.getTokenHeaderPrefix();
+        String tokenHeader = properties.getTokenHeader();
+        accessToken = request.getHeader(tokenHeader);
+        accessToken = StringUtils.substringAfter(accessToken, tokenHeaderPrefix);
+        return accessToken;
     }
 
     private String extractFromParameterMap(HttpServletRequest request, AccessTokenConfig properties) {
         String token = null;
-        if (request.getParameterMap() != null && !request.getParameterMap().isEmpty()) {
+        if (CollUtil.isNotEmpty(request.getParameterMap())) {
             String[] tokenParamVal = request.getParameterMap().get(properties.getTokenQueryParam());
-            if (tokenParamVal != null && tokenParamVal.length == 1) {
+            if (tokenParamVal != null && tokenParamVal.length > 0) {
                 token = tokenParamVal[0];
             }
         }

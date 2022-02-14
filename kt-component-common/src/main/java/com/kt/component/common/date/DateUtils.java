@@ -1,8 +1,8 @@
-package com.kt.toolkit.date;
+package com.kt.component.common.date;
 
 import java.time.*;
 import java.util.Date;
- 
+
 public class DateUtils {
  
     //LocalDate -> Date

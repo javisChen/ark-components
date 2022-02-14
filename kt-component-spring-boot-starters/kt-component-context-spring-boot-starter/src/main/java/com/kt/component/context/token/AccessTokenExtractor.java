@@ -11,7 +11,6 @@ public interface AccessTokenExtractor {
     /**
      * 从request中提取token
      * @param request HttpServletRequest
-     * @param properties Token属性
      * @return token
      */
     String extract(HttpServletRequest request);

@@ -65,19 +65,16 @@
         <dependency>
             <groupId>com.kt</groupId>
             <artifactId>kt-component-dto</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.kt</groupId>
-            <artifactId>kt-component-toolkit</artifactId>
-            <version>${project.version}</version>
+            <artifactId>kt-component-common</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.kt</groupId>
             <artifactId>kt-component-exception</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

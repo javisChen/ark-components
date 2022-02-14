@@ -47,6 +47,11 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-common</artifactId>
+        </dependency>
+
         <!-- 测试包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,7 +1,7 @@
 package com.kt.component.dto;
 
+import com.kt.component.common.util.SpringUtils;
 import com.kt.component.context.ServiceContext;
-import com.kt.component.web.util.SpringUtils;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
