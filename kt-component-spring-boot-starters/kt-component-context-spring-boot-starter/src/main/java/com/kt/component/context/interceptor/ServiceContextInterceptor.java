@@ -7,6 +7,7 @@ import com.kt.component.context.LoginUserContext;
 import com.kt.component.context.ServiceContext;
 import com.kt.component.context.support.RedisKeyConst;
 import com.kt.component.context.token.AccessTokenExtractor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,9 +35,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getServletPath().equals("/v1/login/account") || request.getServletPath().equals("/v1/access/api")) {
-            return true;
-        }
+
         setLoginUserContext(request);
 
         setTraceContext(request);
@@ -49,13 +48,15 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
 
     private void setLoginUserContext(HttpServletRequest request) {
         String accessToken = accessTokenExtractor.extract(request);
-        Object cache = getUserCacheByToken(createAccessTokenKey(accessToken));
-        LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
-        ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+        if (StringUtils.isNotEmpty(accessToken)) {
+            Object cache = getUserCacheByToken(createAccessTokenKey(accessToken));
+            LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
+            ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+        }
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         ServiceContext.clearContext();
     }
 

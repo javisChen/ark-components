@@ -10,13 +10,13 @@
 
 #### 组件说明
 
-|组件名称|功能|版本|
-| ---- | ---- | ---- | 
-|kt-component-dto|定义了通用|1.0.0|
-|kt-component-exception|定义了规范异常格式|1.0.0|
-|kt-component-toolkit|通用工具组件|1.0.0|
-|kt-component-validator|校验组件|1.0.0|
-|kt-component-spring-boot-starters|springboot-starters|1.0.0|
+| 组件名称                              |功能|版本|
+|-----------------------------------| ---- | ---- | 
+| kt-component-dto                  |定义了通用|1.0.0|
+| kt-component-exception            |定义了规范异常格式|1.0.0|
+| kt-component-common               |通用工具组件|1.0.0|
+| kt-component-validator            |校验组件|1.0.0|
+| kt-component-spring-boot-starters |springboot-starters|1.0.0|
 
 SpringBootStarter
 

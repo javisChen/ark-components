@@ -5,6 +5,7 @@ import com.kt.component.context.ServiceContext;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
@@ -47,11 +48,20 @@ public class ServerResponse implements Serializable {
         return createResponse(code, msg);
     }
 
+
+    public static ServerResponse error(String service, String code, String msg) {
+        return createResponse(service, code, msg);
+    }
+
     protected static ServerResponse createResponse(String code, String msg) {
+        return createResponse(null, code, msg);
+    }
+
+    protected static ServerResponse createResponse(String service, String code, String msg) {
         return new ServerResponse()
                 .setCode(code)
                 .setMsg(msg)
-                .setService(SpringUtils.getApplicationName());
+                .setService(StringUtils.defaultString(service, SpringUtils.getApplicationName()));
     }
 
 }

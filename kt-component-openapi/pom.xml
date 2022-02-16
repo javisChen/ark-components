@@ -53,7 +53,7 @@
 
         <dependency>
             <groupId>com.kt</groupId>
-            <artifactId>kt-component-toolkit</artifactId>
+            <artifactId>kt-component-common</artifactId>
         </dependency>
 
         <dependency>

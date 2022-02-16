@@ -60,6 +60,10 @@
             <artifactId>kt-component-cache</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-common</artifactId>
+        </dependency>
 
     </dependencies>
 

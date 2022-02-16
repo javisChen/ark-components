@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 public class CloudCommonAutoConfiguration {
 
     public CloudCommonAutoConfiguration() {
-        log.info("enable [kt-component-web-spring-boot-starter]");
+        log.info("enable [kt-component-common-spring-boot-starter]");
     }
 
     @Bean

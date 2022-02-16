@@ -6,14 +6,15 @@ package com.kt.component.microservice.rpc.exception;
  */
 public class RpcException extends RuntimeException {
 
-    private String targetService;
+    private String service;
 
     public RpcException() {
 
     }
 
-    public RpcException(String message) {
+    public RpcException(String service, String message) {
         super(message);
+        this.service = service;
     }
 
     public RpcException(String message, Throwable cause) {
@@ -26,5 +27,9 @@ public class RpcException extends RuntimeException {
 
     public RpcException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public String getService() {
+        return service;
     }
 }
