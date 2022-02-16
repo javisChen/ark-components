@@ -22,12 +22,6 @@ import java.util.List;
 @Slf4j
 public class ExceptionAutoConfiguration {
 
-    private ServerProperties serverProperties;
-
-    public ExceptionAutoConfiguration(ServerProperties serverProperties) {
-        this.serverProperties = serverProperties;
-    }
-
     public ExceptionAutoConfiguration() {
         log.info("enable [kt-component-exception-spring-boot-starter]");
     }
