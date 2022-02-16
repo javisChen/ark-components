@@ -53,7 +53,8 @@ public class RpcUtils {
         }
         if (!serverResponse.getCode().equals(ResponseEnums.OK.getCode())) {
             log.error("[RPC]调用返回错误：" + serverResponse);
-            throw new RpcException("RPC调用返回错误：" + serverResponse);
+            String msg = serverResponse.getMsg();
+            throw new RpcException(msg);
         }
     }
 
