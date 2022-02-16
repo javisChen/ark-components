@@ -22,7 +22,7 @@ public class RpcUtils {
      * @param serverResponse 服务端响应体
      * @return List
      */
-    public static <T> T attemptGetData(SingleResponse<T> serverResponse) {
+    public static <T> T checkAndGetData(SingleResponse<T> serverResponse) {
         checkResponse(serverResponse);
         return serverResponse.getData();
     }
@@ -32,9 +32,29 @@ public class RpcUtils {
      * @param serverResponse 服务端响应体
      * @return List
      */
-    public static <T> List<T> attemptGetData(MultiResponse<T> serverResponse) {
+    public static <T> SingleResponse<T> checkAndGetResponse(SingleResponse<T> serverResponse) {
+        checkResponse(serverResponse);
+        return serverResponse;
+    }
+
+    /**
+     * 如果服务器响应错误或异常的话，会抛出RpcException
+     * @param serverResponse 服务端响应体
+     * @return List
+     */
+    public static <T> List<T> checkAndGetData(MultiResponse<T> serverResponse) {
         checkResponse(serverResponse);
         return serverResponse.getData();
+    }
+
+    /**
+     * 如果服务器响应错误或异常的话，会抛出RpcException
+     * @param serverResponse 服务端响应体
+     * @return List
+     */
+    public static <T> MultiResponse<T> checkAndGetResponse(MultiResponse<T> serverResponse) {
+        checkResponse(serverResponse);
+        return serverResponse;
     }
 
     /**
@@ -49,11 +69,13 @@ public class RpcUtils {
     private static <T> void checkResponse(ServerResponse serverResponse) {
         if (serverResponse == null) {
             log.error("[RPC]调用异常 -> 响应结果为空");
-            throw new RpcException("[RPC]调用异常 -> 响应结果为空");
+            throw new RpcException(serverResponse.getService(), 
+
+                    "[RPC]调用异常 -> 响应结果为空");
         }
         if (!serverResponse.getCode().equals(ResponseEnums.OK.getCode())) {
             log.error("[RPC]调用返回错误：" + serverResponse);
-            throw new RpcException("RPC调用返回错误：" + serverResponse);
+            throw new RpcException(serverResponse.getService(), "RPC调用返回错误：" + serverResponse);
         }
     }
 
