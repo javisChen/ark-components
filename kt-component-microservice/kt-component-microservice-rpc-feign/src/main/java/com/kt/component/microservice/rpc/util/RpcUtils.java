@@ -69,13 +69,11 @@ public class RpcUtils {
     private static <T> void checkResponse(ServerResponse serverResponse) {
         if (serverResponse == null) {
             log.error("[RPC]调用异常 -> 响应结果为空");
-            throw new RpcException(serverResponse.getService(), 
-
-                    "[RPC]调用异常 -> 响应结果为空");
+            throw new RpcException(null, "目标服务异常");
         }
         if (!serverResponse.getCode().equals(ResponseEnums.OK.getCode())) {
             log.error("[RPC]调用返回错误：" + serverResponse);
-            throw new RpcException(serverResponse.getService(), "RPC调用返回错误：" + serverResponse);
+            throw new RpcException(serverResponse.getService(), serverResponse.getMsg());
         }
     }
 

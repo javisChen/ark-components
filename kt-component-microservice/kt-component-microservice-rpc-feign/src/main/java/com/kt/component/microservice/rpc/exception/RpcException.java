@@ -28,4 +28,8 @@ public class RpcException extends RuntimeException {
     public RpcException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
+    public String getService() {
+        return service;
+    }
 }
