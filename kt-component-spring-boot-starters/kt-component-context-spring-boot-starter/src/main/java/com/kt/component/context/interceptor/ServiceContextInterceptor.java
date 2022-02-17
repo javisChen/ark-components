@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * 服务上下文拦截器
@@ -50,8 +51,10 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
         String accessToken = accessTokenExtractor.extract(request);
         if (StringUtils.isNotEmpty(accessToken)) {
             Object cache = getUserCacheByToken(createAccessTokenKey(accessToken));
-            LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
-            ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+            if (Objects.nonNull(cache)) {
+                LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
+                ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+            }
         }
     }
 
