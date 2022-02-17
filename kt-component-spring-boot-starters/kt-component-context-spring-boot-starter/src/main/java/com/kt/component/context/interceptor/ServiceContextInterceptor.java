@@ -43,7 +43,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private void setTraceContext(HttpServletRequest request) {
-        ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, request.getHeader("X-TraceId"));
+        ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, request.getHeader("X-Trace-Id"));
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
