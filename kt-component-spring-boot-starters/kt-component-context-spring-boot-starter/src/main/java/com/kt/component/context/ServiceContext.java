@@ -26,7 +26,7 @@ public class ServiceContext {
             contextMap = new ConcurrentHashMap<>(16);
             THREAD_LOCAL.set(contextMap);
         }
-        THREAD_LOCAL.get().put(key, value);
+        contextMap.put(key, value);
     }
 
 
