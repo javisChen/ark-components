@@ -14,9 +14,8 @@ public class ServiceContext {
     private static final ThreadLocal<Map<String, Object>> THREAD_LOCAL = new ThreadLocal<>();
 
     public static void clearContext() {
-        Map<String, Object> map = THREAD_LOCAL.get();
-        if (map != null && map.size() > 0) {
-            map.remove(LOGIN_USER_CONTEXT_KEY);
+        if (THREAD_LOCAL.get() != null) {
+            THREAD_LOCAL.get().clear();
         }
     }
 
