@@ -39,6 +39,7 @@
         <dependency>
             <groupId>com.kt</groupId>
             <artifactId>kt-component-web-spring-boot-starter</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -50,6 +51,7 @@
                     <artifactId>druid-spring-boot-starter</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

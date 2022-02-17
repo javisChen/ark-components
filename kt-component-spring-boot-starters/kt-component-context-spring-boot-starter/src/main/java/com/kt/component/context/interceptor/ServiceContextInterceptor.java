@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * 服务上下文拦截器
@@ -43,15 +44,17 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private void setTraceContext(HttpServletRequest request) {
-        ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, request.getHeader("X-TraceId"));
+        ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, request.getHeader("X-Trace-Id"));
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
         String accessToken = accessTokenExtractor.extract(request);
         if (StringUtils.isNotEmpty(accessToken)) {
             Object cache = getUserCacheByToken(createAccessTokenKey(accessToken));
-            LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
-            ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+            if (Objects.nonNull(cache)) {
+                LoginUserContext loginUserContext = JSONObject.parseObject((String) cache, LoginUserContext.class);
+                ServiceContext.setContext(ServiceContext.LOGIN_USER_CONTEXT_KEY, loginUserContext);
+            }
         }
     }
 
