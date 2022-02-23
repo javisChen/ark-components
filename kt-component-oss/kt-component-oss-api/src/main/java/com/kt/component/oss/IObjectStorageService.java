@@ -7,7 +7,6 @@ package com.kt.component.oss;
 
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * 定义OSS通用接口
@@ -21,7 +20,7 @@ public interface IObjectStorageService {
 
     boolean exists(String bucketName, String objectName);
 
-    OutputStream get(String fileURI);
+    InputStream get(String bucketName, String objectName);
 
     String getFileUrl(String objectName);
 

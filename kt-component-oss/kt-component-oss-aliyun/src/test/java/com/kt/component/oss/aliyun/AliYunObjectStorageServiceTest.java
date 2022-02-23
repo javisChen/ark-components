@@ -1,33 +1,32 @@
-package com.kt.component.oss.minio;
+package com.kt.component.oss.aliyun;
 
 import cn.hutool.core.io.IoUtil;
 import com.kt.component.oss.IObjectStorageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class MinIoObjectStorageServiceTest {
+public class AliYunObjectStorageServiceTest {
 
     private IObjectStorageService iObjectStorageService;
 
     @Before
     public void setUp() {
-        MinIoConfiguration minIoConfiguration = new MinIoConfiguration();
-        minIoConfiguration.setEndPoint("http://127.0.0.1:9000");
-//        minIoConfiguration.setAccessKey("admin");
-//        minIoConfiguration.setSecretKey("admin123456");
-        minIoConfiguration.setAccessKey("user");
-        minIoConfiguration.setSecretKey("user123456");
-        iObjectStorageService = new MinIoObjectStorageService(minIoConfiguration);
+        AliYunConfiguration minIoConfiguration = new AliYunConfiguration();
+        minIoConfiguration.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
+        minIoConfiguration.setAccessKey("LTAI5tB6EGUDPBWRtvwKFcxg");
+        minIoConfiguration.setSecretKey("M9gV934ETKDXtHvaBXrK8NEtZHzEEZ");
+        iObjectStorageService = new AliYunObjectStorageService(minIoConfiguration);
     }
 
-    @Test
+    @org.junit.Test
     public void testPut() {
         InputStream resourceAsStream = getClass().getResourceAsStream("/test.txt");
-        String ossUrl = iObjectStorageService.put("code", "project-a", resourceAsStream);
+        String ossUrl = iObjectStorageService.put("kt-code-bucket", "eop/project-a", resourceAsStream);
         System.out.println(ossUrl);
         Assertions.assertNotNull(ossUrl);
     }

@@ -1,7 +1,6 @@
 package com.kt.component.oss;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class AbstractObjectStorageService implements IObjectStorageService {
 
@@ -21,7 +20,7 @@ public class AbstractObjectStorageService implements IObjectStorageService {
     }
 
     @Override
-    public OutputStream get(String fileURI) {
+    public InputStream get(String bucketName, String objectName) {
         return null;
     }
 
@@ -29,4 +28,5 @@ public class AbstractObjectStorageService implements IObjectStorageService {
     public String getFileUrl(String objectName) {
         return null;
     }
+
 }

@@ -1,14 +1,15 @@
 package com.kt.component.oss.minio;
 
+import cn.hutool.core.io.IoUtil;
 import com.kt.component.oss.AbstractObjectStorageService;
 import com.kt.component.oss.exception.OssException;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.ObjectWriteResponse;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
+import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 @Slf4j
@@ -42,14 +43,25 @@ public class MinIoObjectStorageService extends AbstractObjectStorageService {
                     .bucket(bucketName).object(objectName)
                     .method(Method.GET)
                     .build();
-            String presignedObjectUrl = minioClient.getPresignedObjectUrl(build);
-            ObjectWriteResponse objectWriteResponse = minioClient.putObject(args);
             String endpoint = minIoConfiguration.getEndPoint();
-            boolean customDomain = endpoint.startsWith("https://" + bucketName);
-//            return customDomain ? endpoint + "/" + fileURI : endpoint + "/" + bucketName + "/" + fileURI;
-            return "";
+            return endpoint + "/" + bucketName + "/" + objectName;
         } catch (Exception e) {
             throw new OssException("OSS上传失败", e);
+        }
+    }
+
+    @Override
+    public InputStream get(String bucketName, String objectName) {
+        try {
+            GetPresignedObjectUrlArgs build = GetPresignedObjectUrlArgs.builder()
+                    .bucket(bucketName)
+                    .method(Method.GET)
+                    .object(objectName).build();
+            String objectUrl = minioClient.getPresignedObjectUrl(build);
+            GetObjectArgs args = GetObjectArgs.builder().bucket(bucketName).object(objectName).build();
+            return minioClient.getObject(args);
+        } catch (Exception e) {
+            throw new OssException("OSS下载失败", e);
         }
     }
 }
