@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>kt-component-oss</name>
+    <groupId>com.kt</groupId>
+    <artifactId>kt-component-oss</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>kt-component-oss-api</module>
+        <module>kt-component-oss-minio</module>
+        <module>kt-component-oss-aliyun</module>
+    </modules>
+
+    <properties>
+        <kt-component-oss-api.version>1.0.0-SNAPSHOT</kt-component-oss-api.version>
+        <kt-component-oss-aliyun.version>1.0.0-SNAPSHOT</kt-component-oss-aliyun.version>
+        <kt-component-oss-minio.version>1.0.0-SNAPSHOT</kt-component-oss-minio.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kt</groupId>
+                <artifactId>kt-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.kt</groupId>
+                <artifactId>kt-component-oss-api</artifactId>
+                <version>${kt-component-oss-api.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

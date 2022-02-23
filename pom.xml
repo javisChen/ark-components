@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>kt-component-oss</module>
         <module>kt-component-cache</module>
         <module>kt-component-lock</module>
         <module>kt-component-common</module>

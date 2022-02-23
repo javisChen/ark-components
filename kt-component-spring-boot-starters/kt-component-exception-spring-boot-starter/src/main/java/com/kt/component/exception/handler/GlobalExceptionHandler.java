@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     /**
      * HTTP METHOD不匹配异常
      */
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ServerResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         return ServerResponse.error(ResponseEnums.USER_METHOD_NOT_ALLOWED);
