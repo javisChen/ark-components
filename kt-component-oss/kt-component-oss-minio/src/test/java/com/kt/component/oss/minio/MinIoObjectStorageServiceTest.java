@@ -17,24 +17,21 @@ public class MinIoObjectStorageServiceTest {
     public void setUp() {
         MinIoConfiguration minIoConfiguration = new MinIoConfiguration();
         minIoConfiguration.setEndPoint("http://127.0.0.1:9000");
-//        minIoConfiguration.setAccessKey("admin");
-//        minIoConfiguration.setSecretKey("admin123456");
-        minIoConfiguration.setAccessKey("user");
-        minIoConfiguration.setSecretKey("user123456");
+        minIoConfiguration.setAccessKey("admin");
+        minIoConfiguration.setSecretKey("admin123456");
         iObjectStorageService = new MinIoObjectStorageService(minIoConfiguration);
     }
 
     @Test
     public void testPut() {
-        InputStream resourceAsStream = getClass().getResourceAsStream("/test.txt");
-        String ossUrl = iObjectStorageService.put("code", "project-a", resourceAsStream);
-        System.out.println(ossUrl);
+        InputStream resourceAsStream = getClass().getResourceAsStream("/test.png");
+        String ossUrl = iObjectStorageService.put("code", "test.png", resourceAsStream);
         Assertions.assertNotNull(ossUrl);
     }
 
     @Test
     public void testGet() {
-        InputStream ossUrl = iObjectStorageService.get("code", "project-a");
+        InputStream ossUrl = iObjectStorageService.get("code", "test.txt");
         String read = IoUtil.read(ossUrl, StandardCharsets.UTF_8);
         System.out.println(read);
         Assertions.assertNotNull(read);

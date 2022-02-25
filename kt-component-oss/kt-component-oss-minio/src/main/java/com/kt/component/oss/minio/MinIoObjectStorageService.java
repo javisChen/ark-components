@@ -1,15 +1,15 @@
 package com.kt.component.oss.minio;
 
-import cn.hutool.core.io.IoUtil;
 import com.kt.component.oss.AbstractObjectStorageService;
 import com.kt.component.oss.exception.OssException;
-import io.minio.*;
-import io.minio.http.Method;
-import io.minio.messages.Item;
+import com.kt.component.oss.util.FileContentTypeUtil;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 
 @Slf4j
@@ -34,18 +34,18 @@ public class MinIoObjectStorageService extends AbstractObjectStorageService {
     @Override
     public String put(String bucketName, String objectName, InputStream inputstream) {
         try {
-            PutObjectArgs args = PutObjectArgs.builder()
+            PutObjectArgs.Builder argsBuilder = PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(objectName)
-                    .stream(inputstream, inputstream.available(), -1)
-                    .build();
-            GetPresignedObjectUrlArgs build = GetPresignedObjectUrlArgs.builder()
-                    .bucket(bucketName).object(objectName)
-                    .method(Method.GET)
-                    .build();
-            String endpoint = minIoConfiguration.getEndPoint();
-            return endpoint + "/" + bucketName + "/" + objectName;
+                    .stream(inputstream, inputstream.available(), -1);
+            String contentType = FileContentTypeUtil.getType(objectName);
+            if (StringUtils.isNotEmpty(contentType)) {
+                argsBuilder.contentType(contentType);
+            }
+            minioClient.putObject(argsBuilder.build());
+            return minIoConfiguration.getEndPoint() + File.separator + bucketName+ File.separator + objectName;
         } catch (Exception e) {
+            log.error("OSS上传失败", e);
             throw new OssException("OSS上传失败", e);
         }
     }
@@ -53,11 +53,6 @@ public class MinIoObjectStorageService extends AbstractObjectStorageService {
     @Override
     public InputStream get(String bucketName, String objectName) {
         try {
-            GetPresignedObjectUrlArgs build = GetPresignedObjectUrlArgs.builder()
-                    .bucket(bucketName)
-                    .method(Method.GET)
-                    .object(objectName).build();
-            String objectUrl = minioClient.getPresignedObjectUrl(build);
             GetObjectArgs args = GetObjectArgs.builder().bucket(bucketName).object(objectName).build();
             return minioClient.getObject(args);
         } catch (Exception e) {

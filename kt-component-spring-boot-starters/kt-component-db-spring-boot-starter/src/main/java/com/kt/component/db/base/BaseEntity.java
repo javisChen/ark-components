@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public abstract class BaseEntity {
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @TableField(value = "gmt_create")
