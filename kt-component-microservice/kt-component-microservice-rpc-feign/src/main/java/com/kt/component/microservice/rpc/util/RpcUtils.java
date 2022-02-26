@@ -1,7 +1,7 @@
 package com.kt.component.microservice.rpc.util;
 
 import com.kt.component.dto.MultiResponse;
-import com.kt.component.dto.ResponseEnums;
+import com.kt.component.dto.BizErrorCode;
 import com.kt.component.dto.ServerResponse;
 import com.kt.component.dto.SingleResponse;
 import com.kt.component.microservice.rpc.exception.RpcException;
@@ -71,7 +71,7 @@ public class RpcUtils {
             log.error("[RPC]调用异常 -> 响应结果为空");
             throw new RpcException(null, "目标服务异常");
         }
-        if (!serverResponse.getCode().equals(ResponseEnums.OK.getCode())) {
+        if (!serverResponse.getCode().equals(BizErrorCode.OK.getCode())) {
             log.error("[RPC]调用返回错误：" + serverResponse);
             throw new RpcException(serverResponse.getService(), serverResponse.getMsg());
         }
@@ -79,6 +79,6 @@ public class RpcUtils {
 
     public static boolean isSuccess(ServerResponse serverResponse) {
         return Objects.nonNull(serverResponse) &&
-                serverResponse.getCode().equals(ResponseEnums.OK.getCode());
+                serverResponse.getCode().equals(BizErrorCode.OK.getCode());
     }
 }

@@ -36,7 +36,7 @@ public class MultiResponse<T> extends ServerResponse {
     }
 
     public static <T> MultiResponse<T> ok(Collection<T> data) {
-        return new MultiResponse<>(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg(), data);
+        return new MultiResponse<>(BizErrorCode.OK.getCode(), BizErrorCode.OK.getMsg(), data);
     }
 
     public static <T> MultiResponse<T> error(String code, String msg, Collection<T> data) {

@@ -1,9 +1,6 @@
 package com.kt.component.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /*
@@ -28,10 +25,10 @@ public class SingleResponse<T> extends ServerResponse {
     }
 
     public static <T> SingleResponse<T> ok(T data) {
-        return new SingleResponse<>(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg(), data);
+        return new SingleResponse<>(BizErrorCode.OK.getCode(), BizErrorCode.OK.getMsg(), data);
     }
 
-    public static <T> SingleResponse<T> error(ResponseEnums responseEnums, T data) {
+    public static <T> SingleResponse<T> error(BizErrorCode responseEnums, T data) {
         return new SingleResponse<>(responseEnums.getCode(), responseEnums.getMsg(), data);
     }
 

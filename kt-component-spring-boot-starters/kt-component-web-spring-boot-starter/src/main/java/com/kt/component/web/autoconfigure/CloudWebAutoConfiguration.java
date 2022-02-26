@@ -1,5 +1,7 @@
 package com.kt.component.web.autoconfigure;
 
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +31,13 @@ public class CloudWebAutoConfiguration {
         log.info("enable [kt-component-web-spring-boot-starter]");
     }
 
+    /**
+     * 使用FastJSON作为应用的HTTP消息转换器
+     */
     @Bean
     @ConditionalOnMissingBean(HttpMessageConverters.class)
     public HttpMessageConverters fastJsonHttpMessageConverters() {
-        //1.需要定义一个convert转换消息的对象;
+
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -55,6 +61,14 @@ public class CloudWebAutoConfiguration {
         supportedMediaTypes.add(MediaType.TEXT_XML);
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
+
+        // 解决Long返回前端精度丢失的问题
+        SerializeConfig serializeConfig = SerializeConfig.globalInstance;
+        serializeConfig.put(BigInteger.class, ToStringSerializer.instance);
+        serializeConfig.put(Long.class, ToStringSerializer.instance);
+        serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
+        fastJsonConfig.setSerializeConfig(serializeConfig);
+
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 

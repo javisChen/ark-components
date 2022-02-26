@@ -8,14 +8,11 @@ package com.kt.component.exception;
  */
 public class ExceptionFactory {
 
-    public static BizException bizException(String errorMessage) {
-        return new BizException(errorMessage);
-    }
-
-    public static BizException bizException(String errorCode, String errorMessage) {
-        return new BizException(errorCode, errorMessage);
-    }
-
+    /**
+     * 系统内部异常
+     * @param errorMessage 具体错误信息
+     * @return UserException
+     */
     public static SysException sysException(String errorMessage) {
         return new SysException(errorMessage);
     }
@@ -31,5 +28,34 @@ public class ExceptionFactory {
     public static SysException sysException(String errorCode, String errorMessage, Throwable e) {
         return new SysException(errorCode, errorMessage, e);
     }
+
+    /**
+     * 用户操作异常
+     * @param errorMessage 具体错误信息
+     * @return UserException
+     */
+    public static UserException userException(String errorMessage) {
+        return new UserException(errorMessage);
+    }
+
+    /**
+     * 第三方服务异常
+     * @param errorMessage 具体错误信息
+     * @return ThirdSysException
+     */
+    public static ThirdSysException thirdSysException(String errorMessage) {
+        return new ThirdSysException(errorMessage);
+    }
+
+    /**
+     * 第三方服务异常
+     * @param errorMessage 具体错误信息
+     * @param e 错误堆栈
+     * @return ThirdSysException
+     */
+    public static ThirdSysException thirdSysException(String errorMessage, Throwable e) {
+        return new ThirdSysException(errorMessage, e);
+    }
+
 
 }

@@ -37,17 +37,16 @@ public class ServerResponse implements Serializable {
     }
 
     public static ServerResponse ok() {
-        return createResponse(ResponseEnums.OK.getCode(), ResponseEnums.OK.getMsg());
+        return createResponse(BizErrorCode.OK.getCode(), BizErrorCode.OK.getMsg());
     }
 
-    public static ServerResponse error(ResponseEnums responseEnums) {
+    public static ServerResponse error(BizErrorCode responseEnums) {
         return createResponse(responseEnums.getCode(), responseEnums.getMsg());
     }
 
     public static ServerResponse error(String code, String msg) {
         return createResponse(code, msg);
     }
-
 
     public static ServerResponse error(String service, String code, String msg) {
         return createResponse(service, code, msg);

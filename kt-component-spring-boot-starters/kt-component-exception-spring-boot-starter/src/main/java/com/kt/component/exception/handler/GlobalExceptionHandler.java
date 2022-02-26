@@ -1,11 +1,15 @@
 package com.kt.component.exception.handler;
 
-import com.kt.component.dto.ResponseEnums;
+import com.kt.component.dto.BizErrorCode;
 import com.kt.component.dto.ServerResponse;
 import com.kt.component.dto.SingleResponse;
 import com.kt.component.exception.BizException;
+import com.kt.component.exception.SysException;
+import com.kt.component.exception.ThirdSysException;
+import com.kt.component.exception.UserException;
 import com.kt.component.validator.ValidationResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.kt.component.dto.BizErrorCode.USER_ERROR;
 
 /**
  * @author JavisChen
@@ -30,17 +37,37 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ServerResponse handle(Exception e) {
-        log.error("SYS EXCEPTION：", e);
-        return ServerResponse.error(ResponseEnums.SERVER_ERROR);
+        log.error("Unknown exception：", e);
+        return ServerResponse.error(BizErrorCode.SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = UserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ServerResponse handle(UserException e) {
+        log.warn("User exception：", e);
+        return ServerResponse.error(e.getErrCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(value = ThirdSysException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ServerResponse handle(ThirdSysException e) {
+        log.error("Third service exception：", e);
+        return ServerResponse.error(e.getErrCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(value = SysException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ServerResponse handle(SysException e) {
+        log.error("sys exception：", e);
+        return ServerResponse.error(e.getErrCode(), e.getMessage());
+    }
 
     @ExceptionHandler(value = BizException.class)
     @ResponseStatus(HttpStatus.OK)
     public ServerResponse handle(BizException e) {
-        log.error("BIZ EXCEPTION：", e);
+        log.error("Biz Exception：", e);
         return ServerResponse.error(e.getErrCode(), e.getMessage());
     }
 
@@ -50,26 +77,30 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ServerResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        return ServerResponse.error(ResponseEnums.USER_METHOD_NOT_ALLOWED);
+        return ServerResponse.error(USER_ERROR.getCode(), HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
     }
 
     /*
      * @desc 处理参数校验异常
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ServerResponse handle(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>();
+            List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>(fieldErrors.size());
             fieldErrors.forEach((error -> validationResultErrors
                     .add(new ValidationResult.FieldError(error.getField(), error.getDefaultMessage()))));
-            return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getCode(),
-                    ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getMsg(),
-                    new ValidationResult(bindingResult.getFieldError().getDefaultMessage(), validationResultErrors));
+            FieldError fieldError = bindingResult.getFieldError();
+            String defaultMessage = "";
+            if (Objects.nonNull(fieldError)) {
+                defaultMessage = fieldError.getDefaultMessage();
+            }
+            return SingleResponse.error(USER_ERROR.getCode(), defaultMessage,
+                    new ValidationResult(defaultMessage, validationResultErrors));
         }
-        return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID);
+        return SingleResponse.error(USER_ERROR);
     }
 
     /*
@@ -93,30 +124,39 @@ public class GlobalExceptionHandler {
         e.getFieldErrors()
                 .forEach((error) -> validationResultErrors
                         .add(new ValidationResult.FieldError(error.getField(), error.getDefaultMessage())));
-        return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getCode(),
-                ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getMsg(),
+        return SingleResponse.error(USER_ERROR.getCode(),
+                USER_ERROR.getMsg(),
                 new ValidationResult(e.getBindingResult().getFieldError().getDefaultMessage(), validationResultErrors));
     }
 
     /**
      * 处理RequestParam的校验异常
-     * @param e
+     * @param e ConstraintViolationException
      */
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public SingleResponse<ValidationResult> handle(ConstraintViolationException e) {
         ValidationResult result = new ValidationResult(
                 e.getConstraintViolations().stream().findFirst().get().getMessage(), null);
-        return SingleResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID, result);
+        return SingleResponse.error(USER_ERROR, result);
     }
 
+    /**
+     * RequestBody解析失败，例如：请求体为空、类型不匹配等
+     * @param e HttpMessageNotReadableException
+     */
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ServerResponse handle(HttpMessageNotReadableException e) {
-        if (e.getMessage().contains("JSON parse error: 2")) {
-            return ServerResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID);
+        String message = e.getMessage();
+        if (StringUtils.isNotBlank(message)) {
+            if (message.contains("JSON parse error")) {
+                return ServerResponse.error(USER_ERROR.getCode(), e.getMessage());
+            } else if (message.contains("Required request body is missing")) {
+                return ServerResponse.error(USER_ERROR.getCode(), "Required request body is missing");
+            }
         }
-        return ServerResponse.error(ResponseEnums.USER_REQUIRED_REQUEST_BODY_IS_MISSING);
+        return ServerResponse.error(USER_ERROR.getCode(), message);
     }
 
     /**
@@ -130,6 +170,6 @@ public class GlobalExceptionHandler {
     })
     @ResponseStatus(HttpStatus.OK)
     public ServerResponse handleMissingServletRequestPartException(Exception e) {
-        return ServerResponse.error("上传文件操作异常：{}", e.getMessage());
+        return ServerResponse.error(USER_ERROR.getCode(), "上传文件操作异常：{}", e.getMessage());
     }
 }

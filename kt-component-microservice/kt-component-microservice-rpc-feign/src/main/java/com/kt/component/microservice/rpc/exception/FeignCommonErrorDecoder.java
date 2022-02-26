@@ -21,13 +21,19 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
         if (status == HttpStatus.UNAUTHORIZED.value()) {
             String msg = getMsgFromBody(bodyString);
             String service = getServiceFromBody(bodyString);
-            return new RpcException(service, response, msg);
+            String code = getCodeFromBody(bodyString);
+            return new RpcException(service, response, msg, code);
         } else if (status == HttpStatus.FORBIDDEN.value()) {
             String msg = getMsgFromBody(bodyString);
             String service = getServiceFromBody(bodyString);
-            return new RpcException(service, response, msg);
+            String code = getCodeFromBody(bodyString);
+            return new RpcException(service, response, msg, code);
         }
-        return new RpcException(null, response, bodyString);
+        return new RpcException(null, response, bodyString, null);
+    }
+
+    private String getCodeFromBody(String body) {
+        return JSONObject.parseObject(body).getString("code");
     }
 
     private String getMsgFromBody(String body) {

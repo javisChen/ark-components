@@ -1,14 +1,14 @@
 package com.kt.component.exception;
 
 /**
- * System Exception is unexpected Exception, retry might work again
+ * 系统内部异常
  * @author JavisChen
  */
 public class SysException extends BaseException {
 
     private static final long serialVersionUID = 4355163994767354840L;
 
-    private static final String DEFAULT_ERR_CODE = "SYS_ERROR";
+    private static final String DEFAULT_ERR_CODE = "S0001";
 
     public SysException(String errMessage) {
         super(DEFAULT_ERR_CODE, errMessage);
