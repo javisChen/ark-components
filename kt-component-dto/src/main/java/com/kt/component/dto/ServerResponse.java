@@ -2,6 +2,7 @@ package com.kt.component.dto;
 
 import com.kt.component.common.util.spring.SpringUtils;
 import com.kt.component.context.ServiceContext;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -20,9 +21,13 @@ import java.io.Serializable;
 public class ServerResponse implements Serializable {
 
     private static final long serialVersionUID = -5409913864886373072L;
+    @ApiModelProperty(value = "响应码（000000表示成功）")
     private String code;
+    @ApiModelProperty(value = "返回消息")
     private String msg;
+    @ApiModelProperty(value = "响应服务")
     private String service;
+    @ApiModelProperty(value = "链路id")
     private String traceId;
 
     public ServerResponse() {

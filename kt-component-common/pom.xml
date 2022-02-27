@@ -66,8 +66,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-exception</artifactId>
         </dependency>
 
     </dependencies>

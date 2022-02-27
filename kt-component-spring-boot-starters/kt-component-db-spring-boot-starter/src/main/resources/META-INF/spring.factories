@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.kt.component.db.autoconfigure.KTDatabaseAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.kt.component.db.autoconfigure.CloudDBAutoConfiguration

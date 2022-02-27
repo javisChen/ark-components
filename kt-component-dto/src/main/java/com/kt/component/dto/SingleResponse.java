@@ -1,6 +1,10 @@
 package com.kt.component.dto;
 
-import lombok.*;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /*
@@ -17,6 +21,7 @@ public class SingleResponse<T> extends ServerResponse {
 
     private static final long serialVersionUID = -5409913864886373072L;
 
+    @ApiModelProperty(value = "对象")
     private T data;
 
     public SingleResponse(String code, String msg, T data) {

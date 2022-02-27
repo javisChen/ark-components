@@ -1,5 +1,6 @@
 package com.kt.component.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import java.util.List;
 public class MultiResponse<T> extends ServerResponse {
 
     private static final long serialVersionUID = 1L;
-
+    @ApiModelProperty(value = "数组")
     private Collection<T> data;
 
     public MultiResponse(String code, String msg, Collection<T> data) {
