@@ -1,6 +1,6 @@
 package com.kt.component.common.autoconfigure;
 
-import com.kt.component.common.util.SpringUtils;
+import com.kt.component.common.util.spring.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 

@@ -1,4 +1,4 @@
-package com.kt.component.common.util;
+package com.kt.component.common.util.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
