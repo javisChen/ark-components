@@ -1,12 +1,9 @@
 package com.kt.component.dto;
 
-import com.kt.component.common.util.spring.SpringUtils;
-import com.kt.component.context.ServiceContext;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
@@ -37,8 +34,6 @@ public class ServerResponse implements Serializable {
     public ServerResponse(String code, String msg) {
         this.code = code;
         this.msg = msg;
-        this.service = SpringUtils.getApplicationName();
-        this.traceId = ServiceContext.getTraceId();
     }
 
     public static ServerResponse ok() {
@@ -64,8 +59,8 @@ public class ServerResponse implements Serializable {
     protected static ServerResponse createResponse(String service, String code, String msg) {
         return new ServerResponse()
                 .setCode(code)
-                .setMsg(msg)
-                .setService(StringUtils.defaultString(service, SpringUtils.getApplicationName()));
+                .setMsg(msg);
+//                .setService(StringUtils.defaultString(service, SpringUtils.getApplicationName()));
     }
 
 }

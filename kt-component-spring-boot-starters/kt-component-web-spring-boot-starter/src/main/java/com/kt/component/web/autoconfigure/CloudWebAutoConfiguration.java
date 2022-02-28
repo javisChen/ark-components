@@ -4,6 +4,7 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.kt.component.web.advice.CommonResponseBodyAdvice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,6 +38,11 @@ public class CloudWebAutoConfiguration {
 
     public CloudWebAutoConfiguration() {
         log.info("enable [kt-component-web-spring-boot-starter]");
+    }
+
+    @Bean
+    public CommonResponseBodyAdvice commonResponseBodyAdvice() {
+        return new CommonResponseBodyAdvice();
     }
 
     @Bean
