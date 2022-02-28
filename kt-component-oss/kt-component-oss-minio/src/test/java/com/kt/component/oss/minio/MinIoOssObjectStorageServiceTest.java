@@ -9,17 +9,17 @@ import org.junit.jupiter.api.Assertions;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class MinIoObjectStorageServiceTest {
+public class MinIoOssObjectStorageServiceTest {
 
     private IObjectStorageService iObjectStorageService;
 
     @Before
     public void setUp() {
-        MinIoConfiguration minIoConfiguration = new MinIoConfiguration();
-        minIoConfiguration.setEndPoint("http://127.0.0.1:9000");
-        minIoConfiguration.setAccessKey("admin");
-        minIoConfiguration.setSecretKey("admin123456");
-        iObjectStorageService = new MinIoObjectStorageService(minIoConfiguration);
+        MinIoOssProperties minIoOssProperties = new MinIoOssProperties();
+        minIoOssProperties.setEndPoint("http://127.0.0.1:9000");
+        minIoOssProperties.setAccessKey("admin");
+        minIoOssProperties.setSecretKey("admin123456");
+        iObjectStorageService = new MinIoOssObjectStorageService(minIoOssProperties);
     }
 
     @Test

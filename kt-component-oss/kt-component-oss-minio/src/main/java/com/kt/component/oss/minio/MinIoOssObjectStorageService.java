@@ -13,21 +13,21 @@ import java.io.File;
 import java.io.InputStream;
 
 @Slf4j
-public class MinIoObjectStorageService extends AbstractObjectStorageService {
+public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
 
     protected static final String BACKSLASH = "/";
     protected MinioClient minioClient = null;
-    private final MinIoConfiguration minIoConfiguration;
+    private final MinIoOssProperties minIoOssProperties;
 
-    public MinIoObjectStorageService(MinIoConfiguration minIoConfiguration) {
-        this.minIoConfiguration = minIoConfiguration;
+    public MinIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
+        this.minIoOssProperties = minIoOssProperties;
         init();
     }
 
     public void init() {
         this.minioClient = MinioClient.builder()
-                .endpoint(minIoConfiguration.getEndPoint())
-                .credentials(minIoConfiguration.getAccessKey(), minIoConfiguration.getSecretKey())
+                .endpoint(minIoOssProperties.getEndPoint())
+                .credentials(minIoOssProperties.getAccessKey(), minIoOssProperties.getSecretKey())
                 .build();
     }
 
@@ -43,7 +43,7 @@ public class MinIoObjectStorageService extends AbstractObjectStorageService {
                 argsBuilder.contentType(contentType);
             }
             minioClient.putObject(argsBuilder.build());
-            return minIoConfiguration.getEndPoint() + File.separator + bucketName+ File.separator + objectName;
+            return minIoOssProperties.getEndPoint() + File.separator + bucketName+ File.separator + objectName;
         } catch (Exception e) {
             log.error("OSS上传失败", e);
             throw new OssException("OSS上传失败", e);

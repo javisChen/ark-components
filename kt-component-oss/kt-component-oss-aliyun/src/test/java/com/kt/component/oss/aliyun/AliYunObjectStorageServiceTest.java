@@ -5,7 +5,6 @@ import com.kt.component.oss.IObjectStorageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +15,7 @@ public class AliYunObjectStorageServiceTest {
 
     @Before
     public void setUp() {
-        AliYunConfiguration minIoConfiguration = new AliYunConfiguration();
+        AliYunOssProperties minIoConfiguration = new AliYunOssProperties();
         minIoConfiguration.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
         minIoConfiguration.setAccessKey("LTAI5tB6EGUDPBWRtvwKFcxg");
         minIoConfiguration.setSecretKey("M9gV934ETKDXtHvaBXrK8NEtZHzEEZ");

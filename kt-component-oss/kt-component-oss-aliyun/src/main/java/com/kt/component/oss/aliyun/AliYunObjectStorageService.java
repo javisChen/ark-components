@@ -1,29 +1,27 @@
 package com.kt.component.oss.aliyun;
 
 import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.PutObjectResult;
 import com.kt.component.oss.AbstractObjectStorageService;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 
 public class AliYunObjectStorageService extends AbstractObjectStorageService {
 
     private OSS ossClient;
-    private AliYunConfiguration aliYunConfiguration;
+    private AliYunOssProperties aliYunOssProperties;
 
-    public AliYunObjectStorageService(AliYunConfiguration aliYunConfiguration) {
-        this.aliYunConfiguration = aliYunConfiguration;
+    public AliYunObjectStorageService(AliYunOssProperties aliYunOssProperties) {
+        this.aliYunOssProperties = aliYunOssProperties;
         init();
     }
 
     public void init() {
         this.ossClient = new OSSClientBuilder()
-                .build(aliYunConfiguration.getEndPoint(),
-                        aliYunConfiguration.getAccessKey(),
-                        aliYunConfiguration.getSecretKey());
+                .build(aliYunOssProperties.getEndPoint(),
+                        aliYunOssProperties.getAccessKey(),
+                        aliYunOssProperties.getSecretKey());
     }
 
     @Override
