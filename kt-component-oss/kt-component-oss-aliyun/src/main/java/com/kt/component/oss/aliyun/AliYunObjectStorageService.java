@@ -10,7 +10,7 @@ import java.io.InputStream;
 public class AliYunObjectStorageService extends AbstractObjectStorageService {
 
     private OSS ossClient;
-    private AliYunOssProperties aliYunOssProperties;
+    private final AliYunOssProperties aliYunOssProperties;
 
     public AliYunObjectStorageService(AliYunOssProperties aliYunOssProperties) {
         this.aliYunOssProperties = aliYunOssProperties;

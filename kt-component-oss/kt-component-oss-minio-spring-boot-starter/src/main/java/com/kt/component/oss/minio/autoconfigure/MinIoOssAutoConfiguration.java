@@ -22,7 +22,7 @@ public class MinIoOssAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "kt.component.oss.minio", havingValue = "true")
+    @ConditionalOnProperty(value = "kt.component.oss.minio.enabled", havingValue = "true")
     public MinIoOssObjectStorageService minIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
         return new MinIoOssObjectStorageService(minIoOssProperties);
     }
