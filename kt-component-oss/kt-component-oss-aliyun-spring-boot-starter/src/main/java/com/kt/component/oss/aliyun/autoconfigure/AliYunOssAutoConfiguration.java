@@ -3,6 +3,8 @@ package com.kt.component.oss.aliyun.autoconfigure;
 import com.kt.component.oss.aliyun.AliYunObjectStorageService;
 import com.kt.component.oss.aliyun.AliYunOssProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Bean;
  * @ Version       :  1.0
  */
 @Slf4j
+@EnableConfigurationProperties(value = AliYunOssProperties.class)
 public class AliYunOssAutoConfiguration {
 
     public AliYunOssAutoConfiguration() {
@@ -19,6 +22,7 @@ public class AliYunOssAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(value = "kt.component.oss.aliyun.enabled", havingValue = "true")
     public AliYunObjectStorageService aliYunObjectStorageService(AliYunOssProperties aliYunOssProperties) {
         return new AliYunObjectStorageService(aliYunOssProperties);
     }

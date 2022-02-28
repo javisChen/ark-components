@@ -10,4 +10,5 @@ public class MinIoOssProperties {
     private String endPoint;
     private String accessKey;
     private String secretKey;
+    private Boolean enabled = true;
 }
