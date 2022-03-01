@@ -11,22 +11,16 @@ public abstract class BaseEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
-    @TableField(value = "gmt_create")
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmt_modified")
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 
-    @TableField(value = "creator")
+    @TableField(value = "creator", fill = FieldFill.INSERT)
     private Long creator;
 
-    @TableField(value = "modifier")
+    @TableField(value = "modifier", fill = FieldFill.INSERT_UPDATE)
     private Long modifier;
 
-    public BaseEntity(Long id) {
-        this.id = id;
-    }
-
-    public BaseEntity() {
-    }
 }

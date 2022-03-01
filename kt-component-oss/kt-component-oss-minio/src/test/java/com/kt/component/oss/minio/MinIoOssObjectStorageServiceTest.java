@@ -24,7 +24,7 @@ public class MinIoOssObjectStorageServiceTest {
 
     @Test
     public void testPut() {
-        InputStream resourceAsStream = getClass().getResourceAsStream("/test.txt");
+        InputStream resourceAsStream = getClass().getResourceAsStream("/test.png");
         String ossUrl = iObjectStorageService.put("code", "test.txt", resourceAsStream);
         Assertions.assertNotNull(ossUrl);
     }
