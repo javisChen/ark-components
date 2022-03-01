@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.kt.component.dto.PageResponse;
 import com.kt.component.exception.ExceptionFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Bean转换器
@@ -18,6 +20,9 @@ import java.util.List;
 public class BeanConvertor {
 
     public static <S, T> T copy(S src, Class<T> targetClazz) {
+        if (Objects.isNull(src)) {
+            return null;
+        }
         T targetObj;
         try {
             targetObj = targetClazz.newInstance();
@@ -31,6 +36,9 @@ public class BeanConvertor {
     }
 
     public static <S, T> List<T> copyList(List<S> srcList, Class<T> targetClazz) {
+        if (CollectionUtils.isEmpty(srcList)) {
+            return null;
+        }
         List<T> targetList = new ArrayList<>(srcList.size());
         srcList.forEach(s -> targetList.add(copy(s, targetClazz)));
         return targetList;
@@ -38,7 +46,10 @@ public class BeanConvertor {
 
     public static <S, T> PageResponse<T> copyPage(IPage<S> page, Class<T> targetClazz) {
         List<S> srcList = page.getRecords();
-        List<T> targetList = copyList(srcList, targetClazz);
+        List<T> targetList = null;
+        if (CollectionUtils.isNotEmpty(srcList)) {
+            targetList = copyList(srcList, targetClazz);
+        }
         PageResponse<T> pageResponse = new PageResponse<>();
         pageResponse.setTotal(page.getTotal());
         pageResponse.setSize(page.getSize());

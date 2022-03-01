@@ -80,8 +80,9 @@ public class GlobalExceptionHandler {
         return ServerResponse.error(USER_ERROR.getCode(), HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
     }
 
-    /*
-     * @desc 处理参数校验异常
+    /**
+     * 如果入参是@RequestBody + @Validated
+     * JSR303参数校验不通过就是抛出MethodArgumentNotValidException
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -102,17 +103,6 @@ public class GlobalExceptionHandler {
         }
         return SingleResponse.error(USER_ERROR);
     }
-
-    /*
-     * @desc 处理参数校验异常
-     * @param [e]
-     */
-//    @ExceptionHandler(value = ClientArgumentNotValidException.class)
-//    public ServerResponse handle(ClientArgumentNotValidException e) {
-//        List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>();
-//        validationResultErrors.add(new ValidationResult.FieldError(e.getErrorField(), e.getErrorMsg()));
-//        return ServerResponse.error(ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getCode(), ResponseEnums.USER_METHOD_ARGUMENT_NOT_VALID.getMsg(), new ValidationResult(e.getErrorMsg(), validationResultErrors));
-//    }
 
     /**
      * 处理参数校验异常（post application/x-www-form-urlencoded）就会抛出 BindException
@@ -138,7 +128,7 @@ public class GlobalExceptionHandler {
     public SingleResponse<ValidationResult> handle(ConstraintViolationException e) {
         ValidationResult result = new ValidationResult(
                 e.getConstraintViolations().stream().findFirst().get().getMessage(), null);
-        return SingleResponse.error(USER_ERROR, result);
+        return SingleResponse.error(USER_ERROR.getCode(), result.getDefaultMsg(), result);
     }
 
     /**
@@ -161,7 +151,6 @@ public class GlobalExceptionHandler {
 
     /**
      * 调用上传接口没有传入文件
-     *
      * @return httpStatus=400 busiCode=-1
      */
     @ExceptionHandler(value = {
