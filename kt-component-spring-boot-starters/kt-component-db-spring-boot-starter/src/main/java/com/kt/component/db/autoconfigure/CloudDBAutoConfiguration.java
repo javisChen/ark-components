@@ -24,14 +24,4 @@ public class CloudDBAutoConfiguration {
         return interceptor;
     }
 
-    /**
-     * 自动填充公共字段
-     */
-//    @Bean
-//    @ConditionalOnMissingBean(MetaObjectHandler.class)
-//    public MetaObjectHandler metaObjectHandler() {
-//        return new FieldAutoFillObjectHandler();
-//    }
-
-
 }

@@ -4,7 +4,9 @@ import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.kt.component.web.advice.CommonResponseBodyAdvice;
+import com.kt.component.web.handler.BaseFieldAutoFillObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -102,6 +104,15 @@ public class CloudWebAutoConfiguration {
         fastJsonConfig.setSerializeConfig(serializeConfig);
 
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
+    }
+
+    /**
+     * 自动填充公共字段
+     */
+    @Bean
+    @ConditionalOnMissingBean(MetaObjectHandler.class)
+    public MetaObjectHandler metaObjectHandler() {
+        return new BaseFieldAutoFillObjectHandler();
     }
 
 }
