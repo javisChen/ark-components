@@ -15,8 +15,7 @@ import java.io.InputStream;
 @Slf4j
 public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
 
-    protected static final String BACKSLASH = "/";
-    protected MinioClient minioClient = null;
+    private MinioClient minioClient = null;
     private final MinIoOssProperties minIoOssProperties;
 
     public MinIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
