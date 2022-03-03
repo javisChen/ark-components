@@ -9,6 +9,7 @@ import com.kt.component.context.ServiceContext;
 import com.kt.component.context.support.RedisKeyConst;
 import com.kt.component.context.token.AccessTokenExtractor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +30,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
 
     private final RedisService redisService;
     private final AccessTokenExtractor accessTokenExtractor;
+    private final String traceIdKey = "X-Trace-Id";
 
     public ServiceContextInterceptor(RedisService redisService,
                                      AccessTokenExtractor accessTokenExtractor) {
@@ -45,11 +47,12 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private void setTraceContext(HttpServletRequest request) {
-        String traceId = request.getHeader("X-Trace-Id");
+        String traceId = request.getHeader(traceIdKey);
         if (StringUtils.isEmpty(traceId)) {
             traceId = TraceIdUtils.getId();
         }
         ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, traceId);
+        MDC.put(traceIdKey, traceId);
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
@@ -66,6 +69,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         ServiceContext.clearContext();
+        MDC.remove(traceIdKey);
     }
 
     private Object getUserCacheByToken(String accessTokenKey) {
