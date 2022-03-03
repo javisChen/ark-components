@@ -23,4 +23,7 @@ public abstract class BaseEntity {
     @TableField(value = "modifier", fill = FieldFill.INSERT_UPDATE)
     private Long modifier;
 
+    @TableField(value = "is_deleted")
+    private Long isDeleted;
+
 }
