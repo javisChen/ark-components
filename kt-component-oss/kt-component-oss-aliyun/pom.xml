@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.kt</groupId>
+            <groupId>com.kt.oss</groupId>
             <artifactId>kt-component-oss-api</artifactId>
         </dependency>
 
