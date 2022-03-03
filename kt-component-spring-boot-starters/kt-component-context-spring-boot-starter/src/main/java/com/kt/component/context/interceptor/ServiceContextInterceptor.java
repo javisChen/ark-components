@@ -3,6 +3,7 @@ package com.kt.component.context.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kt.component.cache.redis.RedisService;
+import com.kt.component.common.id.TraceIdUtils;
 import com.kt.component.context.LoginUserContext;
 import com.kt.component.context.ServiceContext;
 import com.kt.component.context.support.RedisKeyConst;
@@ -45,9 +46,10 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
 
     private void setTraceContext(HttpServletRequest request) {
         String traceId = request.getHeader("X-Trace-Id");
-        if (StringUtils.isNotEmpty(traceId)) {
-            ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, traceId);
+        if (StringUtils.isEmpty(traceId)) {
+            traceId = TraceIdUtils.getId();
         }
+        ServiceContext.setContext(ServiceContext.TRACE_ID_KEY, traceId);
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
