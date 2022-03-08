@@ -51,9 +51,9 @@ public class BeanConvertor {
             targetList = copyList(srcList, targetClazz);
         }
         PageResponse<T> pageResponse = new PageResponse<>();
-        pageResponse.setTotal(page.getTotal());
-        pageResponse.setSize(page.getSize());
-        pageResponse.setCurrent(page.getCurrent());
+        pageResponse.setTotal((int) page.getTotal());
+        pageResponse.setSize((int) page.getSize());
+        pageResponse.setCurrent((int) page.getCurrent());
         pageResponse.setRecords(targetList);
         return pageResponse;
     }
