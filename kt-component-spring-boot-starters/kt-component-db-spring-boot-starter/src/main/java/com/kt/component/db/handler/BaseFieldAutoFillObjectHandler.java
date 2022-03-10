@@ -1,4 +1,4 @@
-package com.kt.component.web.handler;
+package com.kt.component.db.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.kt.component.context.LoginUserContext;

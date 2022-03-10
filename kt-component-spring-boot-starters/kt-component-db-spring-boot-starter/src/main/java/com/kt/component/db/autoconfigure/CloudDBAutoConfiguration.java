@@ -1,8 +1,11 @@
 package com.kt.component.db.autoconfigure;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.kt.component.db.handler.BaseFieldAutoFillObjectHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -22,6 +25,15 @@ public class CloudDBAutoConfiguration {
         PaginationInnerInterceptor innerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
         interceptor.addInnerInterceptor(innerInterceptor);
         return interceptor;
+    }
+
+    /**
+     * 自动填充公共字段
+     */
+    @Bean
+    @ConditionalOnMissingBean(MetaObjectHandler.class)
+    public MetaObjectHandler metaObjectHandler() {
+        return new BaseFieldAutoFillObjectHandler();
     }
 
 }
