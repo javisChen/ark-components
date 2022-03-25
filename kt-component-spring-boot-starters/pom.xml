@@ -14,7 +14,6 @@
     <modules>
         <module>kt-component-common-spring-boot-starter</module>
         <module>kt-component-context-spring-boot-starter</module>
-        <module>kt-component-redis-spring-boot-starter</module>
         <module>kt-component-logger-spring-boot-starter</module>
         <module>kt-component-exception-spring-boot-starter</module>
         <module>kt-component-db-spring-boot-starter</module>

@@ -2,7 +2,7 @@
 package com.kt.component.context.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kt.component.cache.redis.RedisService;
+import com.kt.component.cache.redis.RedisCacheService;
 import com.kt.component.common.id.TraceIdUtils;
 import com.kt.component.context.LoginUserContext;
 import com.kt.component.context.ServiceContext;
@@ -28,13 +28,13 @@ import java.util.Objects;
 @Component
 public class ServiceContextInterceptor implements HandlerInterceptor {
 
-    private final RedisService redisService;
+    private final RedisCacheService redisCacheService;
     private final AccessTokenExtractor accessTokenExtractor;
     private final String traceIdKey = "X-Trace-Id";
 
-    public ServiceContextInterceptor(RedisService redisService,
+    public ServiceContextInterceptor(RedisCacheService redisCacheService,
                                      AccessTokenExtractor accessTokenExtractor) {
-        this.redisService = redisService;
+        this.redisCacheService = redisCacheService;
         this.accessTokenExtractor = accessTokenExtractor;
     }
 
@@ -73,7 +73,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private Object getUserCacheByToken(String accessTokenKey) {
-        return redisService.get(accessTokenKey);
+        return redisCacheService.get(accessTokenKey);
     }
 
     private String createAccessTokenKey(String accessToken) {

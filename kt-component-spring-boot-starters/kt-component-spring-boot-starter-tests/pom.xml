@@ -29,8 +29,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.kt</groupId>
-            <artifactId>kt-component-redis-spring-boot-starter</artifactId>
+            <groupId>com.kt.cache</groupId>
+            <artifactId>kt-component-cache-redis-spring-boot-starter</artifactId>
             <scope>test</scope>
         </dependency>
 
