@@ -1,6 +1,6 @@
 package com.kt.component.cache.redis;
 
-import com.kt.component.cache.ICacheService;
+import com.kt.component.cache.CacheService;
 import com.kt.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class RedisCacheService implements ICacheService {
+public class RedisCacheService implements CacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 

@@ -9,8 +9,8 @@
     </parent>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>kt-component-lock-api</artifactId>
-    <name>kt-component-lock-api</name>
+    <artifactId>kt-component-lock-redis</artifactId>
+    <name>kt-component-lock-redis</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,6 +18,15 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.kt.lock</groupId>
+            <artifactId>kt-component-lock-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kt.cache</groupId>
+            <artifactId>kt-component-cache-redis</artifactId>
+        </dependency>
 
     </dependencies>
 

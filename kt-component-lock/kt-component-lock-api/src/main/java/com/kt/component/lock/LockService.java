@@ -8,5 +8,5 @@ public interface LockService {
 
     boolean lock(String key, long leaseTime, TimeUnit unit);
 
-    boolean unlock(String key);
+    void unlock(String key);
 }

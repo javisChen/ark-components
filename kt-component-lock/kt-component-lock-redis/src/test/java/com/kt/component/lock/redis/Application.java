@@ -1,4 +1,4 @@
-package com.kt.component.cache.redis;
+package com.kt.component.lock.redis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Javis
  * @date 2020-11-10 3:58 PM
  */
-@SpringBootApplication(scanBasePackages = {"com.kt.component.cache.redis"})
+@SpringBootApplication(scanBasePackages = {"com.kt.component.*"})
 public class Application {
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package com.kt.component.lock.redis;
 
 import com.kt.component.lock.LockService;
+import com.kt.component.lock.exception.LockException;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -21,9 +22,8 @@ public class RedisLockService implements LockService {
         RLock lock = redissonClient.getLock(key);
         try {
             return lock.tryLock(waitTime, leaseTime, unit);
-        } catch (InterruptedException e) {
-            log.error("tryLock error", e);
-            return false;
+        } catch (Exception e) {
+            throw new LockException(e);
         }
     }
 
@@ -32,20 +32,17 @@ public class RedisLockService implements LockService {
         RLock lock = redissonClient.getLock(key);
         try {
             return lock.tryLock(leaseTime, unit);
-        } catch (InterruptedException e) {
-            log.error("tryLock error", e);
-            return false;
+        } catch (Exception e) {
+            throw new LockException(e);
         }
     }
 
     @Override
-    public boolean unlock(String key) {
+    public void unlock(String key) {
         try {
             redissonClient.getLock(key).unlock();
         } catch (Exception e) {
-            log.error("unlock error", e);
-            return false;
+            throw new LockException(e);
         }
-        return true;
     }
 }

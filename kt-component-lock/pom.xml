@@ -12,6 +12,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+
     </properties>
 
     <modules>
@@ -28,7 +30,22 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.kt.lock</groupId>
+                <artifactId>kt-component-lock-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kt.lock</groupId>
+                <artifactId>kt-component-lock-redis</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
         </dependencies>
+
+
     </dependencyManagement>
 
     <dependencies>

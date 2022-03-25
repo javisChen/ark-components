@@ -10,7 +10,7 @@ package com.kt.component.cache;
  * 定义缓存通用接口
  * @author victor
  */
-public interface ICacheService {
+public interface CacheService {
 
     void set(String key, Object value);
 
