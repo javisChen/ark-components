@@ -11,6 +11,7 @@
     <packaging>jar</packaging>
 
     <artifactId>kt-component-oss-minio</artifactId>
+    <name>kt-component-oss-minio</name>
 
     <dependencies>
         <dependency>

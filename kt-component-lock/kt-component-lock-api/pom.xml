@@ -3,18 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kt-component-oss</artifactId>
-        <groupId>com.kt.oss</groupId>
+        <artifactId>kt-component-lock</artifactId>
+        <groupId>com.kt.lock</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
+    <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>kt-component-oss-api</artifactId>
-    <name>kt-component-oss-api</name>
+    <artifactId>kt-component-cache-api</artifactId>
+    <name>kt-component-cache-api</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.kt</groupId>
+            <artifactId>kt-component-exception</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

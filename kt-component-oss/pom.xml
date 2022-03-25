@@ -32,10 +32,23 @@
             </dependency>
 
             <dependency>
-                <groupId>com.kt</groupId>
+                <groupId>com.kt.oss</groupId>
                 <artifactId>kt-component-oss-api</artifactId>
                 <version>${kt-component-oss-api.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.kt.oss</groupId>
+                <artifactId>kt-component-oss-aliyun</artifactId>
+                <version>${kt-component-oss-aliyun.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kt.oss</groupId>
+                <artifactId>kt-component-oss-minio</artifactId>
+                <version>${kt-component-oss-minio.version}</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
