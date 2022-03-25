@@ -1,27 +1,27 @@
 package com.kt.component.oss.exception;
 
-import com.kt.component.exception.BizException;
-
 /**
  * OSS操作异常类
  * @author victor
  */
-public class OssException extends BizException {
+public class OssException extends RuntimeException {
 
-    public OssException(String errMessage) {
-        super(errMessage);
+    public OssException() {
     }
 
-    public OssException(String errCode, String errMessage) {
-        super(errCode, errMessage);
+    public OssException(String message) {
+        super(message);
     }
 
-    public OssException(String errMessage, Throwable e) {
-        super(errMessage, e);
+    public OssException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public OssException(String errorCode, String errMessage, Throwable e) {
-        super(errorCode, errMessage, e);
+    public OssException(Throwable cause) {
+        super(cause);
     }
 
+    public OssException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

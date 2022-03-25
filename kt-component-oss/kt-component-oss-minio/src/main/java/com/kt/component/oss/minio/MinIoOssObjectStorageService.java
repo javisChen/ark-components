@@ -44,7 +44,7 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
             minioClient.putObject(argsBuilder.build());
             return minIoOssProperties.getEndPoint() + File.separator + bucketName+ File.separator + objectName;
         } catch (Exception e) {
-            throw new OssException("OSS上传失败", e);
+            throw new OssException(e);
         }
     }
 
@@ -54,7 +54,7 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
             GetObjectArgs args = GetObjectArgs.builder().bucket(bucketName).object(objectName).build();
             return minioClient.getObject(args);
         } catch (Exception e) {
-            throw new OssException("OSS下载失败", e);
+            throw new OssException(e);
         }
     }
 }
