@@ -17,6 +17,7 @@
         <module>kt-component-oss</module>
         <module>kt-component-cache</module>
         <module>kt-component-lock</module>
+        <module>kt-component-mq</module>
         <module>kt-component-common</module>
         <module>kt-component-config</module>
         <module>kt-component-dto</module>

@@ -2,26 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>kt-component-oss</name>
-    <groupId>com.kt.oss</groupId>
-    <artifactId>kt-component-oss</artifactId>
+    <name>kt-component-mq</name>
+    <groupId>com.kt.mq</groupId>
+    <artifactId>kt-component-mq</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>kt-component-oss-api</module>
-        <module>kt-component-oss-minio</module>
-        <module>kt-component-oss-aliyun</module>
-        <module>kt-component-oss-minio-spring-boot-starter</module>
-        <module>kt-component-oss-aliyun-spring-boot-starter</module>
+        <module>kt-component-mq-api</module>
+        <module>kt-component-mq-rocketmq</module>
     </modules>
 
     <properties>
-        <kt-component-oss-api.version>1.0.0-SNAPSHOT</kt-component-oss-api.version>
-        <kt-component-oss-aliyun.version>1.0.0-SNAPSHOT</kt-component-oss-aliyun.version>
-        <kt-component-oss-minio.version>1.0.0-SNAPSHOT</kt-component-oss-minio.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -33,21 +26,15 @@
             </dependency>
 
             <dependency>
-                <groupId>com.kt.oss</groupId>
-                <artifactId>kt-component-oss-api</artifactId>
-                <version>${kt-component-oss-api.version}</version>
+                <groupId>com.kt.mq</groupId>
+                <artifactId>kt-component-mq-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.kt.oss</groupId>
-                <artifactId>kt-component-oss-aliyun</artifactId>
-                <version>${kt-component-oss-aliyun.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.kt.oss</groupId>
-                <artifactId>kt-component-oss-minio</artifactId>
-                <version>${kt-component-oss-minio.version}</version>
+                <groupId>com.kt.mq</groupId>
+                <artifactId>kt-component-mq-rocketmq</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
         </dependencies>
