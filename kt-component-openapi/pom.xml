@@ -53,12 +53,13 @@
 
         <dependency>
             <groupId>com.kt</groupId>
-            <artifactId>kt-component-common</artifactId>
+            <artifactId>kt-component-exception</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.kt</groupId>
-            <artifactId>kt-component-exception</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

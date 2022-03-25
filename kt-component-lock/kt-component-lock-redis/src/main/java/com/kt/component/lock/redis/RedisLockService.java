@@ -2,13 +2,11 @@ package com.kt.component.lock.redis;
 
 import com.kt.component.lock.LockService;
 import com.kt.component.lock.exception.LockException;
-import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class RedisLockService implements LockService {
 
     private final RedissonClient redissonClient;
