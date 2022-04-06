@@ -1,12 +1,14 @@
 package com.kt.component.statemachine;
 
-import com.kt.component.statemachine.config.Events;
-import com.kt.component.statemachine.config.States;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kt.component.statemachine.core.StateMachineExecutor;
+import com.kt.component.statemachine.core.action.ActionExecutor;
+import com.kt.component.statemachine.core.guard.GuardExecutor;
+import com.kt.component.statemachine.core.service.StateMachineService;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Application
@@ -15,18 +17,22 @@ import org.springframework.statemachine.StateMachine;
  * @date 2020-11-10 3:58 PM
  */
 @SpringBootApplication
+@MapperScan("com.kt.component.statemachine.dao.mapper")
 public class Application implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
-    @Autowired
-    private StateMachine<States, Events> stateMachine;
 
     @Override
     public void run(String... args) throws Exception {
-        boolean b = stateMachine.sendEvent(Events.PAY);
-        System.out.println(b);
+    }
+
+    @Bean
+    public StateMachineExecutor stateMachineExecutor(StateMachineService stateMachineService,
+                                                     GuardExecutor guardExecutor,
+                                                     ActionExecutor actionExecutor) {
+        return new StateMachineExecutor(stateMachineService, guardExecutor, actionExecutor);
     }
 }

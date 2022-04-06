@@ -9,6 +9,7 @@ import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
@@ -47,6 +48,12 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
                 .and()
                 .withExternal()
+                .guard(new Guard<States, Events>() {
+                    @Override
+                    public boolean evaluate(StateContext<States, Events> context) {
+                        return true;
+                    }
+                })
                 .action(new Action<States, Events>() {
                     @Override
                     public void execute(StateContext<States, Events> context) {

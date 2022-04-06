@@ -1,12 +1,8 @@
 package com.kt.component.statemachine;
 
-import com.kt.component.statemachine.config.Events;
-import com.kt.component.statemachine.config.States;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.statemachine.StateMachine;
 
 /**
  * Application
@@ -21,12 +17,8 @@ public class Application implements CommandLineRunner {
         SpringApplication.run(Application.class, args);
     }
 
-    @Autowired
-    private StateMachine<States, Events> stateMachine;
-
     @Override
     public void run(String... args) throws Exception {
-        boolean b = stateMachine.sendEvent(Events.PAY);
-        System.out.println(b);
+
     }
 }
