@@ -1,10 +1,10 @@
-package com.kt.component.db.autoconfigure;
+package com.kt.component.orm.mybatis.autoconfigure;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.kt.component.db.handler.BaseFieldAutoFillObjectHandler;
+import com.kt.component.orm.mybatis.handler.BaseFieldAutoFillObjectHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
  * @ CreateDate    :  2020/11/09
  * @ Version       :  1.0
  */
-public class CloudDBAutoConfiguration {
+public class OrmMybatisAutoConfiguration {
 
     /**
      * 新的分页插件,一缓和二缓遵循mybatis的规则,需要设置 MybatisConfiguration#useDeprecatedExecutor = false 避免缓存出现问题(该属性会在旧插件移除后一同移除)

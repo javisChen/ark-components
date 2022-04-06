@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kt.component.statemachine.dao.entity.StateMachineDefinitionDO;
 import com.kt.component.statemachine.dao.mapper.StateMachineDefinitionMapper;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -13,6 +14,7 @@ import com.kt.component.statemachine.dao.mapper.StateMachineDefinitionMapper;
  * @author EOP
  * @since 2022-04-04
  */
+@Service
 public class StateMachineDefinitionService extends ServiceImpl<StateMachineDefinitionMapper, StateMachineDefinitionDO>
         implements IService<StateMachineDefinitionDO> {
 

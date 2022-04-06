@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.kt.component.oss.minio.autoconfigure.MinIoOssAutoConfiguration
+  com.kt.component.lock.redis.autoconfigure.RedisLockAutoConfiguration

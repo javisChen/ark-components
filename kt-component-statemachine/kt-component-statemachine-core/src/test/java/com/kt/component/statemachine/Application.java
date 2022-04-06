@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
  * @author Javis
  * @date 2020-11-10 3:58 PM
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.kt.component.statemachine")
 @MapperScan("com.kt.component.statemachine.dao.mapper")
 public class Application implements CommandLineRunner {
 

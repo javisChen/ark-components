@@ -1,9 +1,8 @@
 {
-  "bizType": "",
   "states": ["UN_PAY", "PAID", "CLOSED"],
   "events": ["CREATE_ORDER", "PAY", "CLOSE"],
-  "initState": "",
-  "finalState": "",
+  "initState": "UN_PAY",
+  "finalState": "CLOSED",
   "transitions": [{
     "guards": [
       "com.kt.component.statemachine.guard.OrderPayGuard"

@@ -1,4 +1,4 @@
-package com.kt.component.db.handler;
+package com.kt.component.orm.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.kt.component.context.LoginUserContext;
@@ -15,8 +15,9 @@ public class BaseFieldAutoFillObjectHandler implements MetaObjectHandler {
         Long currentUserId = getCurrentUserId();
         strictInsertFill(metaObject, "creator", Long.class, currentUserId);
         strictInsertFill(metaObject, "modifier", Long.class, currentUserId);
-        strictInsertFill(metaObject, "gmtCreate", LocalDateTime.class, LocalDateTime.now());
-        strictInsertFill(metaObject, "gmtModified", LocalDateTime.class, LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        strictInsertFill(metaObject, "gmtCreate", LocalDateTime.class, now);
+        strictInsertFill(metaObject, "gmtModified", LocalDateTime.class, now);
     }
 
     @Override

@@ -1,6 +1,7 @@
 # kt-components
 
 #### 介绍
+
 沉淀一些非常通用实用的组件提升研发效率，以一种灵活可插拔形式引用
 
 #### 软件架构
@@ -26,9 +27,9 @@ SpringBootStarter
 |kt-component-exception-spring-boot-starter|异常处理（全局异常捕捉）|1.0.0|
 |kt-component-redis-spring-boot-starter|Redis封装|1.0.0|
 |kt-component-web-spring-boot-starter|单体Web应用Starter|1.0.0|
-|kt-component-db-spring-boot-starter|数据库相关|1.0.0|
 
 #### 使用说明
+
 ```
 mvn install到本地（如果不想运行测试，可以加上-DskipTests参数）
 ```

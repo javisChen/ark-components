@@ -1,4 +1,4 @@
-package com.kt.component.db.base;
+package com.kt.component.orm.mybatis.base;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
