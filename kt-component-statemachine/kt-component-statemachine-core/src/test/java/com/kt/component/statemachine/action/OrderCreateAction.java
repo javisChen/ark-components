@@ -1,4 +1,5 @@
 package com.kt.component.statemachine.action;
+import java.time.LocalDateTime;
 
 import com.kt.component.statemachine.core.StateMachineContext;
 import com.kt.component.statemachine.core.action.DefaultAction;
@@ -19,6 +20,14 @@ public class OrderCreateAction extends DefaultAction<OrderCreateDTO> {
     @Override
     public void execute(StateMachineContext context, OrderCreateDTO params) {
         OrderDO entity = new OrderDO();
+        entity.setPrice(0);
+        entity.setStatus(0);
+        entity.setId(0L);
+//        entity.setGmtCreate(LocalDateTime.now());
+        entity.setGmtModified(LocalDateTime.now());
+        entity.setCreator(0L);
+        entity.setModifier(0L);
+        entity.setIsDeleted(0L);
         orderMapper.insert(entity);
     }
 }
