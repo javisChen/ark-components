@@ -36,7 +36,7 @@ public final class GuardExecutor {
                 return false;
             }
             try {
-                Guard<?> guardInstance = ((Guard<?>) applicationContext.getBean(clazz));
+                Guard guardInstance = ((Guard) applicationContext.getBean(clazz));
                 if (!guardInstance.evaluate(context)) {
                     log.info("Guard [{}] no pass", guard);
                     return false;

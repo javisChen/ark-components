@@ -1,17 +1,39 @@
 {
-  "states": ["UN_PAY", "PAID", "CLOSED"],
-  "events": ["CREATE_ORDER", "PAY", "CLOSE"],
+  "states": [
+    "UN_PAY",
+    "PAID",
+    "CLOSED"
+  ],
+  "events": [
+    "CREATE_ORDER",
+    "PAY",
+    "CLOSE"
+  ],
+  "initEvent": "CREATE_ORDER",
   "initState": "UN_PAY",
   "finalState": "CLOSED",
-  "transitions": [{
-    "guards": [
-      "com.kt.component.statemachine.guard.OrderPayGuard"
-    ],
-    "source" : "UN_PAY",
-    "event": "PAY",
-    "target": "PAID",
-    "actions": [
-      "com.kt.component.statemachine.action.OrderPayAction"
-    ]
-  }]
+  "transitions": [
+    {
+      "guards": [
+        "com.kt.component.statemachine.guard.OrderCreateGuard"
+      ],
+      "source": "",
+      "event": "CREATE_ORDER",
+      "target": "UN_PAY",
+      "actions": [
+        "com.kt.component.statemachine.action.OrderCreateAction"
+      ]
+    },
+    {
+      "guards": [
+        "com.kt.component.statemachine.guard.OrderPayGuard"
+      ],
+      "source": "UN_PAY",
+      "event": "PAY",
+      "target": "PAID",
+      "actions": [
+        "com.kt.component.statemachine.action.OrderPayAction"
+      ]
+    }
+  ]
 }

@@ -40,7 +40,7 @@ public class StateMachineService {
         return stateMachineRuntimeService.getByBizCodeAndBizId(bizCode, bizId);
     }
 
-    public StateMachineRuntimeDO initRuntime(String bizCode, Long bizId, String state) {
+    public void initRuntime(String bizCode, Long bizId, String state) {
         StateMachineRuntimeDO entity = new StateMachineRuntimeDO();
         entity.setBizCode(bizCode);
         entity.setBizId(bizId);
@@ -51,6 +51,5 @@ public class StateMachineService {
         entity.setGmtCreate(LocalDateTime.now());
         entity.setGmtModified(LocalDateTime.now());
         stateMachineRuntimeService.save(entity);
-        return entity;
     }
 }

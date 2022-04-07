@@ -17,5 +17,6 @@ public class OrderPayAction extends DefaultAction<OrderPayDTO> {
 
     @Override
     public void execute(StateMachineContext context, OrderPayDTO params) {
+        System.out.println("订单支付ACTION");
     }
 }

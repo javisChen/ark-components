@@ -12,4 +12,5 @@ public class AliYunOssProperties {
     private String secretKey;
     private Boolean enabled = true;
 
+
 }

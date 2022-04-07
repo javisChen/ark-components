@@ -12,7 +12,7 @@ public class StateMachineTest extends ApplicationTests {
     @Test
     public void test() {
         StateMachineResult execute = stateMachineExecutor
-                .execute("order", 1L, "PAY", null);
+                .execute("order", 1L, "CREATE_ORDER", null);
     }
 
 }

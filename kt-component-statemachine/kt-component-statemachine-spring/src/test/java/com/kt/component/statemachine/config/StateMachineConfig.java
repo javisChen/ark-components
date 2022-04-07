@@ -48,18 +48,8 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
                 .and()
                 .withExternal()
-                .guard(new Guard<States, Events>() {
-                    @Override
-                    public boolean evaluate(StateContext<States, Events> context) {
-                        return true;
-                    }
-                })
-                .action(new Action<States, Events>() {
-                    @Override
-                    public void execute(StateContext<States, Events> context) {
-                        System.out.println("execute");
-                    }
-                })
+                .guard(context -> true)
+                .action(context -> System.out.println("execute"))
                 .source(States.WAIT_PAY).target(States.PAID).event(Events.PAY);
         // @formatter:off
     }

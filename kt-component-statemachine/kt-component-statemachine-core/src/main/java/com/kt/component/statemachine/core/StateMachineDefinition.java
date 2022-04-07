@@ -18,6 +18,8 @@ public class StateMachineDefinition {
     private List<String> events;
     @JSONField(name = "initState")
     private String initState;
+    @JSONField(name = "initEvent")
+    private String initEvent;
     @JSONField(name = "finalState")
     private String finalState;
     @JSONField(name = "transitions")

@@ -25,7 +25,7 @@ public class Application implements CommandLineRunner {
     private StateMachine<States, Events> stateMachine;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         boolean b = stateMachine.sendEvent(Events.PAY);
         System.out.println(b);
     }
