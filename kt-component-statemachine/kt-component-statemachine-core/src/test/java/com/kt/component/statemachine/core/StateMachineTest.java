@@ -11,7 +11,8 @@ public class StateMachineTest extends ApplicationTests {
 
     @Test
     public void test() {
-        stateMachineExecutor.execute("order", 1L, "PAY", null);
+        StateMachineResult execute = stateMachineExecutor
+                .execute("order", 1L, "PAY", null);
     }
 
 }

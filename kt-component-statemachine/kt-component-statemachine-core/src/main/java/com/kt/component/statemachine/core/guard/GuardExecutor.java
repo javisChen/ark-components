@@ -1,7 +1,7 @@
 package com.kt.component.statemachine.core.guard;
 
+import cn.hutool.core.util.ClassUtil;
 import com.kt.component.statemachine.core.StateMachineContext;
-import com.kt.component.statemachine.core.action.Action;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -31,12 +31,12 @@ public final class GuardExecutor {
                 log.error("Guard class [{}] not found", guard);
                 return false;
             }
-            if (!clazz.isAssignableFrom(Action.class)) {
-                log.error("Guard class [{}] must be extend [com.kt.component.statemachine.core.guard.Guard]", guard);
+            if (!ClassUtil.isAssignable(Guard.class, clazz)) {
+                log.error("Guard class [{}] must be extend [{}]", guard, Guard.class.getName());
                 return false;
             }
             try {
-                Guard guardInstance = ((Guard) applicationContext.getBean(clazz));
+                Guard<?> guardInstance = ((Guard<?>) applicationContext.getBean(clazz));
                 if (!guardInstance.evaluate(context)) {
                     log.info("Guard [{}] no pass", guard);
                     return false;

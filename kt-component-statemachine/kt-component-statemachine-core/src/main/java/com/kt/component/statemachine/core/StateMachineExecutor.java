@@ -6,8 +6,8 @@ import com.kt.component.statemachine.core.guard.GuardExecutor;
 import com.kt.component.statemachine.core.service.StateMachineService;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,9 +16,9 @@ import java.util.Objects;
  */
 public class StateMachineExecutor {
 
-    private StateMachineService stateMachineService;
-    private GuardExecutor guardExecutor;
-    private ActionExecutor actionExecutor;
+    private final StateMachineService stateMachineService;
+    private final GuardExecutor guardExecutor;
+    private final ActionExecutor actionExecutor;
 
     public StateMachineExecutor(StateMachineService stateMachineService,
                                 GuardExecutor guardExecutor,
@@ -36,7 +36,7 @@ public class StateMachineExecutor {
      * @param params  参数
      * @return 成功=true，失败=false
      */
-    public StateMachineResult execute(String bizCode, Long bizId, String event, Map<String, Object> params) {
+    public <P> StateMachineResult execute(String bizCode, Long bizId, String event, P params) {
 
         // 根据bizCode查出状态机定义规则
         StateMachineDefinition stateMachineDefinition = stateMachineService.getDefinition(bizCode);
@@ -76,13 +76,8 @@ public class StateMachineExecutor {
         return StateMachineResult.fail(String.format("cannot find match transition for state:[%s] and event:[%s]", currentState, event));
     }
 
-    private StateMachineContext assembleContext(String bizCode, Long bizId, String event, Map<String, Object> params) {
-        return StateMachineContext.builder()
-                .bizCode(bizCode)
-                .bizId(bizId)
-                .event(event)
-                .params(params)
-                .build();
+    private StateMachineContext assembleContext(String bizCode, Long bizId, String event, Object params) {
+        return new StateMachineContext(bizCode, bizId, event, params, new HashMap<>(16));
     }
 
     private StateMachineRuntimeDO getRuntime(String bizCode, Long bizId, StateMachineDefinition stateMachineDefinition) {

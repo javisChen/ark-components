@@ -8,6 +8,8 @@ import com.kt.component.statemachine.dao.entity.StateMachineDefinitionDO;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class StateMachineService {
 
@@ -46,6 +48,8 @@ public class StateMachineService {
         entity.setFinished(false);
         entity.setCreator(0L);
         entity.setModifier(0L);
+        entity.setGmtCreate(LocalDateTime.now());
+        entity.setGmtModified(LocalDateTime.now());
         stateMachineRuntimeService.save(entity);
         return entity;
     }

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.kt.component.orm.mybatis.handler.BaseFieldAutoFillObjectHandler;
+import com.kt.component.orm.mybatis.support.DefaultUserInfo;
+import com.kt.component.orm.mybatis.support.UserInfo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
@@ -31,9 +33,18 @@ public class OrmMybatisAutoConfiguration {
      * 自动填充公共字段
      */
     @Bean
+    @ConditionalOnMissingBean(UserInfo.class)
+    public UserInfo userInfo() {
+        return new DefaultUserInfo();
+    }
+
+    /**
+     * 自动填充公共字段
+     */
+    @Bean
     @ConditionalOnMissingBean(MetaObjectHandler.class)
-    public MetaObjectHandler metaObjectHandler() {
-        return new BaseFieldAutoFillObjectHandler();
+    public MetaObjectHandler metaObjectHandler(UserInfo userInfo) {
+        return new BaseFieldAutoFillObjectHandler(userInfo);
     }
 
 }

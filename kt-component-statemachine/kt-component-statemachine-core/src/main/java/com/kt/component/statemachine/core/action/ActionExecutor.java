@@ -1,5 +1,6 @@
 package com.kt.component.statemachine.core.action;
 
+import cn.hutool.core.util.ClassUtil;
 import com.kt.component.statemachine.core.StateMachineContext;
 import com.kt.component.statemachine.core.exception.StateMachineException;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,8 @@ public class ActionExecutor {
                 throw new StateMachineException(String.format("Action class [%s] not found", action));
             }
 
-            if (!clazz.isAssignableFrom(Action.class)) {
-                String format = String.format("Guard class [%s] must be extend [com.kt.component.statemachine.core.action.Action]", action);
+            if (!ClassUtil.isAssignable(Action.class, clazz)) {
+                String format = String.format("Action class [%s] must be extend [%s]", action, Action.class.getName());
                 throw new StateMachineException(format);
             }
 

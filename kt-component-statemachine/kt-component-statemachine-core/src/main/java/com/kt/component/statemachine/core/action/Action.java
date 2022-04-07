@@ -8,4 +8,5 @@ import com.kt.component.statemachine.core.StateMachineContext;
 public interface Action {
 
     void execute(StateMachineContext context);
+
 }

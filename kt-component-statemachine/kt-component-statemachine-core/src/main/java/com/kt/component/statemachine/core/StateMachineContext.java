@@ -1,21 +1,22 @@
 package com.kt.component.statemachine.core;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
 
 /**
- * 状态机shangxiawen
+ * 状态机
  * @author jc
  */
 @Data
-@Builder
+@AllArgsConstructor
 public class StateMachineContext {
 
    private String bizCode;
    private Long bizId;
    private String event;
-   private Map<String, Object> params;
+   private Object params;
+   private Map<String, Object> extParams;
 
 }

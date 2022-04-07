@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * 统一
+ * 响应BODY统一返回处理，自动追加上traceId和service字段
+ * @author jc
  */
 @RestControllerAdvice(assignableTypes = BaseController.class)
 public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object> {

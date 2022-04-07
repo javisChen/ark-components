@@ -25,6 +25,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.kt.statemachine</groupId>
             <artifactId>kt-component-statemachine-dao</artifactId>
         </dependency>

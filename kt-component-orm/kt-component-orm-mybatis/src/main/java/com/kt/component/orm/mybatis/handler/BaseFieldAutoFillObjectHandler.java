@@ -1,39 +1,33 @@
 package com.kt.component.orm.mybatis.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.kt.component.context.LoginUserContext;
-import com.kt.component.context.ServiceContext;
+import com.kt.component.orm.mybatis.support.UserInfo;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class BaseFieldAutoFillObjectHandler implements MetaObjectHandler {
 
+    private final UserInfo userInfo;
+
+    public BaseFieldAutoFillObjectHandler(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
     @Override
     public void insertFill(MetaObject metaObject) {
-        Long currentUserId = getCurrentUserId();
+        Long currentUserId = userInfo.getCurrentUserId();
+        LocalDateTime now = LocalDateTime.now();
         strictInsertFill(metaObject, "creator", Long.class, currentUserId);
         strictInsertFill(metaObject, "modifier", Long.class, currentUserId);
-        LocalDateTime now = LocalDateTime.now();
         strictInsertFill(metaObject, "gmtCreate", LocalDateTime.class, now);
         strictInsertFill(metaObject, "gmtModified", LocalDateTime.class, now);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        Long currentUserId = getCurrentUserId();
-        strictUpdateFill(metaObject, "modifier", Long.class, currentUserId);
+        strictUpdateFill(metaObject, "modifier", Long.class, userInfo.getCurrentUserId());
         strictUpdateFill(metaObject, "gmtModified", LocalDateTime.class, LocalDateTime.now());
-    }
-
-    private Long getCurrentUserId() {
-        Long currentUserId = 0L;
-        LoginUserContext currentUser = ServiceContext.getCurrentUser();
-        if (Objects.nonNull(currentUser)) {
-            currentUserId = currentUser.getUserId();
-        }
-        return currentUserId;
     }
 
 }
