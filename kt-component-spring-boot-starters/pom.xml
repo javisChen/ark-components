@@ -12,8 +12,6 @@
     <artifactId>kt-component-spring-boot-starters</artifactId>
 
     <modules>
-        <module>kt-component-common-spring-boot-starter</module>
-        <module>kt-component-context-spring-boot-starter</module>
         <module>kt-component-logger-spring-boot-starter</module>
         <module>kt-component-exception-spring-boot-starter</module>
         <module>kt-component-web-spring-boot-starter</module>

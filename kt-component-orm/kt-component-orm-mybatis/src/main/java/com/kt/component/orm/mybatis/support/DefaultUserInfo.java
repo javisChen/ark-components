@@ -1,5 +1,9 @@
 package com.kt.component.orm.mybatis.support;
 
+/**
+ * 默认实现
+ * @author jc
+ */
 public class DefaultUserInfo implements UserInfo {
 
     @Override

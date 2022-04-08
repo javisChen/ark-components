@@ -15,6 +15,7 @@
 
     <modules>
         <module>kt-component-oss</module>
+        <module>kt-component-context</module>
         <module>kt-component-orm</module>
         <module>kt-component-statemachine</module>
         <module>kt-component-cache</module>

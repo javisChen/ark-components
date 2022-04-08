@@ -64,13 +64,13 @@
 
         <!-- 组件依赖 -->
         <dependency>
-            <groupId>com.kt</groupId>
+            <groupId>com.kt.dto</groupId>
             <artifactId>kt-component-dto</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.kt</groupId>
-            <artifactId>kt-component-common</artifactId>
+            <groupId>com.kt.common</groupId>
+            <artifactId>kt-component-common-core</artifactId>
         </dependency>
 
         <dependency>

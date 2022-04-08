@@ -1,7 +1,7 @@
 package com.kt.component.web.advice;
 
 import com.kt.component.common.util.spring.SpringUtils;
-import com.kt.component.context.ServiceContext;
+import com.kt.component.context.core.ServiceContext;
 import com.kt.component.dto.ServerResponse;
 import com.kt.component.web.base.BaseController;
 import org.springframework.core.MethodParameter;

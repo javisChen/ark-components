@@ -63,7 +63,7 @@
 
         <!-- 组件依赖 -->
         <dependency>
-            <groupId>com.kt</groupId>
+            <groupId>com.kt.dto</groupId>
             <artifactId>kt-component-dto</artifactId>
             <version>${project.version}</version>
         </dependency>

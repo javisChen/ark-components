@@ -8,6 +8,7 @@ import com.kt.component.orm.mybatis.handler.BaseFieldAutoFillObjectHandler;
 import com.kt.component.orm.mybatis.support.DefaultUserInfo;
 import com.kt.component.orm.mybatis.support.UserInfo;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -33,6 +34,7 @@ public class OrmMybatisAutoConfiguration {
      * 自动填充公共字段
      */
     @Bean
+    @ConditionalOnMissingClass()
     @ConditionalOnMissingBean(UserInfo.class)
     public UserInfo userInfo() {
         return new DefaultUserInfo();

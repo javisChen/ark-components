@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kt-component-orm</artifactId>
-        <groupId>com.kt.orm</groupId>
+        <artifactId>kt-component-context</artifactId>
+        <groupId>com.kt.context</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
-    <name>kt-component-orm-mybatis</name>
-    <artifactId>kt-component-orm-mybatis</artifactId>
+    <name>kt-component-context-core</name>
+    <artifactId>kt-component-context-core</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,7 +20,6 @@
 
     <dependencies>
 
-        <!-- 工具包 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -28,31 +27,21 @@
         </dependency>
 
         <dependency>
-            <groupId>p6spy</groupId>
-            <artifactId>p6spy</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kt.context</groupId>
-            <artifactId>kt-component-context-spring-boot-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.kt.cache</groupId>
+            <artifactId>kt-component-cache-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kt.common</groupId>
+            <artifactId>kt-component-common-core</artifactId>
+        </dependency>
+
 
     </dependencies>
 </project>
