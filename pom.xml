@@ -14,19 +14,21 @@
     </properties>
 
     <modules>
+        <module>kt-component-common</module>
+        <module>kt-component-dto</module>
         <module>kt-component-oss</module>
         <module>kt-component-context</module>
         <module>kt-component-orm</module>
+        <module>kt-component-logger</module>
         <module>kt-component-statemachine</module>
         <module>kt-component-cache</module>
         <module>kt-component-lock</module>
         <module>kt-component-mq</module>
-        <module>kt-component-common</module>
         <module>kt-component-config</module>
-        <module>kt-component-dto</module>
         <module>kt-component-exception</module>
         <module>kt-component-validator</module>
         <module>kt-component-openapi</module>
+        <module>kt-component-web</module>
         <module>kt-component-microservice</module>
         <module>kt-component-spring-boot-starters</module>
     </modules>

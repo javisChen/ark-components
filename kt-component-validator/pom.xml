@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>kt-component-validator</name>
-    <groupId>com.kt</groupId>
+    <groupId>com.kt.validator</groupId>
     <artifactId>kt-component-validator</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
