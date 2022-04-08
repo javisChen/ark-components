@@ -70,7 +70,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.kt</groupId>
+            <groupId>com.kt.logger</groupId>
             <artifactId>kt-component-logger-spring-boot-starter</artifactId>
         </dependency>
 

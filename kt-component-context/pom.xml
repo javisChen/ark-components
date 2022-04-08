@@ -19,7 +19,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.kt</groupId>
+                <groupId>com.kt.boot</groupId>
                 <artifactId>kt-dependencies</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>

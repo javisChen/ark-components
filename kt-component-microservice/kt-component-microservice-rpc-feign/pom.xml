@@ -3,7 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kt</groupId>
+    <parent>
+        <groupId>com.kt.microservice</groupId>
+        <artifactId>kt-component-microservice</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
     <artifactId>kt-component-microservice-rpc-feign</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>kt-component-microservice-rpc-feign</name>
@@ -18,7 +22,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.kt</groupId>
+                <groupId>com.kt.boot</groupId>
                 <artifactId>kt-dependencies</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
@@ -45,8 +49,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
 
         <dependency>
             <groupId>com.kt.dto</groupId>
