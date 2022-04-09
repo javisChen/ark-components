@@ -25,4 +25,11 @@ public class StateMachineRuntimeService extends ServiceImpl<StateMachineRuntimeM
                 .eq(StateMachineRuntimeDO::getBizId, bizId)
                 .one();
     }
+
+    public void updateStateByBizIdAndBizCode(Long bizId, String bizCode, String state) {
+        lambdaUpdate()
+                .set(StateMachineRuntimeDO::getState, state)
+                .eq(StateMachineRuntimeDO::getBizId, bizId)
+                .eq(StateMachineRuntimeDO::getBizCode, bizCode);
+    }
 }

@@ -34,6 +34,17 @@
       "actions": [
         "com.kt.component.statemachine.action.OrderPayAction"
       ]
+    },
+    {
+      "guards": [
+        "com.kt.component.statemachine.guard.OrderPayGuard"
+      ],
+      "source": "PAID",
+      "event": "CLOSE",
+      "target": "CLOSED",
+      "actions": [
+        "com.kt.component.statemachine.action.OrderPayAction"
+      ]
     }
   ]
 }

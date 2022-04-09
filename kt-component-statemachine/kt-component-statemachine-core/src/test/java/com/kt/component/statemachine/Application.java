@@ -1,6 +1,7 @@
 package com.kt.component.statemachine;
 
 import com.kt.component.statemachine.core.StateMachineExecutor;
+import com.kt.component.statemachine.core.StateMachineTransactionAction;
 import com.kt.component.statemachine.core.action.ActionExecutor;
 import com.kt.component.statemachine.core.guard.GuardExecutor;
 import com.kt.component.statemachine.core.service.StateMachineService;
@@ -25,7 +26,8 @@ public class Application {
     @Bean
     public StateMachineExecutor stateMachineExecutor(StateMachineService stateMachineService,
                                                      GuardExecutor guardExecutor,
-                                                     ActionExecutor actionExecutor) {
-        return new StateMachineExecutor(stateMachineService, guardExecutor, actionExecutor);
+                                                     ActionExecutor actionExecutor,
+                                                     StateMachineTransactionAction transactionAction) {
+        return new StateMachineExecutor(stateMachineService, guardExecutor, actionExecutor, transactionAction);
     }
 }

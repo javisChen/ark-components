@@ -11,8 +11,13 @@ public class StateMachineTest extends ApplicationTests {
 
     @Test
     public void test() {
-        StateMachineResult execute = stateMachineExecutor
-                .execute("order", 1L, "CREATE_ORDER", null);
+        try {
+            StateMachineResult execute = stateMachineExecutor
+                    .execute("order", 1L, "CLOSE", null);
+            System.out.println(execute);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

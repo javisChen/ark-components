@@ -5,10 +5,9 @@ import com.kt.component.common.ParamsChecker;
 import com.kt.component.statemachine.core.StateMachineDefinition;
 import com.kt.component.statemachine.core.exception.StateMachineException;
 import com.kt.component.statemachine.dao.entity.StateMachineDefinitionDO;
+import com.kt.component.statemachine.dao.entity.StateMachineHistoryDO;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class StateMachineService {
@@ -40,16 +39,23 @@ public class StateMachineService {
         return stateMachineRuntimeService.getByBizCodeAndBizId(bizCode, bizId);
     }
 
-    public void initRuntime(String bizCode, Long bizId, String state) {
+    public void saveRuntime(Long runtimeId, String bizCode, Long bizId, String state, boolean finished) {
         StateMachineRuntimeDO entity = new StateMachineRuntimeDO();
-        entity.setBizCode(bizCode);
-        entity.setBizId(bizId);
-        entity.setState(state);
-        entity.setFinished(false);
-        entity.setCreator(0L);
-        entity.setModifier(0L);
-        entity.setGmtCreate(LocalDateTime.now());
-        entity.setGmtModified(LocalDateTime.now());
-        stateMachineRuntimeService.save(entity);
+        if (runtimeId == null) {
+            entity.setBizCode(bizCode);
+            entity.setBizId(bizId);
+            entity.setState(state);
+            entity.setFinished(false);
+            stateMachineRuntimeService.save(entity);
+        } else {
+            entity.setId(runtimeId);
+            entity.setState(state);
+            entity.setFinished(finished);
+            stateMachineRuntimeService.updateById(entity);
+        }
+    }
+
+    public void saveHistory(StateMachineHistoryDO stateMachineHistoryDO) {
+        stateMachineHistoryService.save(stateMachineHistoryDO);
     }
 }
