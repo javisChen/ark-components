@@ -13,7 +13,7 @@ public class StateMachineTest extends ApplicationTests {
     public void test() {
         try {
             StateMachineResult execute = stateMachineExecutor
-                    .execute("order", 1L, "CLOSE", null);
+                    .execute("order", 2L, "CREATE_ORDER", null);
             System.out.println(execute);
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,6 +36,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kt.context</groupId>
+            <artifactId>kt-component-context-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>

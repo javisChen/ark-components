@@ -56,6 +56,12 @@
             <artifactId>kt-component-orm-mybatis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.kt.context</groupId>
+            <artifactId>kt-component-context-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

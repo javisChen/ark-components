@@ -6,9 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.kt.component.orm.mybatis.handler.BaseFieldAutoFillObjectHandler;
 import com.kt.component.orm.mybatis.support.DefaultUserInfo;
+import com.kt.component.orm.mybatis.support.ServiceContextUserInfo;
 import com.kt.component.orm.mybatis.support.UserInfo;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -30,13 +31,20 @@ public class OrmMybatisAutoConfiguration {
         return interceptor;
     }
 
+
     /**
-     * 自动填充公共字段
+     * 使用LoginUserContext填充基础字段
      */
     @Bean
-    @ConditionalOnMissingClass()
     @ConditionalOnMissingBean(UserInfo.class)
-    public UserInfo userInfo() {
+    @ConditionalOnClass(name = "com.kt.component.context.core.LoginUserContext")
+    public UserInfo serviceContextUserInfo() {
+        return new ServiceContextUserInfo();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(UserInfo.class)
+    public UserInfo defaultUserInfo() {
         return new DefaultUserInfo();
     }
 
