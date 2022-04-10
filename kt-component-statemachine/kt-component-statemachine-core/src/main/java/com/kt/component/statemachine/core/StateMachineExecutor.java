@@ -7,6 +7,7 @@ import com.kt.component.statemachine.core.service.StateMachineService;
 import com.kt.component.statemachine.dao.entity.StateMachineHistoryDO;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Objects;
  * @author jc
  */
 @Slf4j
+@Component
 public class StateMachineExecutor {
 
     private final StateMachineService stateMachineService;

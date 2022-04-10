@@ -29,6 +29,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.kt.cache</groupId>
             <artifactId>kt-component-cache-redis-spring-boot-starter</artifactId>
             <scope>test</scope>

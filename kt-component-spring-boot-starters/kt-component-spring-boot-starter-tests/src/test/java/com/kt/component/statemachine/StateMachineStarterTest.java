@@ -1,4 +1,4 @@
-package com.kt.statemachine;
+package com.kt.component.statemachine;
 
 import com.kt.component.statemachine.core.StateMachineExecutor;
 import com.kt.component.statemachine.core.StateMachineResult;
@@ -15,7 +15,7 @@ public class StateMachineStarterTest extends ApplicationTests {
     public void test() {
         try {
             StateMachineResult execute = stateMachineExecutor
-                    .execute("order", 2L, "CREATE_ORDER", null);
+                    .execute("order", 3L, "CREATE_ORDER", null);
             System.out.println(execute);
         } catch (Exception e) {
             e.printStackTrace();

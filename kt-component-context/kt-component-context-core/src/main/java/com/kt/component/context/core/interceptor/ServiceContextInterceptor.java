@@ -10,7 +10,6 @@ import com.kt.component.context.core.contants.RedisKeyConst;
 import com.kt.component.context.core.token.AccessTokenExtractor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,7 +26,6 @@ import static com.kt.component.context.core.contants.ContextConst.*;
  * 2.设置通用的上下文参数（当前用户、当前TraceId等）
  * @author victor
  */
-@Component
 public class ServiceContextInterceptor implements HandlerInterceptor {
 
     private final RedisCacheService redisCacheService;

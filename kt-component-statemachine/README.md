@@ -11,3 +11,21 @@
 | kt-component-statemachine-dao  | 状态机持久化操作 |     |
 
 ## 使用说明
+
+1.引入Maven依赖
+```maven
+<dependency>
+    <groupId>com.kt.statemachine</groupId>
+    <artifactId>kt-component-statemachine-spring-boot-starter</artifactId>
+</dependency>
+```
+
+```java
+try {
+    StateMachineResult execute = stateMachineExecutor
+            .execute("order", 3L, "CREATE_ORDER", null);
+    System.out.println(execute);
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```

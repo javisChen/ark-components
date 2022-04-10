@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2020-11-10 3:58 PM
  */
 @SpringBootApplication(scanBasePackages = {"com.kt.component.*"})
+//@SpringBootApplication()
 public class Application {
 
     public static void main(String[] args) {
