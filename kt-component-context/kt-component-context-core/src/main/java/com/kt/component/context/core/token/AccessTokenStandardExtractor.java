@@ -2,7 +2,6 @@ package com.kt.component.context.core.token;
 
 import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,23 +9,22 @@ import javax.servlet.http.HttpServletRequest;
  * Token提取器默认实现
  * @author jc
  */
-@Component
 public class AccessTokenStandardExtractor implements AccessTokenExtractor {
 
-    private final AccessTokenConfig tokenConfig;
+    private final AccessTokenConfig accessTokenConfig;
 
-    public AccessTokenStandardExtractor(AccessTokenConfig tokenConfig) {
-        this.tokenConfig = tokenConfig;
+    public AccessTokenStandardExtractor(AccessTokenConfig accessTokenConfig) {
+        this.accessTokenConfig = accessTokenConfig;
     }
 
     @Override
     public String extract(HttpServletRequest request) {
-        String accessToken = extractFromParameterMap(request, tokenConfig);
+        String accessToken = extractFromParameterMap(request, accessTokenConfig);
         if (StringUtils.isNotEmpty(accessToken)) {
             return accessToken;
         }
-        String tokenHeaderPrefix = tokenConfig.getTokenHeaderPrefix();
-        String tokenHeader = tokenConfig.getTokenHeader();
+        String tokenHeaderPrefix = accessTokenConfig.getTokenHeaderPrefix();
+        String tokenHeader = accessTokenConfig.getTokenHeader();
         accessToken = request.getHeader(tokenHeader);
         accessToken = StringUtils.substringAfter(accessToken, tokenHeaderPrefix);
         return accessToken;
