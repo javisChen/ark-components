@@ -34,24 +34,22 @@ public class CatchLogAspect {
     @Around(value = "pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
-        String sn = StrUtil.uuid();
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
                 RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
-
-        logRequest(joinPoint, request, sn);
+        logRequest(joinPoint, request);
 
         Object result = null;
         try {
             result = joinPoint.proceed();
         } finally {
-            logResponse(startTime, result, sn);
+            logResponse(startTime, result);
         }
 
         return result;
     }
 
-    private void logResponse(long startTime, Object response, String sn) {
+    private void logResponse(long startTime, Object response) {
         long endTime = System.currentTimeMillis();
         try {
             log.info("[resp] response : " + JSON.toJSONString(response));
@@ -59,13 +57,13 @@ public class CatchLogAspect {
         } catch (Exception e) {
             log.error("logResponse error : " + e);
         } finally {
-            log.info("========================= REQUEST FINISHED {} =========================", sn);
+            log.info("========================= REQUEST FINISHED =========================");
         }
     }
 
-    private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request, String sn) {
+    private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request) {
         try {
-            log.info("========================= REQUEST PROCESSING {} =========================", sn);
+            log.info("========================= REQUEST PROCESSING =========================");
             log.info("url : " + request.getRequestURL().toString());
             log.info("remote_host : " + request.getRemoteHost());
             log.info("http_method: " + request.getMethod());
