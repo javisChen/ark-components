@@ -8,6 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class BeanConvertor {
 
     public static <S, T> List<T> copyList(List<S> srcList, Class<T> targetClazz) {
         if (CollectionUtils.isEmpty(srcList)) {
-            return null;
+            return Collections.emptyList();
         }
         List<T> targetList = new ArrayList<>(srcList.size());
         srcList.forEach(s -> targetList.add(copy(s, targetClazz)));
@@ -49,6 +50,8 @@ public class BeanConvertor {
         List<T> targetList = null;
         if (CollectionUtils.isNotEmpty(srcList)) {
             targetList = copyList(srcList, targetClazz);
+        } else {
+            targetList = Collections.emptyList();
         }
         PageResponse<T> pageResponse = new PageResponse<>();
         pageResponse.setTotal((int) page.getTotal());
