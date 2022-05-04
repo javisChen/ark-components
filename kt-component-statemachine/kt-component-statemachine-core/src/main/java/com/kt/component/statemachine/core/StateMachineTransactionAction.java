@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class StateMachineTransactionAction {
 
-
     @Transactional
     public void execute(Runnable runnable) {
         runnable.run();

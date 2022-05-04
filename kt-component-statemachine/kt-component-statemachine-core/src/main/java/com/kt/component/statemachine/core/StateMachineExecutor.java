@@ -7,6 +7,7 @@ import com.kt.component.statemachine.core.service.StateMachineService;
 import com.kt.component.statemachine.dao.entity.StateMachineHistoryDO;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -20,6 +21,8 @@ import java.util.Objects;
 @Slf4j
 @Component
 public class StateMachineExecutor {
+
+    private final String initEvent = "INIT";
 
     private final StateMachineService stateMachineService;
     private final GuardExecutor guardExecutor;
@@ -55,7 +58,7 @@ public class StateMachineExecutor {
         // 组装上下文
         StateMachineContext context = assembleContext(bizCode, bizId, event, params);
 
-        // 根据bizCode和bizId查出对应状态机运行时数据
+        // 根据bizCode和bizId查出对应状态机运行状态
         StateMachineRuntimeDO runtime = getRuntime(context);
 
         // 执行状态转换
@@ -67,17 +70,22 @@ public class StateMachineExecutor {
                                                  StateMachineContext context) {
         List<StateMachineDefinition.Transitions> transitions = definition.getTransitions();
         String event = context.getEvent();
+        // 状态机必须先进行初始化
         if (Objects.isNull(runtime)) {
-            // 如果runtime为空，检查一下驱动事件是否initEvent
-            if (!definition.getInitEvent().equals(event)) {
-                throw new StateMachineException("current event is not init event");
+            if (!initEvent.equals(event)) {
+                return doExecuteTransition(context, transitions.get(0), definition, null);
+            } else {
+                throw new StateMachineException("please drive [init] event first");
             }
-            // 约定Transitions第一个对象是初始驱动事件配置，直接执行。
-            return doExecuteTransition(context, transitions.get(0), definition, runtime);
         }
 
-        // 判断业务状态是否已经结束
-        if (runtime.getFinished()) {
+        // 禁止重复初始化
+        if (initEvent.equals(event)) {
+            throw new StateMachineException("state has been initialized");
+        }
+
+        // 如果规则有定义finalState的话，当状态机已驱动到最终状态后，不得再继续运行
+        if (hasFinalState(definition) && runtime.getFinished()) {
             throw new StateMachineException("state already finished");
         }
 
@@ -88,6 +96,13 @@ public class StateMachineExecutor {
             }
         }
         return StateMachineResult.fail(String.format("cannot find match transition for state:[%s] and event:[%s]", runtime, event));
+    }
+
+    /**
+     * 是否有配置最终状态
+     */
+    private boolean hasFinalState(StateMachineDefinition definition) {
+        return StringUtils.isNotEmpty(definition.getFinalState());
     }
 
     private StateMachineResult doExecuteTransition(StateMachineContext context,
@@ -103,13 +118,14 @@ public class StateMachineExecutor {
         transactionAction.execute(() -> {
 
             actionExecutor.execute(transition.getActions(), context);
-
-            String state = definition.getInitState();
-            if (Objects.nonNull(runtimeDO)) {
+            String state = null;
+            if (Objects.isNull(runtimeDO)) {
+                // 如果是首次驱动状态机，约定取第一个State作为初始化状态
+                state = definition.getStates().get(0);
+            } else {
                 state = transition.getTarget();
             }
             saveStateMachineInfo(context, transition, definition, runtimeDO, state);
-
         });
         return StateMachineResult.success();
     }
@@ -149,7 +165,7 @@ public class StateMachineExecutor {
 
     private void checkEventIsLegal(String event, StateMachineDefinition stateMachineDefinition) {
         if (!stateMachineDefinition.getEvents().contains(event)) {
-            throw new StateMachineException("event is illegal");
+            throw new StateMachineException("event is illegal, please check the definition");
         }
     }
 }

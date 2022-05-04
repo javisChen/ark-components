@@ -9,11 +9,11 @@
     "PAY",
     "CLOSE"
   ],
-  "initEvent": "CREATE_ORDER",
   "initState": "UN_PAY",
   "finalState": "CLOSED",
   "transitions": [
     {
+      "name": "订单创建",
       "guards": [
         "com.kt.component.statemachine.guard.OrderCreateGuard"
       ],
@@ -25,23 +25,13 @@
       ]
     },
     {
+      "name": "订单支付",
       "guards": [
         "com.kt.component.statemachine.guard.OrderPayGuard"
       ],
       "source": "UN_PAY",
       "event": "PAY",
       "target": "PAID",
-      "actions": [
-        "com.kt.component.statemachine.action.OrderPayAction"
-      ]
-    },
-    {
-      "guards": [
-        "com.kt.component.statemachine.guard.OrderPayGuard"
-      ],
-      "source": "PAID",
-      "event": "CLOSE",
-      "target": "CLOSED",
       "actions": [
         "com.kt.component.statemachine.action.OrderPayAction"
       ]
