@@ -35,8 +35,11 @@ public class PageResponse<T> {
         return new PageResponse<>((int)current, (int)size, (int)total, records);
     }
 
-    public static PageResponse<?> build(IPage<?> page) {
+    public static <T> PageResponse<T> build(IPage<T> page) {
         return new PageResponse<>((int)page.getCurrent(), (int)page.getSize(), (int)page.getTotal(), page.getRecords());
+    }
+    public static PageResponse<?> empty(IPage<?> page) {
+        return new PageResponse<>((int)page.getCurrent(), (int)page.getSize(), (int)page.getTotal(), null);
     }
 
 }
