@@ -31,11 +31,11 @@ public class PageResponse<T> {
     public PageResponse() {
     }
 
-    public static <T> PageResponse<T> build(long current, long size, long total, Collection<T> records) {
+    public static <T> PageResponse<T> of(long current, long size, long total, Collection<T> records) {
         return new PageResponse<>((int)current, (int)size, (int)total, records);
     }
 
-    public static <T> PageResponse<T> build(IPage<T> page) {
+    public static <T> PageResponse<T> of(IPage<T> page) {
         return new PageResponse<>((int)page.getCurrent(), (int)page.getSize(), (int)page.getTotal(), page.getRecords());
     }
     public static PageResponse<?> empty(IPage<?> page) {
