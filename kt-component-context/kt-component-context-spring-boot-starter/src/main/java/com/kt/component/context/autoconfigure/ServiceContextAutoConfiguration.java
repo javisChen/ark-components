@@ -1,6 +1,6 @@
 package com.kt.component.context.autoconfigure;
 
-import com.kt.component.cache.redis.RedisCacheService;
+import com.kt.component.search.redis.RedisCacheService;
 import com.kt.component.context.core.interceptor.ServiceContextInterceptor;
 import com.kt.component.context.core.token.AccessTokenConfig;
 import com.kt.component.context.core.token.AccessTokenExtractor;

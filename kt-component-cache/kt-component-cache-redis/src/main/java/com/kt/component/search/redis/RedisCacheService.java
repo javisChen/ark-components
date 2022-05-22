@@ -1,7 +1,7 @@
-package com.kt.component.cache.redis;
+package com.kt.component.search.redis;
 
-import com.kt.component.cache.CacheService;
-import com.kt.component.cache.exception.CacheException;
+import com.kt.component.search.CacheService;
+import com.kt.component.search.exception.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 

@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.kt.component.cache;
+package com.kt.component.search;
 
 
 /**
