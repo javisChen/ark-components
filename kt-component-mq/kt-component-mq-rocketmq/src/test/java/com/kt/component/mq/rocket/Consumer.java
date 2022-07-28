@@ -21,17 +21,18 @@ public class Consumer {
             consumer.subscribe(topic, "*");
             consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
                 for (MessageExt messageExt : msgs) {
-                    log.debug("received msg: {}", messageExt);
+                    log.debug("received msgId: {}, key: {} body: {}", messageExt.getMsgId(),
+                            messageExt.getKeys(),
+                            new String(messageExt.getBody()));
                     try {
                         long now = System.currentTimeMillis();
                         long costTime = System.currentTimeMillis() - now;
-                        log.debug("consume {} cost: {} ms", messageExt.getMsgId(), costTime);
                     } catch (Exception e) {
                         log.warn("consume message failed. messageId:{}, topic:{}, reconsumeTimes:{}", messageExt.getMsgId(), messageExt.getTopic(), messageExt.getReconsumeTimes(), e);
                         return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                     }
                 }
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             });
             consumer.start();
         } catch (MQClientException e) {
