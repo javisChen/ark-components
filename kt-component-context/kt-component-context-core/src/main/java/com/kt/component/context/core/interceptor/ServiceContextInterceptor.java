@@ -2,7 +2,7 @@
 package com.kt.component.context.core.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kt.component.search.redis.RedisCacheService;
+import com.kt.component.cache.redis.RedisCacheService;
 import com.kt.component.common.id.TraceIdUtils;
 import com.kt.component.context.core.LoginUserContext;
 import com.kt.component.context.core.ServiceContext;

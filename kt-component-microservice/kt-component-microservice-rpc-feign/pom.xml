@@ -8,8 +8,9 @@
         <artifactId>kt-component-microservice</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>kt-component-microservice-rpc-feign</artifactId>
+
     <version>1.0.0-SNAPSHOT</version>
+    <artifactId>kt-component-microservice-rpc-feign</artifactId>
     <name>kt-component-microservice-rpc-feign</name>
     <packaging>jar</packaging>
 

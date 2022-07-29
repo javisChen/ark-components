@@ -1,7 +1,7 @@
-package com.kt.component.search.redis.autoconfigure;
+package com.kt.component.redis.autoconfigure;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
-import com.kt.component.search.redis.RedisCacheService;
+import com.kt.component.cache.redis.RedisCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

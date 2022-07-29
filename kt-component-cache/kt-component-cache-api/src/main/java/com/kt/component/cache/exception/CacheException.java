@@ -1,4 +1,4 @@
-package com.kt.component.search.exception;
+package com.kt.component.cache.exception;
 
 /**
  * Cache操作异常类
