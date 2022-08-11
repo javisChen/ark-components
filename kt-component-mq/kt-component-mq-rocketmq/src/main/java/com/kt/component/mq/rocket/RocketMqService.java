@@ -18,7 +18,12 @@ public class RocketMqService implements MqService {
 
     @Override
     public void send(String topic, Object msg) {
-        rocketMQTemplate.convertAndSend(topic, msg);
+        SendResult sendResult = rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(msg).build());
+    }
+
+    @Override
+    public void send(String topic, String tags, Object msg) {
+
     }
 
     @Override
@@ -37,5 +42,30 @@ public class RocketMqService implements MqService {
 
             }
         }, 1000L, 2);
+    }
+
+    @Override
+    public void asyncSend(String topic, String tags, Object msg) {
+
+    }
+
+    @Override
+    public void delaySend(String topic, String tags, Object msg, long delay) {
+
+    }
+
+    @Override
+    public void asyncDelaySend(String topic, String tags, Object msg, long delay) {
+
+    }
+
+    @Override
+    public void delaySend(String topic, Object msg, long delay) {
+
+    }
+
+    @Override
+    public void asyncDelaySend(String topic, Object msg, long delay) {
+
     }
 }
