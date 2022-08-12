@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>kt-component-mq-rocketmq</artifactId>
-    <name>kt-component-mq-rocketmq</name>
+    <artifactId>kt-component-mq-rabbitmq</artifactId>
+    <name>kt-component-mq-rabbitmq</name>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -25,8 +25,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
         <dependency>

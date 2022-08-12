@@ -10,6 +10,6 @@ public class Config {
 
     @Bean
     public MessageService mqService(RocketMQTemplate rocketMQTemplate) {
-        return new RocketMessageService(rocketMQTemplate, mqConfiguration);
+        return new RabbitMQSendOperations(rocketMQTemplate, mqConfiguration);
     }
 }
