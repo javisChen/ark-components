@@ -1,6 +1,5 @@
 package com.kt.component.mq.core;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
@@ -119,76 +118,58 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
         doAsyncSend(topic, tag, payLoad, callback, timeout, delay);
     }
 
-    protected MessageResponse doSend(String topic, String tag, MessagePayLoad payLoad, long timeout, int delayLevel) {
-        String destination = StrUtil.isNotBlank(tag) ? buildDestination(topic, tag) : topic;
+    private MessageResponse doSend(String topic, String tag, MessagePayLoad payLoad, long timeout, int delayLevel) {
+        String msgId = payLoad.getMsgId();
         try {
             P body = buildBody(payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message destination:{} payLoad:{}",
-                        destination, JSON.toJSONString(body));
+                log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
+                        msgId, topic, tag, JSON.toJSONString(body));
             }
-            R result = executeSend(destination, body, timeout, delayLevel);
+            R result = executeSend(topic, tag, body, timeout, delayLevel);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] send message destination:{} payLoad:{}, msgId:{}",
-                        destination, JSON.toJSONString(body), payLoad.getMsgId());
+                log.debug("[mq] send message finish msgId:{} payLoad:{}", msgId, JSON.toJSONString(body));
             }
             return convertToMQResponse(result);
+        } catch (Exception e) {
+            log.error("[mq] send message error msgId:" + msgId, e);
+            throw new MQException(e);
+        }
+    }
+
+    private void doAsyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
+        String msgId = payLoad.getMsgId();
+        try {
+            P body = buildBody(payLoad);
+            if (log.isDebugEnabled()) {
+                log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
+                        msgId, topic, tag, JSON.toJSONString(body));
+            }
+            executeAsyncSend(topic, tag, body, timeout, delayLevel, callback);
         } catch (Exception e) {
             log.error("[mq] send message error", e);
             throw new MQException(e);
         }
     }
 
-    protected abstract P buildBody(MessagePayLoad body);
+    /**
+     * MQ实现构造自己的消息体
+     */
+    protected abstract P buildBody(MessagePayLoad messagePayLoad);
 
+    /**
+     * 执行同步发送
+     */
+    protected abstract R executeSend(String destination, String tag, P messagePayLoad, long timeout, int delayLevel);
+
+    /**
+     * 执行异步发送，通过callback接收发送结果
+     */
+    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback);
+
+    /**
+     * 转换回统一的MQ响应体
+     */
     protected abstract MessageResponse convertToMQResponse(R result);
 
-    protected abstract R executeSend(String destination, P messagePayLoad, long timeout, int delayLevel);
-
-    protected void doAsyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
-        String destination = StrUtil.isNotBlank(tag) ? buildDestination(topic, tag) : topic;
-        try {
-            P body = buildBody(payLoad);
-            if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message destination:{} payLoad:{}",
-                        destination, JSON.toJSONString(body));
-            }
-            R result = executeSend(destination, body, timeout, delayLevel);
-            if (log.isDebugEnabled()) {
-                log.debug("[mq] send message destination:{} payLoad:{}, msgId:{}",
-                        destination, JSON.toJSONString(body), payLoad.getMsgId());
-            }
-            return convertToMQResponse(result);
-            Message<MessagePayLoad> message = MessageBuilder.withPayload(payLoad).build();
-            if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message destination:{} payLoad:{}",
-                        destination, JSON.toJSONString(payLoad));
-            }
-            rocketMQTemplate.asyncSend(destination, message, new SendCallback() {
-                @Override
-                public void onSuccess(SendResult sendResult) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("[mq] send message success destination:{} payLoad:{}, msgId:{}",
-                                destination, JSON.toJSONString(payLoad), sendResult.getMsgId());
-                    }
-                    if (callback != null) {
-                        callback.onSuccess(convertToMQResponse(sendResult));
-                    }
-                }
-
-                @Override
-                public void onException(Throwable throwable) {
-                    log.error("[mq] send message error callback", throwable);
-                    if (callback != null) {
-                        callback.onException(throwable);
-                    }
-                }
-            }, timeout, delayLevel);
-        } catch (Exception e) {
-            log.error("[mq] send message error", e);
-            throw new MQException(e);
-        }
-    }
-
-    protected abstract String buildDestination(String topic, String tag);
 }
