@@ -4,13 +4,10 @@ import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
 import com.kt.component.mq.MessageService;
-import com.kt.component.mq.core.generator.MessageIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MessageProducer {
-
-    private MessageIdGenerator messageIdGenerator;
 
     private final MessageService messageService;
 

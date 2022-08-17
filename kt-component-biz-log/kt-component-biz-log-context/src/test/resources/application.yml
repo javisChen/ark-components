@@ -1,0 +1,19 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: test
+  datasource:
+    url: jdbc:mysql://192.168.34.91:32008/redex_center_worksheet?useSSL=false&useUnicode=true&characterEncoding=UTF-8&tinyInt1isBit=false&serverTimezone=Asia/Shanghai&serverTimezone=UTC&allowPublicKeyRetrieval=True
+    username: root
+    password: root
+    name: defaultDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: is_deleted
+      logic-not-delete-value: 0

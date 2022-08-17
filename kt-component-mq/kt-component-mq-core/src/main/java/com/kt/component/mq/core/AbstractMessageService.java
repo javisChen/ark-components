@@ -6,6 +6,8 @@ import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
 import com.kt.component.mq.MessageService;
 import com.kt.component.mq.configuation.MQConfiguration;
+import com.kt.component.mq.core.generator.DefaultMessageIdGenerator;
+import com.kt.component.mq.core.generator.MessageIdGenerator;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,10 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractMessageService<P, R> implements MessageService {
     private final MQConfiguration mqConfiguration;
 
+    private final MessageIdGenerator messageIdGenerator = new DefaultMessageIdGenerator();
+
     protected AbstractMessageService(MQConfiguration mqConfiguration) {
         this.mqConfiguration = mqConfiguration;
     }
 
+    protected AbstractMessageService() {
+        this.mqConfiguration = new MQConfiguration();
+    }
 
     @Override
     public MessageResponse send(String topic, MessagePayLoad payLoad, int timeout) {
@@ -50,12 +57,12 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
 
     @Override
     public MessageResponse send(String topic, MessagePayLoad payLoad) {
-        return doSend(topic, null, payLoad, mqConfiguration.getTimeout(), 0);
+        return doSend(topic, null, payLoad, mqConfiguration.getProducer().getSendMessageTimeout(), 0);
     }
 
     @Override
     public MessageResponse send(String topic, String tag, MessagePayLoad payLoad) {
-        return doSend(topic, tag, payLoad, mqConfiguration.getTimeout(), 0);
+        return doSend(topic, tag, payLoad, mqConfiguration.getProducer().getSendMessageTimeout(), 0);
     }
 
     @Override
@@ -119,16 +126,20 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     }
 
     private MessageResponse doSend(String topic, String tag, MessagePayLoad payLoad, long timeout, int delayLevel) {
-        String msgId = payLoad.getMsgId();
+        String msgId = messageIdGenerator.getId();
+        if (timeout <= 0) {
+            timeout = mqConfiguration.getProducer().getSendMessageTimeout();
+        }
+        payLoad.setMsgId(msgId);
         try {
             P body = buildBody(payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
+                log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
             }
             R result = executeSend(topic, tag, body, timeout, delayLevel);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] send message finish msgId:{} payLoad:{}", msgId, JSON.toJSONString(body));
+                log.debug("[mq] send message finish msgId = {} payLoad = {}", msgId, JSON.toJSONString(body));
             }
             return convertToMQResponse(result);
         } catch (Exception e) {
@@ -138,11 +149,15 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     }
 
     private void doAsyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
-        String msgId = payLoad.getMsgId();
+        String msgId = messageIdGenerator.getId();
+        if (timeout <= 0) {
+            timeout = mqConfiguration.getProducer().getSendMessageTimeout();
+        }
+        payLoad.setMsgId(msgId);
         try {
             P body = buildBody(payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
+                log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
             }
             executeAsyncSend(topic, tag, body, timeout, delayLevel, callback);

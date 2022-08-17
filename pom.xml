@@ -11,6 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <modules>
@@ -22,6 +24,7 @@
         <module>kt-component-search</module>
         <module>kt-component-logger</module>
         <module>kt-component-statemachine</module>
+        <module>kt-component-biz-log</module>
         <module>kt-component-cache</module>
         <module>kt-component-lock</module>
         <module>kt-component-mq</module>
@@ -34,17 +37,16 @@
         <module>kt-component-spring-boot-starters</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.kt.boot</groupId>
-                <artifactId>kt-dependencies</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--            <dependency>-->
+<!--                <groupId>com.kt.boot</groupId>-->
+<!--                <artifactId>kt-dependencies</artifactId>-->
+<!--                <version>${project.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--        </dependencies>-->
+<!--    </dependencyManagement>-->
 
 </project>
