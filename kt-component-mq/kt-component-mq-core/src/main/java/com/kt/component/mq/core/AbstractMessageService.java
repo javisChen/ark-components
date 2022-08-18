@@ -57,12 +57,12 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
 
     @Override
     public MessageResponse send(String topic, MessagePayLoad payLoad) {
-        return doSend(topic, null, payLoad, mqConfiguration.getProducer().getSendMessageTimeout(), 0);
+        return doSend(topic, null, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
     public MessageResponse send(String topic, String tag, MessagePayLoad payLoad) {
-        return doSend(topic, tag, payLoad, mqConfiguration.getProducer().getSendMessageTimeout(), 0);
+        return doSend(topic, tag, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
@@ -128,7 +128,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     private MessageResponse doSend(String topic, String tag, MessagePayLoad payLoad, long timeout, int delayLevel) {
         String msgId = messageIdGenerator.getId();
         if (timeout <= 0) {
-            timeout = mqConfiguration.getProducer().getSendMessageTimeout();
+            timeout = mqConfiguration.getSendMessageTimeout();
         }
         payLoad.setMsgId(msgId);
         try {
@@ -151,7 +151,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     private void doAsyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
         String msgId = messageIdGenerator.getId();
         if (timeout <= 0) {
-            timeout = mqConfiguration.getProducer().getSendMessageTimeout();
+            timeout = mqConfiguration.getSendMessageTimeout();
         }
         payLoad.setMsgId(msgId);
         try {

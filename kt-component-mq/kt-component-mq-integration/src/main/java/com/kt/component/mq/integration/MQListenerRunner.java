@@ -41,7 +41,6 @@ public class MQListenerRunner implements ApplicationRunner, ApplicationContextAw
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
-
     }
 
     public void doListen(MQMessageProcessor processor) {

@@ -6,6 +6,7 @@ import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
 import com.kt.component.mq.configuation.MQConfiguration;
+import com.kt.component.mq.configuation.RocketMQConfiguration;
 import com.kt.component.mq.core.AbstractMessageService;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +35,11 @@ public class RocketMessageService extends AbstractMessageService<Message<Message
     }
 
     private void initProducer(MQConfiguration mqConfiguration) {
-        MQConfiguration.Producer producer = mqConfiguration.getProducer();
+        RocketMQConfiguration rocketMQConfig = mqConfiguration.getRocketMQ();
+        RocketMQConfiguration.Producer producer = rocketMQConfig.getProducer();
         this.defaultMQProducer = new DefaultMQProducer();
         this.defaultMQProducer.setProducerGroup(producer.getGroup());
-        this.defaultMQProducer.setNamesrvAddr(mqConfiguration.getServer());
+        this.defaultMQProducer.setNamesrvAddr(rocketMQConfig.getServer());
         try {
             this.defaultMQProducer.start();
         } catch (MQClientException e) {
