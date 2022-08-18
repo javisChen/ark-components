@@ -8,5 +8,5 @@ import com.kt.component.statemachine.core.StateMachineContext;
  */
 public interface Guard {
 
-    boolean evaluate(StateMachineContext context);
+    void evaluate(StateMachineContext context);
 }

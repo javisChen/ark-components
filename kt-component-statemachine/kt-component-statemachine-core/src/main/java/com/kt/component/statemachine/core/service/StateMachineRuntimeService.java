@@ -1,5 +1,6 @@
 package com.kt.component.statemachine.core.service;
 
+
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kt.component.statemachine.dao.entity.StateMachineRuntimeDO;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 状态机运行时表 Service
  * </p>
  *
- * @author EOP
+ * @author DOP
  * @since 2022-04-04
  */
 
@@ -26,10 +27,12 @@ public class StateMachineRuntimeService extends ServiceImpl<StateMachineRuntimeM
                 .one();
     }
 
-    public void updateStateByBizIdAndBizCode(Long bizId, String bizCode, String state) {
+    public void updateStateByBizIdAndBizCode(Long bizId, String bizCode, String state, boolean finished) {
         lambdaUpdate()
                 .set(StateMachineRuntimeDO::getState, state)
+                .set(StateMachineRuntimeDO::getFinished, finished)
                 .eq(StateMachineRuntimeDO::getBizId, bizId)
-                .eq(StateMachineRuntimeDO::getBizCode, bizCode);
+                .eq(StateMachineRuntimeDO::getBizCode, bizCode)
+                .update();
     }
 }

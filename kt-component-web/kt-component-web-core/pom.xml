@@ -14,8 +14,6 @@
     <artifactId>kt-component-web-core</artifactId>
 
     <properties>
-
-
         <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
     </properties>
 

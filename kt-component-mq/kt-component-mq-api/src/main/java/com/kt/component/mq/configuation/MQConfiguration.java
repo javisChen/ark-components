@@ -24,7 +24,7 @@ public class MQConfiguration {
     @Data
     public static class Producer {
         private String group;
-        private int sendMessageTimeout = 3000;
+        private int sendMessageTimeout = 30000;
         private int compressMessageBodyThreshold = 4096;
         private int retryTimesWhenSendFailed = 2;
         private int retryTimesWhenSendAsyncFailed = 2;

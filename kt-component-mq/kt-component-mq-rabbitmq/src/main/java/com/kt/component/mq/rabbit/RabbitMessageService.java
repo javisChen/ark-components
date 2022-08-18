@@ -10,8 +10,10 @@
 //import org.springframework.amqp.core.AmqpTemplate;
 //import org.springframework.amqp.core.Message;
 //import org.springframework.amqp.core.MessageBuilder;
+//import org.springframework.amqp.rabbit.annotation.RabbitListener;
 //
 //@Slf4j
+//@RabbitListener
 //public class RabbitMessageService implements MessageService {
 //
 //    private final MQConfiguration mqConfiguration;

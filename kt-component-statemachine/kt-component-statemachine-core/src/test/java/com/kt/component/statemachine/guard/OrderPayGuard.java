@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 public class OrderPayGuard implements Guard {
 
     @Override
-    public boolean evaluate(StateMachineContext context) {
+    public void evaluate(StateMachineContext context) {
         log.info("订单支付守卫");
-        return true;
     }
 
 }

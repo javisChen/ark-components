@@ -1,5 +1,6 @@
 package com.kt.component.statemachine.core;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class StateMachineDefinition {
     @JSONField(name = "initEvent")
     private String initEvent;
     @JSONField(name = "finalState")
-    private String finalState;
+    private List<String> finalState;
     @JSONField(name = "transitions")
     private List<Transitions> transitions;
 
@@ -31,12 +32,17 @@ public class StateMachineDefinition {
         @JSONField(name = "guards")
         private List<String> guards;
         @JSONField(name = "source")
-        private String source;
+        private List<String> source;
         @JSONField(name = "event")
         private String event;
         @JSONField(name = "target")
         private String target;
         @JSONField(name = "actions")
         private List<String> actions;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

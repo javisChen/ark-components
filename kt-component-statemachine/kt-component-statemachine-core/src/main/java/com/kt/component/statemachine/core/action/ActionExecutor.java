@@ -1,12 +1,13 @@
 package com.kt.component.statemachine.core.action;
 
-import cn.hutool.core.util.ClassUtil;
 import com.kt.component.statemachine.core.StateMachineContext;
-import com.kt.component.statemachine.core.exception.StateMachineException;
+import com.kt.component.statemachine.core.exception.ActionException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ClassUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,35 +17,32 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class ActionExecutor {
+public class ActionExecutor implements ApplicationContextAware {
 
-    private final ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-    public ActionExecutor(ApplicationContext applicationContext) {
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void execute(List<String> actions, StateMachineContext context) {
-        // 执行守卫
         for (String action : actions) {
-            Class<?> clazz;
+            Object bean;
             try {
-                clazz = Class.forName(action);
-            } catch (ClassNotFoundException e) {
-                throw new StateMachineException(String.format("Action class [%s] not found", action));
+                bean = applicationContext.getBean(action);
+            } catch (BeansException e) {
+                throw new ActionException(e);
             }
-
-            if (!ClassUtil.isAssignable(Action.class, clazz)) {
+            if (!ClassUtils.isAssignable(Action.class, bean.getClass())) {
                 String format = String.format("Action class [%s] must be extend [%s]", action, Action.class.getName());
-                throw new StateMachineException(format);
+                throw new ActionException(format);
             }
-
             try {
-                Action actionInstance = (Action) applicationContext.getBean(clazz);
+                Action actionInstance = (Action) bean;
                 actionInstance.execute(context);
             } catch (Exception e) {
-                throw new StateMachineException(String.format("Action [%s] execute failure", action), e);
+                throw new ActionException(e);
             }
         }
     }

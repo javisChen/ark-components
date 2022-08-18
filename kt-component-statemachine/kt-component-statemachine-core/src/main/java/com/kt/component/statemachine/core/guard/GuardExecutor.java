@@ -1,10 +1,13 @@
 package com.kt.component.statemachine.core.guard;
 
-import cn.hutool.core.util.ClassUtil;
 import com.kt.component.statemachine.core.StateMachineContext;
+import com.kt.component.statemachine.core.exception.GuardException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 
 import java.util.List;
 
@@ -14,38 +17,34 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public final class GuardExecutor {
+public final class GuardExecutor implements ApplicationContextAware {
 
-    private final ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-    public GuardExecutor(ApplicationContext applicationContext) {
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
-    public boolean execute(List<String> guards, StateMachineContext context) {
+    public void execute(List<String> guards, StateMachineContext context) {
         for (String guard : guards) {
-            Class<?> clazz;
+            Object bean;
             try {
-                clazz = Class.forName(guard);
-            } catch (ClassNotFoundException e) {
-                log.error("Guard class [{}] not found", guard);
-                return false;
+                bean = applicationContext.getBean(guard);
+            } catch (BeansException e) {
+                throw new GuardException(e);
             }
-            if (!ClassUtil.isAssignable(Guard.class, clazz)) {
-                log.error("Guard class [{}] must be extend [{}]", guard, Guard.class.getName());
-                return false;
+            if (!ClassUtils.isAssignable(Guard.class, bean.getClass())) {
+                String format = String.format("Guard class [%s] must be extend [%s]", guard, Guard.class.getName());
+                log.error("找不到对应的bean");
+                throw new GuardException(format);
             }
             try {
-                Guard guardInstance = ((Guard) applicationContext.getBean(clazz));
-                if (!guardInstance.evaluate(context)) {
-                    log.info("Guard [{}] no pass", guard);
-                    return false;
-                }
+                Guard guardInstance = (Guard) bean;
+                guardInstance.evaluate(context);
             } catch (Exception e) {
-                log.error("Guard [" + guard + "] execute failure", e);
-                return false;
+                throw new GuardException(e);
             }
         }
-        return true;
     }
 }

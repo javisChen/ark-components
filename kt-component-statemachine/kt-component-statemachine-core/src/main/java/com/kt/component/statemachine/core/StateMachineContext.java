@@ -1,6 +1,5 @@
 package com.kt.component.statemachine.core;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Map;
  * @author jc
  */
 @Data
-@AllArgsConstructor
 public class StateMachineContext {
 
    private String bizCode;
@@ -19,4 +17,18 @@ public class StateMachineContext {
    private Object params;
    private Map<String, Object> extParams;
 
+   public StateMachineContext(String bizCode, String event, Object params, Map<String, Object> extParams) {
+      this.bizCode = bizCode;
+      this.event = event;
+      this.params = params;
+      this.extParams = extParams;
+   }
+
+   public StateMachineContext(String bizCode, Long bizId, String event, Object params, Map<String, Object> extParams) {
+      this.bizCode = bizCode;
+      this.bizId = bizId;
+      this.event = event;
+      this.params = params;
+      this.extParams = extParams;
+   }
 }

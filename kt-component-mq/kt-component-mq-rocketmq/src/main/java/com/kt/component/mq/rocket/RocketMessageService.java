@@ -52,7 +52,6 @@ public class RocketMessageService extends AbstractMessageService<Message<Message
         } catch (Exception e) {
             throw new MQException(e);
         }
-//        return rocketMQTemplate.syncSend(buildDestination(topic, tag), message, timeout, delayLevel);
     }
 
     @Override
