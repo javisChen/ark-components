@@ -12,14 +12,14 @@ public class MQConfiguration {
 
     private int sendMessageTimeout = 30000;
 
-    private RocketMQConfiguration rocketMQ;
+    // private RocketMQConfiguration rocketMQ;
 
 
 //    /**
 //     * 发送消息超时时间，默认3s
 //     */
-//    private String server;
-//
+    private String server;
+
 //    private Producer producer;
 //
 //    private Consumer consumer;

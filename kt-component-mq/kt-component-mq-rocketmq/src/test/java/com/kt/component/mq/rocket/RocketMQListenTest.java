@@ -1,7 +1,6 @@
 package com.kt.component.mq.rocket;
 
 import com.kt.component.mq.configuation.MQConfiguration;
-import com.kt.component.mq.core.MQListenerRunner;
 import com.kt.component.mq.core.annotations.MQMessageListener;
 import com.kt.component.mq.core.processor.MQMessageProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +20,13 @@ public class RocketMQListenTest {
 
     @Test
     public void test() {
-        MQConfiguration mqConfiguration = new MQConfiguration();
-        mqConfiguration.setServer("localhost:9876");
-        new MQListenerRunner(mqConfiguration).doListen(new RocketMQMessageProcessor());
+        MQConfiguration mqConfiguration = new Config().mqConfiguration();
+//        new MQListenerRunner(mqConfiguration).doListen(new RocketMQMessageProcessor());
 
-        try {
-            Thread.sleep(1000000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Thread.sleep(1000000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

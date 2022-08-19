@@ -2,7 +2,7 @@ package com.kt.component.mq.rocket;
 
 import com.kt.component.mq.MessageService;
 import com.kt.component.mq.configuation.MQConfiguration;
-import com.kt.component.mq.configuation.MQConfiguration.Producer;
+import com.kt.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +14,13 @@ public class Config {
     @Bean
     public MQConfiguration mqConfiguration() {
         MQConfiguration mqConfiguration = new MQConfiguration();
-        mqConfiguration.setServer("localhost:9876");
-        Producer producer = new Producer();
+        RocketMQConfiguration rocketMQ = new RocketMQConfiguration();
+        rocketMQ.setServer("localhost:9876");
+        RocketMQConfiguration.Producer producer = new RocketMQConfiguration.Producer();
         producer.setSendMessageTimeout(3000);
         producer.setGroup("pg_test");
-        mqConfiguration.setProducer(producer);
+        rocketMQ.setProducer(producer);
+        mqConfiguration.setRocketMQ(rocketMQ);
         return mqConfiguration;
     }
 

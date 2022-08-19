@@ -2,40 +2,38 @@ package com.kt.component.mq.rocket;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
-import com.kt.component.mq.configuation.MQConfiguration;
-import com.kt.component.mq.configuation.RocketMQConfiguration;
 import com.kt.component.mq.core.AbstractMessageService;
 import com.kt.component.mq.exception.MQException;
+import com.kt.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 
 @Slf4j
-public class RocketMessageService extends AbstractMessageService<Message<MessagePayLoad>, SendResult> {
+public class RocketMessageService extends AbstractMessageService<Message, SendResult> {
 
     private RocketMQTemplate rocketMQTemplate;
     private DefaultMQProducer defaultMQProducer;
 
-    public RocketMessageService(RocketMQTemplate rocketMQTemplate, MQConfiguration mqConfiguration) {
+    public RocketMessageService(RocketMQTemplate rocketMQTemplate, RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         this.rocketMQTemplate = rocketMQTemplate;
         initProducer(mqConfiguration);
     }
-    public RocketMessageService(MQConfiguration mqConfiguration) {
+    public RocketMessageService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         initProducer(mqConfiguration);
     }
 
-    private void initProducer(MQConfiguration mqConfiguration) {
-        RocketMQConfiguration rocketMQConfig = mqConfiguration.getRocketMQ();
+    private void initProducer(RocketMQConfiguration rocketMQConfig) {
         RocketMQConfiguration.Producer producer = rocketMQConfig.getProducer();
         this.defaultMQProducer = new DefaultMQProducer();
         this.defaultMQProducer.setProducerGroup(producer.getGroup());
@@ -48,22 +46,23 @@ public class RocketMessageService extends AbstractMessageService<Message<Message
     }
 
     @Override
-    protected SendResult executeSend(String topic, String tag, Message<MessagePayLoad> message, long timeout, int delayLevel) {
+    protected SendResult executeSend(String topic, String tag, Message message, long timeout, int delayLevel) {
         try {
-            return defaultMQProducer.send(new org.apache.rocketmq.common.message.Message(topic, tag, JSON.toJSONBytes(message.getPayload())));
+            message.setDelayTimeLevel(delayLevel);
+            return defaultMQProducer.send(message, timeout);
         } catch (Exception e) {
             throw new MQException(e);
         }
     }
 
     @Override
-    protected Message<MessagePayLoad> buildBody(MessagePayLoad messagePayLoad) {
-        return MessageBuilder.withPayload(messagePayLoad).build();
-    }
-
-    @Override
-    protected void executeAsyncSend(String topic, String tag, Message<MessagePayLoad> message, long timeout, int delayLevel, MessageSendCallback callback) {
-        rocketMQTemplate.asyncSend(buildDestination(topic, tag), message, new SendCallback() {
+    protected void executeAsyncSend(String topic,
+                                    String tag,
+                                    Message message,
+                                    long timeout,
+                                    int delayLevel,
+                                    MessageSendCallback callback) {
+        defaultMQProducer.send(message, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
                 if (log.isDebugEnabled()) {
@@ -82,20 +81,20 @@ public class RocketMessageService extends AbstractMessageService<Message<Message
                     callback.onException(throwable);
                 }
             }
-        }, timeout, delayLevel);
-    }
-
-    protected String buildDestination(String topic, String tag) {
-        if (StrUtil.isEmpty(tag)) {
-            return topic;
-        }
-        return topic + ":" + tag;
+        }, timeout);
     }
 
     protected MessageResponse convertToMQResponse(SendResult sendResult) {
         return MessageResponse.builder()
                 .withMsgId(sendResult.getMsgId())
                 .build();
+    }
+
+    @Override
+    protected Message buildBody(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad) {
+        Message message = new Message(topic, tag, messagePayLoad.getMsgId(), JSONObject.toJSONBytes(messagePayLoad));
+        message.setDelayTimeLevel(delayLevel);
+        return message;
     }
 
 }

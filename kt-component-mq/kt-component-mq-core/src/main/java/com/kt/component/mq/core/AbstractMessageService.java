@@ -132,7 +132,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
         }
         payLoad.setMsgId(msgId);
         try {
-            P body = buildBody(payLoad);
+            P body = buildBody(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
                 log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
@@ -155,7 +155,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
         }
         payLoad.setMsgId(msgId);
         try {
-            P body = buildBody(payLoad);
+            P body = buildBody(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
                 log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
@@ -170,7 +170,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     /**
      * MQ实现构造自己的消息体
      */
-    protected abstract P buildBody(MessagePayLoad messagePayLoad);
+    protected abstract P buildBody(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad);
 
     /**
      * 执行同步发送

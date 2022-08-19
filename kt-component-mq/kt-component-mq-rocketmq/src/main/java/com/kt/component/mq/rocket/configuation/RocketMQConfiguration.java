@@ -1,5 +1,6 @@
-package com.kt.component.mq.configuation;
+package com.kt.component.mq.rocket.configuation;
 
+import com.kt.component.mq.configuation.MQConfiguration;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -10,13 +11,11 @@ import java.util.Map;
  * @author jc
  */
 @Data
-public class RocketMQConfiguration {
+public class RocketMQConfiguration extends MQConfiguration {
 
     /**
      * 发送消息超时时间，默认3s
      */
-    private String server;
-
     private Producer producer;
 
     private Consumer consumer;
