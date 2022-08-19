@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>kt-component-mq-integration-spring-boot-starter</artifactId>
-    <name>kt-component-mq-integration-spring-boot-starter</name>
+    <artifactId>kt-component-mq-rocketmq-spring-boot-starter</artifactId>
+    <name>kt-component-mq-rocketmq-spring-boot-starter</name>
 
     <properties>
 
@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.kt.mq</groupId>
-            <artifactId>kt-component-mq-integration</artifactId>
+            <artifactId>kt-component-mq-rocketmq</artifactId>
         </dependency>
 
         <dependency>

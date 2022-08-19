@@ -1,7 +1,7 @@
 package com.kt.component.mq.core.listener;
 
 import com.kt.component.mq.core.support.ConsumeMode;
-import com.kt.component.mq.core.support.MQ;
+import com.kt.component.mq.core.support.MQType;
 import lombok.Data;
 
 @Data
@@ -35,8 +35,8 @@ public class MQListenerConfig {
 
     /**
      * 所使用的的MQ
-     * @see MQ
+     * @see MQType
      */
-    private MQ mq;
+    private MQType mqType;
 
 }

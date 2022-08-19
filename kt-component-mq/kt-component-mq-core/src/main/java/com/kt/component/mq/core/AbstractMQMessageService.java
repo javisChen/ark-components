@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
-import com.kt.component.mq.MessageService;
+import com.kt.component.mq.MQMessageService;
 import com.kt.component.mq.configuation.MQConfiguration;
 import com.kt.component.mq.core.generator.DefaultMessageIdGenerator;
 import com.kt.component.mq.core.generator.MessageIdGenerator;
@@ -12,16 +12,16 @@ import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractMessageService<P, R> implements MessageService {
+public abstract class AbstractMQMessageService<P, R> implements MQMessageService {
     private final MQConfiguration mqConfiguration;
 
     private final MessageIdGenerator messageIdGenerator = new DefaultMessageIdGenerator();
 
-    protected AbstractMessageService(MQConfiguration mqConfiguration) {
+    protected AbstractMQMessageService(MQConfiguration mqConfiguration) {
         this.mqConfiguration = mqConfiguration;
     }
 
-    protected AbstractMessageService() {
+    protected AbstractMQMessageService() {
         this.mqConfiguration = new MQConfiguration();
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
                 log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
             }
-            executeAsyncSend(topic, tag, body, timeout, delayLevel, callback);
+            executeAsyncSend(topic, tag, body, timeout, delayLevel, callback, msgId);
         } catch (Exception e) {
             log.error("[mq] send message error", e);
             throw new MQException(e);
@@ -180,7 +180,7 @@ public abstract class AbstractMessageService<P, R> implements MessageService {
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback);
+    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback, String msgId);
 
     /**
      * 转换回统一的MQ响应体

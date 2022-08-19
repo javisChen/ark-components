@@ -1,12 +1,12 @@
 package com.kt.component.mq.rocket.listener;
 
-import com.kt.component.mq.configuation.MQConfiguration;
-import com.kt.component.mq.rocket.configuation.RocketMQConfiguration;
-import com.kt.component.mq.core.support.ConsumeMode;
+import com.kt.component.mq.core.exception.MQListenException;
 import com.kt.component.mq.core.listener.MQListener;
 import com.kt.component.mq.core.listener.MQListenerConfig;
 import com.kt.component.mq.core.processor.MQMessageProcessor;
-import com.kt.component.mq.core.exception.MQListenException;
+import com.kt.component.mq.core.support.ConsumeMode;
+import com.kt.component.mq.core.support.MQType;
+import com.kt.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -18,13 +18,17 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 @Slf4j
 public class RocketMQListener implements MQListener {
 
+    private RocketMQConfiguration configuration;
+
+    public RocketMQListener(RocketMQConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     public void listen(MQMessageProcessor processor,
-                       MQConfiguration mqConfiguration,
                        MQListenerConfig listenerConfig) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
-        RocketMQConfiguration rocketMQ = mqConfiguration.getRocketMQ();
-        consumer.setNamesrvAddr(rocketMQ.getServer());
+        consumer.setNamesrvAddr(configuration.getServer());
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());
         consumer.setConsumeTimeout(listenerConfig.getConsumeTimeout());
         try {
@@ -46,6 +50,11 @@ public class RocketMQListener implements MQListener {
         } catch (MQClientException e) {
             throw new MQListenException(e);
         }
+    }
+
+    @Override
+    public MQType mqType() {
+        return MQType.ROCKET;
     }
 
     private MessageModel choiceMessageModel(ConsumeMode consumeMode) {

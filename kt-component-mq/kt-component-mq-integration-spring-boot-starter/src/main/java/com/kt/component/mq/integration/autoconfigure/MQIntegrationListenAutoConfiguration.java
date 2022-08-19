@@ -1,6 +1,5 @@
 package com.kt.component.mq.integration.autoconfigure;
 
-import com.kt.component.mq.configuation.MQConfiguration;
 import com.kt.component.mq.integration.MQListenStarter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -18,8 +17,8 @@ public class MQIntegrationListenAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MQListenStarter mqListenStarter(MQConfiguration mqConfiguration) {
-        return new MQListenStarter(mqConfiguration);
+    public MQListenStarter mqListenStarter() {
+        return new MQListenStarter();
     }
 
 }

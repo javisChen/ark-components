@@ -20,13 +20,13 @@
 
         <dependency>
             <groupId>com.kt.mq</groupId>
-            <artifactId>kt-component-mq-rocketmq</artifactId>
+            <artifactId>kt-component-mq-rocketmq-spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.kt.mq</groupId>
-            <artifactId>kt-component-mq-rabbitmq</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.kt.mq</groupId>-->
+<!--            <artifactId>kt-component-mq-rabbitmq</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>

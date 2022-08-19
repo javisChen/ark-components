@@ -1,7 +1,7 @@
 package com.kt.component.mq.core.annotations;
 
 import com.kt.component.mq.core.support.ConsumeMode;
-import com.kt.component.mq.core.support.MQ;
+import com.kt.component.mq.core.support.MQType;
 
 import java.lang.annotation.*;
 
@@ -16,7 +16,7 @@ public @interface MQMessageListener {
     String TRACE_TOPIC_PLACEHOLDER = "${rocketmq.consumer.customized-trace-topic:}";
     String ACCESS_CHANNEL_PLACEHOLDER = "${rocketmq.access-channel:}";
 
-    MQ mq() default MQ.ROCKET;
+    MQType mq() default MQType.ROCKET;
 
     String consumerGroup();
 

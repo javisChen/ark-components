@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MQ {
+public enum MQType {
 
-    ROCKET("BROADCASTING"),
-    KAFKA("KAFKA"),
-    PULSAR("PULSAR"),
-    RABBIT("CLUSTERING");
+    ROCKET("RocketMQ"),
+    KAFKA("Kafka"),
+    PULSAR("Pulsar"),
+    RABBIT("RabbitMQ");
 
     private final String name;
 

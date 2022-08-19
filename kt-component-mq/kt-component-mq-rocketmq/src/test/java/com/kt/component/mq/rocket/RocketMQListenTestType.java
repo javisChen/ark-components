@@ -1,13 +1,12 @@
 package com.kt.component.mq.rocket;
 
-import com.kt.component.mq.configuation.MQConfiguration;
 import com.kt.component.mq.core.annotations.MQMessageListener;
 import com.kt.component.mq.core.processor.MQMessageProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 @Slf4j
-public class RocketMQListenTest {
+public class RocketMQListenTestType {
 
     @MQMessageListener(consumerGroup = "default_group", topic = "test")
     class RocketMQMessageProcessor implements MQMessageProcessor {
@@ -20,7 +19,7 @@ public class RocketMQListenTest {
 
     @Test
     public void test() {
-        MQConfiguration mqConfiguration = new Config().mqConfiguration();
+//        MQConfiguration mqConfiguration = new Config().mqConfiguration();
 //        new MQListenerRunner(mqConfiguration).doListen(new RocketMQMessageProcessor());
 
 //        try {

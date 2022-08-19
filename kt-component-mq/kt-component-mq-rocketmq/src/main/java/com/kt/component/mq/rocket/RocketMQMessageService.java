@@ -1,12 +1,11 @@
 package com.kt.component.mq.rocket;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
-import com.kt.component.mq.core.AbstractMessageService;
+import com.kt.component.mq.core.AbstractMQMessageService;
 import com.kt.component.mq.exception.MQException;
 import com.kt.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -15,20 +14,13 @@ import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 
 @Slf4j
-public class RocketMessageService extends AbstractMessageService<Message, SendResult> {
+public class RocketMQMessageService extends AbstractMQMessageService<Message, SendResult> {
 
-    private RocketMQTemplate rocketMQTemplate;
     private DefaultMQProducer defaultMQProducer;
 
-    public RocketMessageService(RocketMQTemplate rocketMQTemplate, RocketMQConfiguration mqConfiguration) {
-        super(mqConfiguration);
-        this.rocketMQTemplate = rocketMQTemplate;
-        initProducer(mqConfiguration);
-    }
-    public RocketMessageService(RocketMQConfiguration mqConfiguration) {
+    public RocketMQMessageService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         initProducer(mqConfiguration);
     }
@@ -61,27 +53,33 @@ public class RocketMessageService extends AbstractMessageService<Message, SendRe
                                     Message message,
                                     long timeout,
                                     int delayLevel,
-                                    MessageSendCallback callback) {
-        defaultMQProducer.send(message, new SendCallback() {
-            @Override
-            public void onSuccess(SendResult sendResult) {
-                if (log.isDebugEnabled()) {
-                    log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
-                            message.getPayload().getMsgId(), topic, tag, JSON.toJSONString(message));
+                                    MessageSendCallback callback,
+                                    String msgId) {
+        try {
+            defaultMQProducer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
+                                msgId, topic, tag, JSON.toJSONString(message));
+                    }
+                    if (callback != null) {
+                        callback.onSuccess(convertToMQResponse(sendResult));
+                    }
                 }
-                if (callback != null) {
-                    callback.onSuccess(convertToMQResponse(sendResult));
-                }
-            }
 
-            @Override
-            public void onException(Throwable throwable) {
-                log.error("[rocket mq] send message error callback", throwable);
-                if (callback != null) {
-                    callback.onException(throwable);
+                @Override
+                public void onException(Throwable throwable) {
+                    log.error("[rocket mq] send message error callback", throwable);
+                    if (callback != null) {
+                        callback.onException(throwable);
+                    }
                 }
-            }
-        }, timeout);
+            }, timeout);
+        } catch (Exception e) {
+            log.error("[rocket mq] send message error", e);
+            throw new MQException(e);
+        }
     }
 
     protected MessageResponse convertToMQResponse(SendResult sendResult) {

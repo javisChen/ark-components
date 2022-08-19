@@ -11,7 +11,7 @@ package com.kt.component.mq;
  *
  * @author victor
  */
-public interface MessageService {
+public interface MQMessageService {
 
     MessageResponse send(String topic, MessagePayLoad msg);
 
