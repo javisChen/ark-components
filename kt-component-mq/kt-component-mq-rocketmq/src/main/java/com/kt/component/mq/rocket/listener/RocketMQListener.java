@@ -1,6 +1,6 @@
 package com.kt.component.mq.rocket.listener;
 
-import com.kt.component.mq.core.exception.MQListenException;
+import com.kt.component.mq.exception.MQListenException;
 import com.kt.component.mq.core.listener.MQListener;
 import com.kt.component.mq.core.listener.MQListenerConfig;
 import com.kt.component.mq.core.processor.MQMessageProcessor;
@@ -16,7 +16,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
 @Slf4j
-public class RocketMQListener implements MQListener {
+public class RocketMQListener implements MQListener<MessageExt> {
 
     private RocketMQConfiguration configuration;
 
@@ -25,7 +25,7 @@ public class RocketMQListener implements MQListener {
     }
 
     @Override
-    public void listen(MQMessageProcessor processor,
+    public void listen(MQMessageProcessor<MessageExt> processor,
                        MQListenerConfig listenerConfig) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
         consumer.setNamesrvAddr(configuration.getServer());
@@ -37,7 +37,7 @@ public class RocketMQListener implements MQListener {
             consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
                 try {
                     for (MessageExt messageExt : msgList) {
-                        if (processor.process(messageExt.getMsgId(), messageExt.getBody())) {
+                        if (processor.process(messageExt.getMsgId(), messageExt.getBody(), messageExt)) {
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
                     }

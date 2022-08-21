@@ -11,7 +11,7 @@ public class RocketMQListenTestType {
     @MQMessageListener(consumerGroup = "default_group", topic = "test")
     class RocketMQMessageProcessor implements MQMessageProcessor {
         @Override
-        public boolean process(String msgId, byte[] body) {
+        public boolean process(String msgId, byte[] body, Object raw) {
             log.info("RocketMQMessageProcessor consume：" + msgId);
             return true;
         }

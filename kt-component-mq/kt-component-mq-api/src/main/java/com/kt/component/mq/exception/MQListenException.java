@@ -1,4 +1,4 @@
-package com.kt.component.mq.core.exception;
+package com.kt.component.mq.exception;
 
 /**
  * MQ注册消费监听异常

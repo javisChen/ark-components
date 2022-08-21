@@ -2,7 +2,7 @@ package com.kt.component.mq.integration;
 
 
 import com.kt.component.mq.core.annotations.MQMessageListener;
-import com.kt.component.mq.core.exception.MQListenException;
+import com.kt.component.mq.exception.MQListenException;
 import com.kt.component.mq.core.listener.MQListener;
 import com.kt.component.mq.core.listener.MQListenerConfig;
 import com.kt.component.mq.core.processor.MQMessageProcessor;

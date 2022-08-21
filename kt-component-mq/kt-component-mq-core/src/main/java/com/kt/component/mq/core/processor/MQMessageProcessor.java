@@ -1,7 +1,11 @@
 package com.kt.component.mq.core.processor;
 
-public interface MQMessageProcessor {
+/**
+ *
+ * @param <RAW> 各个MQ的原生消息对象
+ */
+public interface MQMessageProcessor<RAW> {
 
-    boolean process(String msgId, byte[] body);
+    boolean process(String msgId, byte[] body, RAW raw);
 
 }
