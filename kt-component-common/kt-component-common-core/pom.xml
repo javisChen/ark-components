@@ -15,7 +15,6 @@
 
     <properties>
 
-
     </properties>
 
     <dependencies>
@@ -71,4 +70,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
