@@ -24,6 +24,7 @@ public class RocketMQConfiguration extends MQConfiguration {
 
     @Data
     public static class Producer {
+        private Boolean enabled = false;
         private String group;
         private int sendMessageTimeout = 30000;
         private int compressMessageBodyThreshold = 4096;
@@ -39,6 +40,7 @@ public class RocketMQConfiguration extends MQConfiguration {
 
     @Data
     public static final class Consumer {
+        private Boolean enabled = false;
         private String group;
         private String topic;
         private String messageModel = "CLUSTERING";

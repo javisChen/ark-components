@@ -16,8 +16,7 @@ import org.springframework.context.ApplicationContextAware;
  * @param <T>
  */
 @Slf4j
-public abstract class StandardMQMessageProcessor<T, RAW>
-        implements MQMessageProcessor<RAW>, ApplicationContextAware {
+public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessageProcessor<RAW>, ApplicationContextAware {
 
     private MessageCodec messageCodec;
 
@@ -31,12 +30,12 @@ public abstract class StandardMQMessageProcessor<T, RAW>
             throw new RuntimeException(e);
         }
         // 消费幂等校验
-        if (isRepeatMessage(message, raw)) {
+        if (isRepeatMessage(msgId, message, raw)) {
             log.warn("[mq] message already consume");
             return true;
         }
         try {
-            handleMessage(message, raw);
+            handleMessage(msgId, message, raw);
             log.info("[mq] message handle success");
         } catch (Exception e) {
             log.error("[mq] message handle error", e);
@@ -45,9 +44,9 @@ public abstract class StandardMQMessageProcessor<T, RAW>
         return true;
     }
 
-    protected abstract void handleMessage(T message, RAW raw);
+    protected abstract void handleMessage(String msgId, T message, RAW raw);
 
-    protected boolean isRepeatMessage(T data, RAW raw) {
+    protected boolean isRepeatMessage(String msgId, T data, RAW raw) {
         return false;
     }
 

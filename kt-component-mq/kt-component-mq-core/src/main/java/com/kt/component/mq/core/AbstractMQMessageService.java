@@ -1,21 +1,23 @@
 package com.kt.component.mq.core;
 
 import com.alibaba.fastjson.JSON;
+import com.kt.component.mq.MQMessageService;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
-import com.kt.component.mq.MQMessageService;
 import com.kt.component.mq.configuation.MQConfiguration;
-import com.kt.component.mq.core.generator.DefaultMessageIdGenerator;
 import com.kt.component.mq.core.generator.MessageIdGenerator;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 @Slf4j
-public abstract class AbstractMQMessageService<P, R> implements MQMessageService {
+public abstract class AbstractMQMessageService<P, R> implements MQMessageService, ApplicationContextAware {
     private final MQConfiguration mqConfiguration;
 
-    private final MessageIdGenerator messageIdGenerator = new DefaultMessageIdGenerator();
+    private MessageIdGenerator messageIdGenerator;
 
     protected AbstractMQMessageService(MQConfiguration mqConfiguration) {
         this.mqConfiguration = mqConfiguration;
@@ -23,6 +25,11 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
 
     protected AbstractMQMessageService() {
         this.mqConfiguration = new MQConfiguration();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.messageIdGenerator = applicationContext.getBean(MessageIdGenerator.class);
     }
 
     @Override

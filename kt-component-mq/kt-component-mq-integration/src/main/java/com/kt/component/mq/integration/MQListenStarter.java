@@ -44,11 +44,6 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
         map.forEach((key, listener) -> listenerHolder.put(listener.mqType(), listener));
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
     public void doListen(MQMessageProcessor processor) {
         MQMessageListener annotation = processor.getClass().getAnnotation(MQMessageListener.class);
         if (annotation != null) {
@@ -73,5 +68,10 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
         mQListenerConfig.setConsumeMode(annotation.consumeMode());
         mQListenerConfig.setMqType(annotation.mq());
         return mQListenerConfig;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

@@ -1,5 +1,9 @@
 package com.kt.component.mq.integration.autoconfigure;
 
+import com.kt.component.mq.core.generator.DefaultMessageIdGenerator;
+import com.kt.component.mq.core.generator.MessageIdGenerator;
+import com.kt.component.mq.core.serializer.FastJSONCodec;
+import com.kt.component.mq.core.serializer.MessageCodec;
 import com.kt.component.mq.integration.MQListenStarter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,6 +23,18 @@ public class MQIntegrationListenAutoConfiguration {
     @ConditionalOnMissingBean
     public MQListenStarter mqListenStarter() {
         return new MQListenStarter();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MessageCodec messageCodec() {
+        return new FastJSONCodec();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MessageIdGenerator messageIdGenerator() {
+        return new DefaultMessageIdGenerator();
     }
 
 }
