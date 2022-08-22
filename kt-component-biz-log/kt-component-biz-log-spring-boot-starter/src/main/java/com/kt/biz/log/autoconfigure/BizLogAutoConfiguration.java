@@ -1,5 +1,6 @@
 package com.kt.biz.log.autoconfigure;
 
+import com.kt.biz.log.core.BizLogProcessor;
 import com.kt.biz.log.core.aspect.BizLogRecordAspect;
 import com.kt.biz.log.parse.parser.SpelTemplateParser;
 import com.kt.biz.log.parse.parser.TemplateParser;
@@ -40,10 +41,16 @@ public class BizLogAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public BizLogRecordAspect bizLogRecordAspect(TemplateParser templateParser,
-                                                 BizLogRepository bizLogRepository,
-                                                 IOperatorService operatorService) {
-        return new BizLogRecordAspect(false, templateParser, bizLogRepository, operatorService);
+    public BizLogRecordAspect bizLogRecordAspect(BizLogProcessor processor) {
+        return new BizLogRecordAspect(processor);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public BizLogProcessor bizLogProcessor(TemplateParser templateParser,
+                                              BizLogRepository bizLogRepository,
+                                              IOperatorService operatorService) {
+        return new BizLogProcessor(true, templateParser, bizLogRepository, operatorService);
     }
 
 }
