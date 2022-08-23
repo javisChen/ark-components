@@ -84,7 +84,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
 
     @Override
     public void asyncSend(String topic, String tag, MessagePayLoad payLoad) {
-        doAsyncSend(topic, null, payLoad, null, 0, 0);
+        doAsyncSend(topic, tag, payLoad, null, 0, 0);
     }
 
     @Override

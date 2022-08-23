@@ -12,9 +12,8 @@ public class OrderPayGuard implements Guard {
     private final Logger log = LoggerFactory.getLogger(OrderPayGuard.class);
 
     @Override
-    public boolean evaluate(StateMachineContext context) {
+    public void evaluate(StateMachineContext context) {
         log.info("订单支付守卫");
-        return true;
     }
 
 }
