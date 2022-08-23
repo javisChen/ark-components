@@ -36,7 +36,9 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         }
         try {
             handleMessage(msgId, message, raw);
-            log.info("[mq] message handle success");
+            if (log.isDebugEnabled()) {
+                log.debug("[mq] message handle success");
+            }
         } catch (Exception e) {
             log.error("[mq] message handle error", e);
             throw new MQException(e);
