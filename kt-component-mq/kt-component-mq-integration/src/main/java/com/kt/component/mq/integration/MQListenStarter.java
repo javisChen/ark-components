@@ -18,9 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@SuppressWarnings("all")
 public class MQListenStarter implements ApplicationRunner, ApplicationContextAware {
 
-    private Map<MQType, MQListener> listenerHolder;
+    private Map<MQType, MQListener<?>> listenerHolder;
 
     private ApplicationContext applicationContext;
 

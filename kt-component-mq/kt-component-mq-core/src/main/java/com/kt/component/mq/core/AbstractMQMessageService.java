@@ -139,7 +139,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
         }
         payLoad.setMsgId(msgId);
         try {
-            P body = buildBody(topic, tag, delayLevel, payLoad);
+            P body = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
                 log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
                         msgId, topic, tag, JSON.toJSONString(body));
@@ -162,12 +162,31 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
         }
         payLoad.setMsgId(msgId);
         try {
-            P body = buildBody(topic, tag, delayLevel, payLoad);
+            P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
-                        msgId, topic, tag, JSON.toJSONString(body));
+                log.debug("[mq] start send message msgId = {} topic = {} tag = {} message = {} ",
+                        msgId, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend(topic, tag, body, timeout, delayLevel, callback, msgId);
+            executeAsyncSend(topic, tag, message, timeout, delayLevel, new MessageSendCallback() {
+                @Override
+                public void onSuccess(MessageResponse messageResponse) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("[mq] start send message msgId:{} topic:{} tag:{} message:{} ",
+                                msgId, topic, tag, JSON.toJSONString(message));
+                    }
+                    if (callback != null) {
+                        callback.onSuccess(messageResponse);
+                    }
+                }
+
+                @Override
+                public void onException(Throwable throwable) {
+                    log.error("[mq] send message error callback", throwable);
+                    if (callback != null) {
+                        callback.onException(throwable);
+                    }
+                }
+            }, msgId);
         } catch (Exception e) {
             log.error("[mq] send message error", e);
             throw new MQException(e);
@@ -177,7 +196,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     /**
      * MQ实现构造自己的消息体
      */
-    protected abstract P buildBody(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad);
+    protected abstract P buildMessage(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad);
 
     /**
      * 执行同步发送

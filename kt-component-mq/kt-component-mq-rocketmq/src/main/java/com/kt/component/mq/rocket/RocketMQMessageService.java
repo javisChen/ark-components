@@ -1,6 +1,5 @@
 package com.kt.component.mq.rocket;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.kt.component.mq.MessagePayLoad;
 import com.kt.component.mq.MessageResponse;
@@ -59,10 +58,6 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
             defaultMQProducer.send(message, new SendCallback() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("[mq] start send message msgId:{} topic:{} tag:{} payLoad:{} ",
-                                msgId, topic, tag, JSON.toJSONString(message));
-                    }
                     if (callback != null) {
                         callback.onSuccess(convertToMQResponse(sendResult));
                     }
@@ -70,7 +65,6 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
 
                 @Override
                 public void onException(Throwable throwable) {
-                    log.error("[rocket mq] send message error callback", throwable);
                     if (callback != null) {
                         callback.onException(throwable);
                     }
@@ -89,7 +83,7 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
     }
 
     @Override
-    protected Message buildBody(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad) {
+    protected Message buildMessage(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad) {
         Message message = new Message(topic, tag, messagePayLoad.getMsgId(), JSONObject.toJSONBytes(messagePayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
