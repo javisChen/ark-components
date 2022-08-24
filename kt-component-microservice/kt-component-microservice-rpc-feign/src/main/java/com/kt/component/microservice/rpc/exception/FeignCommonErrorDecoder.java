@@ -18,18 +18,20 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
         int status = response.status();
         Response.Body body = response.body();
         String bodyString = readFromBody(body);
-        JSONObject jsonBody = JSONObject.parseObject(bodyString);
         if (status == HttpStatus.UNAUTHORIZED.value()) {
+            JSONObject jsonBody = JSONObject.parseObject(bodyString);
             String msg = getMsgFromBody(jsonBody);
             String service = getServiceFromBody(jsonBody);
             String code = getCodeFromBody(jsonBody);
             return new RpcException(service, response, msg, code);
         } else if (status == HttpStatus.FORBIDDEN.value()) {
+            JSONObject jsonBody = JSONObject.parseObject(bodyString);
             String msg = getMsgFromBody(jsonBody);
             String service = getServiceFromBody(jsonBody);
             String code = getCodeFromBody(jsonBody);
             return new RpcException(service, response, msg, code);
         }
+        // 503：直接返回body的提示语即可
         return new RpcException(null, response, bodyString, null);
     }
 
