@@ -18,30 +18,31 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
         int status = response.status();
         Response.Body body = response.body();
         String bodyString = readFromBody(body);
+        JSONObject jsonBody = JSONObject.parseObject(bodyString);
         if (status == HttpStatus.UNAUTHORIZED.value()) {
-            String msg = getMsgFromBody(bodyString);
-            String service = getServiceFromBody(bodyString);
-            String code = getCodeFromBody(bodyString);
+            String msg = getMsgFromBody(jsonBody);
+            String service = getServiceFromBody(jsonBody);
+            String code = getCodeFromBody(jsonBody);
             return new RpcException(service, response, msg, code);
         } else if (status == HttpStatus.FORBIDDEN.value()) {
-            String msg = getMsgFromBody(bodyString);
-            String service = getServiceFromBody(bodyString);
-            String code = getCodeFromBody(bodyString);
+            String msg = getMsgFromBody(jsonBody);
+            String service = getServiceFromBody(jsonBody);
+            String code = getCodeFromBody(jsonBody);
             return new RpcException(service, response, msg, code);
         }
         return new RpcException(null, response, bodyString, null);
     }
 
-    private String getCodeFromBody(String body) {
-        return JSONObject.parseObject(body).getString("code");
+    private String getCodeFromBody(JSONObject body) {
+        return body.getString("code");
     }
 
-    private String getMsgFromBody(String body) {
-        return JSONObject.parseObject(body).getString("msg");
+    private String getMsgFromBody(JSONObject body) {
+        return body.getString("msg");
     }
 
-    private String getServiceFromBody(String body) {
-        return JSONObject.parseObject(body).getString("service");
+    private String getServiceFromBody(JSONObject body) {
+        return body.getString("service");
     }
 
     private String readFromBody(Response.Body body) {
