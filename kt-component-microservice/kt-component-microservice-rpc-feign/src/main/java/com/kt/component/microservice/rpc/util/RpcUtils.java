@@ -4,7 +4,7 @@ import com.kt.component.dto.BizErrorCode;
 import com.kt.component.dto.MultiResponse;
 import com.kt.component.dto.ServerResponse;
 import com.kt.component.dto.SingleResponse;
-import com.kt.component.microservice.rpc.exception.RpcException;
+import com.kt.component.exception.ExceptionFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -69,11 +69,11 @@ public class RpcUtils {
     private static <T> void checkResponse(ServerResponse serverResponse) {
         if (serverResponse == null) {
             log.error("[RPC]调用异常 -> 响应结果为空");
-            throw new RpcException(null, "目标服务异常");
+            throw ExceptionFactory.rpcException("目标服务异常");
         }
         if (!serverResponse.getCode().equals(BizErrorCode.OK.getCode())) {
             log.error("[RPC]调用返回错误：" + serverResponse);
-            throw new RpcException(serverResponse.getService(), serverResponse.getMsg());
+            throw ExceptionFactory.rpcException(serverResponse.getService(), serverResponse.getMsg());
         }
     }
 

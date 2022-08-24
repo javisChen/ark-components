@@ -16,8 +16,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-
     </properties>
 
     <dependencyManagement>
@@ -54,6 +52,11 @@
         <dependency>
             <groupId>com.kt.dto</groupId>
             <artifactId>kt-component-dto</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kt.exception</groupId>
+            <artifactId>kt-component-exception-core</artifactId>
         </dependency>
 
         <dependency>

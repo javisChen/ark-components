@@ -3,10 +3,7 @@ package com.kt.component.exception.handler;
 import com.kt.component.dto.BizErrorCode;
 import com.kt.component.dto.ServerResponse;
 import com.kt.component.dto.SingleResponse;
-import com.kt.component.exception.BizException;
-import com.kt.component.exception.SysException;
-import com.kt.component.exception.ThirdSysException;
-import com.kt.component.exception.UserException;
+import com.kt.component.exception.*;
 import com.kt.component.validator.ValidationResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +38,13 @@ public class GlobalExceptionHandler {
     public ServerResponse handle(Exception e) {
         log.error("Unknown exception：", e);
         return ServerResponse.error(BizErrorCode.SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = RpcException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ServerResponse handle(RpcException e) {
+        log.error("Rpc exception：", e);
+        return ServerResponse.error(BizErrorCode.RPC_ERROR.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(value = UserException.class)

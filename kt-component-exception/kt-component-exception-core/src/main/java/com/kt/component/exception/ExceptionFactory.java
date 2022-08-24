@@ -56,6 +56,44 @@ public class ExceptionFactory {
     public static ThirdSysException thirdSysException(String errorMessage, Throwable e) {
         return new ThirdSysException(errorMessage, e);
     }
+    /**
+     * 第三方服务异常
+     * @param errorMessage 具体错误信息
+     * @return RpcException
+     */
+    public static RpcException rpcException(String errorMessage) {
+        return new RpcException(errorMessage);
+    }
+
+    /**
+     * 第三方服务异常
+     * @param service 报错的服务名
+     * @return RpcException
+     */
+    public static RpcException rpcException(String service, String message) {
+        return new RpcException(service, message);
+    }
+
+    /**
+     * 第三方服务异常
+     * @param errorMessage 具体错误信息
+     * @param e 错误堆栈
+     * @return RpcException
+     */
+    public static RpcException rpcException(String errorMessage, Throwable e) {
+        return new RpcException(errorMessage, e);
+    }
+
+
+    /**
+     * 第三方服务异常
+     * @param errorMessage 具体错误信息
+     * @param e 错误堆栈
+     * @return RpcException
+     */
+    public static RpcException rpcException(String service, Object response, String message, String bizErrorCode) {
+        return new RpcException(service, response, message, bizErrorCode);
+    }
 
 
 }

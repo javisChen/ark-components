@@ -1,6 +1,4 @@
-package com.kt.component.microservice.rpc.exception;
-
-import feign.Response;
+package com.kt.component.exception;
 
 /**
  * RPC调用异常
@@ -10,13 +8,13 @@ public class RpcException extends RuntimeException {
 
     private String service;
     private String bizErrorCode;
-    private Response response;
+    private Object response;
 
     public RpcException() {
 
     }
 
-    public RpcException(String service, Response response, String message, String bizErrorCode) {
+    public RpcException(String service, Object response, String message, String bizErrorCode) {
         super(message);
         this.service = service;
         this.response = response;
@@ -35,11 +33,19 @@ public class RpcException extends RuntimeException {
         this.service = service;
     }
 
+    public RpcException(String message) {
+        super(message);
+    }
+
+    public RpcException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public String getService() {
         return service;
     }
 
-    public Response getResponse() {
+    public Object getResponse() {
         return response;
     }
 

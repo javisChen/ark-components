@@ -35,14 +35,21 @@ public enum BizErrorCode {
      * 用户端错误
      */
     USER_ERROR("U0001", "User Error"),
+
     /**
      * 系统执行错误
      */
     SERVER_ERROR("S0001", "Server Error"),
+
     /**
      * 第三方服务出错
      */
-    THIRD_PARTY_ERROR("T0001", "Third Service Error");
+    THIRD_PARTY_ERROR("T0001", "Third Service Error"),
+
+    /**
+     * RPC调用出错
+     */
+    RPC_ERROR("R0001", "RPC Error");
 
     private final String code;
     private final String msg;

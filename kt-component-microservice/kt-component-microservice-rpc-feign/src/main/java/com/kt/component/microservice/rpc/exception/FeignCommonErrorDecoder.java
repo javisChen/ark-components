@@ -2,6 +2,8 @@ package com.kt.component.microservice.rpc.exception;
 
 import cn.hutool.core.io.IoUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.kt.component.exception.ExceptionFactory;
+import com.kt.component.exception.RpcException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
@@ -18,21 +20,24 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
         int status = response.status();
         Response.Body body = response.body();
         String bodyString = readFromBody(body);
+        RpcException rpcException;
         if (status == HttpStatus.UNAUTHORIZED.value()) {
             JSONObject jsonBody = JSONObject.parseObject(bodyString);
             String msg = getMsgFromBody(jsonBody);
             String service = getServiceFromBody(jsonBody);
             String code = getCodeFromBody(jsonBody);
-            return new RpcException(service, response, msg, code);
+            rpcException = ExceptionFactory.rpcException(service, response, msg, code);
         } else if (status == HttpStatus.FORBIDDEN.value()) {
             JSONObject jsonBody = JSONObject.parseObject(bodyString);
             String msg = getMsgFromBody(jsonBody);
             String service = getServiceFromBody(jsonBody);
             String code = getCodeFromBody(jsonBody);
-            return new RpcException(service, response, msg, code);
+            rpcException = ExceptionFactory.rpcException(service, response, msg, code);
+        } else {
+            // 503：直接返回body的提示语即可
+            rpcException = new RpcException(null, response, bodyString, null);
         }
-        // 503：直接返回body的提示语即可
-        return new RpcException(null, response, bodyString, null);
+        return rpcException;
     }
 
     private String getCodeFromBody(JSONObject body) {
