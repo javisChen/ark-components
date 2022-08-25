@@ -19,7 +19,7 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
     public Exception decode(String methodKey, Response response) {
         int status = response.status();
         Response.Body body = response.body();
-        String bodyString = readFromBody(body);
+        String bodyString = readStrFromBody(body);
         RpcException rpcException;
         if (status == HttpStatus.UNAUTHORIZED.value()) {
             JSONObject jsonBody = JSONObject.parseObject(bodyString);
@@ -37,7 +37,8 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
             // 503：直接返回body的提示语即可
             rpcException = new RpcException(null, response, bodyString, null);
         }
-        return rpcException;
+        // 这样直接throw才会被统一异常捕捉
+        throw rpcException;
     }
 
     private String getCodeFromBody(JSONObject body) {
@@ -52,7 +53,7 @@ public class FeignCommonErrorDecoder implements ErrorDecoder {
         return body.getString("service");
     }
 
-    private String readFromBody(Response.Body body) {
+    private String readStrFromBody(Response.Body body) {
         String read = "";
         try {
             read = IoUtil.read(body.asInputStream(), StandardCharsets.UTF_8);
