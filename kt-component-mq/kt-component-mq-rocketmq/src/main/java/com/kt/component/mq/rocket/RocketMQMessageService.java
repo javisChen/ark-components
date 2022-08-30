@@ -1,7 +1,7 @@
 package com.kt.component.mq.rocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.kt.component.mq.MessagePayLoad;
+import com.kt.component.mq.Message;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
 import com.kt.component.mq.core.AbstractMQMessageService;
@@ -12,10 +12,9 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.common.message.Message;
 
 @Slf4j
-public class RocketMQMessageService extends AbstractMQMessageService<Message, SendResult> {
+public class RocketMQMessageService extends AbstractMQMessageService<org.apache.rocketmq.common.message.Message, SendResult> {
 
     private DefaultMQProducer defaultMQProducer;
 
@@ -37,7 +36,7 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
     }
 
     @Override
-    protected SendResult executeSend(String topic, String tag, Message message, long timeout, int delayLevel) {
+    protected SendResult executeSend(String topic, String tag, org.apache.rocketmq.common.message.Message message, long timeout, int delayLevel) {
         try {
             message.setDelayTimeLevel(delayLevel);
             return defaultMQProducer.send(message, timeout);
@@ -49,7 +48,7 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
     @Override
     protected void executeAsyncSend(String topic,
                                     String tag,
-                                    Message message,
+                                    org.apache.rocketmq.common.message.Message message,
                                     long timeout,
                                     int delayLevel,
                                     MessageSendCallback callback,
@@ -83,8 +82,8 @@ public class RocketMQMessageService extends AbstractMQMessageService<Message, Se
     }
 
     @Override
-    protected Message buildMessage(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad) {
-        Message message = new Message(topic, tag, messagePayLoad.getMsgId(), JSONObject.toJSONBytes(messagePayLoad));
+    protected org.apache.rocketmq.common.message.Message buildMessage(String topic, String tag, int delayLevel, Message messagePayLoad) {
+        org.apache.rocketmq.common.message.Message message = new org.apache.rocketmq.common.message.Message(topic, tag, messagePayLoad.getMsgId(), JSONObject.toJSONBytes(messagePayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
     }

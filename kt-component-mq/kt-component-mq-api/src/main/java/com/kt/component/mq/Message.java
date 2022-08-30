@@ -5,16 +5,16 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class MessagePayLoad {
+public class Message<T> {
 
-    private Object body;
+    private T body;
     private String msgId;
 
-    public MessagePayLoad(Object body) {
+    public Message(T body) {
         this.body = body;
     }
 
-    public MessagePayLoad(String msgId, Object body) {
+    public Message(String msgId, T body) {
         this.body = body;
         this.msgId = msgId;
     }

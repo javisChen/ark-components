@@ -1,6 +1,7 @@
 package com.kt.component.mq.core.processor;
 
 import cn.hutool.core.util.TypeUtil;
+import com.kt.component.mq.Message;
 import com.kt.component.mq.core.serializer.MessageCodec;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
     @Override
     public boolean process(String msgId, byte[] body, RAW raw) {
         // 反序列化
-        T message = null;
+        Message<T> message = null;
         try {
             message = messageCodec.decode(body, TypeUtil.getTypeArgument(getClass()));
         } catch (Exception e) {
@@ -46,9 +47,9 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         return true;
     }
 
-    protected abstract void handleMessage(String msgId, T message, RAW raw);
+    protected abstract void handleMessage(String msgId, Message<T> message, RAW raw);
 
-    protected boolean isRepeatMessage(String msgId, T data, RAW raw) {
+    protected boolean isRepeatMessage(String msgId, Message<T> data, RAW raw) {
         return false;
     }
 

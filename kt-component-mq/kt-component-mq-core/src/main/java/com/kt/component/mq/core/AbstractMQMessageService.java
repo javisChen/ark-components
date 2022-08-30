@@ -2,7 +2,7 @@ package com.kt.component.mq.core;
 
 import com.alibaba.fastjson.JSON;
 import com.kt.component.mq.MQMessageService;
-import com.kt.component.mq.MessagePayLoad;
+import com.kt.component.mq.Message;
 import com.kt.component.mq.MessageResponse;
 import com.kt.component.mq.MessageSendCallback;
 import com.kt.component.mq.configuation.MQConfiguration;
@@ -33,106 +33,106 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     }
 
     @Override
-    public MessageResponse send(String topic, MessagePayLoad payLoad, int timeout) {
+    public MessageResponse send(String topic, Message payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MessageResponse send(String topic, String tag, MessagePayLoad payLoad, int timeout) {
+    public MessageResponse send(String topic, String tag, Message payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, MessagePayLoad payLoad, int delay) {
+    public MessageResponse delaySend(String topic, Message payLoad, int delay) {
         return doSend(topic, null, payLoad, 0, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, MessagePayLoad payLoad, int delay, int timeout) {
+    public MessageResponse delaySend(String topic, Message payLoad, int delay, int timeout) {
         return doSend(topic, null, payLoad, timeout, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, String tag, int delay, MessagePayLoad payLoad) {
+    public MessageResponse delaySend(String topic, String tag, int delay, Message payLoad) {
         return doSend(topic, tag, payLoad, 0, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, String tag, int delay, int timeout, MessagePayLoad payLoad) {
+    public MessageResponse delaySend(String topic, String tag, int delay, int timeout, Message payLoad) {
         return doSend(topic, tag, payLoad, timeout, delay);
     }
 
     @Override
-    public MessageResponse send(String topic, MessagePayLoad payLoad) {
+    public MessageResponse send(String topic, Message payLoad) {
         return doSend(topic, null, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public MessageResponse send(String topic, String tag, MessagePayLoad payLoad) {
+    public MessageResponse send(String topic, String tag, Message payLoad) {
         return doSend(topic, tag, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public void asyncSend(String topic, MessagePayLoad payLoad) {
+    public void asyncSend(String topic, Message payLoad) {
         doAsyncSend(topic, null, payLoad, null, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, MessagePayLoad payLoad, int timeout) {
+    public void asyncSend(String topic, Message payLoad, int timeout) {
         doAsyncSend(topic, null, payLoad, null, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MessagePayLoad payLoad) {
+    public void asyncSend(String topic, String tag, Message payLoad) {
         doAsyncSend(topic, tag, payLoad, null, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MessagePayLoad payLoad, int timeout) {
+    public void asyncSend(String topic, String tag, Message payLoad, int timeout) {
         doAsyncSend(topic, tag, payLoad, null, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, MessagePayLoad payLoad, MessageSendCallback callback) {
+    public void asyncSend(String topic, Message payLoad, MessageSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, MessagePayLoad payLoad, int timeout, MessageSendCallback callback) {
+    public void asyncSend(String topic, Message payLoad, int timeout, MessageSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback) {
+    public void asyncSend(String topic, String tag, Message payLoad, MessageSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MessagePayLoad payLoad, int timeout, MessageSendCallback callback) {
+    public void asyncSend(String topic, String tag, Message payLoad, int timeout, MessageSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void delayAsyncSend(String topic, MessagePayLoad payLoad, int delay, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, Message payLoad, int delay, MessageSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, MessagePayLoad payLoad, int delay, int timeout, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, Message payLoad, int delay, int timeout, MessageSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, MessagePayLoad payLoad, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, Message payLoad, MessageSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, int timeout, MessagePayLoad payLoad, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, int timeout, Message payLoad, MessageSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, delay);
     }
 
-    private MessageResponse doSend(String topic, String tag, MessagePayLoad payLoad, long timeout, int delayLevel) {
+    private MessageResponse doSend(String topic, String tag, Message payLoad, long timeout, int delayLevel) {
         String msgId = messageIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
@@ -155,7 +155,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
         }
     }
 
-    private void doAsyncSend(String topic, String tag, MessagePayLoad payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
+    private void doAsyncSend(String topic, String tag, Message payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
         String msgId = messageIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
@@ -196,7 +196,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     /**
      * MQ实现构造自己的消息体
      */
-    protected abstract P buildMessage(String topic, String tag, int delayLevel, MessagePayLoad messagePayLoad);
+    protected abstract P buildMessage(String topic, String tag, int delayLevel, Message message);
 
     /**
      * 执行同步发送
