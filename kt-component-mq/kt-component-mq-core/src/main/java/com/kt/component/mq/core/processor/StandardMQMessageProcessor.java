@@ -22,7 +22,7 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
     private MessageCodec messageCodec;
 
     @Override
-    public boolean process(String msgId, byte[] body, RAW raw) {
+    public boolean process(byte[] body, RAW raw) {
         // 反序列化
         Message<T> message = null;
         try {
@@ -30,6 +30,7 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        String msgId = message.getMsgId();
         // 消费幂等校验
         if (isRepeatMessage(msgId, message, raw)) {
             log.warn("[mq] message already consume");

@@ -6,6 +6,6 @@ package com.kt.component.mq.core.processor;
  */
 public interface MQMessageProcessor<RAW> {
 
-    boolean process(String msgId, byte[] body, RAW raw);
+    boolean process(byte[] body, RAW raw);
 
 }
