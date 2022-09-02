@@ -84,12 +84,8 @@ public class ExceptionFactory {
         return new RpcException(errorMessage, e);
     }
 
-
     /**
      * 第三方服务异常
-     * @param errorMessage 具体错误信息
-     * @param e 错误堆栈
-     * @return RpcException
      */
     public static RpcException rpcException(String service, Object response, String message, String bizErrorCode) {
         return new RpcException(service, response, message, bizErrorCode);
