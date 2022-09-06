@@ -60,7 +60,6 @@
         <dependency>
             <groupId>com.kt.orm</groupId>
             <artifactId>kt-component-orm-mybatis-spring-boot-starter</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
