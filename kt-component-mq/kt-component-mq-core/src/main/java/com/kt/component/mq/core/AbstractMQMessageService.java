@@ -171,7 +171,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
                 @Override
                 public void onSuccess(MessageResponse messageResponse) {
                     if (log.isDebugEnabled()) {
-                        log.debug("[mq] send message msgId:{} topic:{} tag:{} message:{} ",
+                        log.debug("[mq] send message msgId = {} topic = {} tag = {} message = {} ",
                                 msgId, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
