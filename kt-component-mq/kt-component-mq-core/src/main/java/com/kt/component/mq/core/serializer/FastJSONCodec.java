@@ -1,6 +1,5 @@
 package com.kt.component.mq.core.serializer;
 
-import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson.JSON;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;

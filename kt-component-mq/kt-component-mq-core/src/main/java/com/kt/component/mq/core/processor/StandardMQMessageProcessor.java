@@ -19,13 +19,13 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Slf4j
 public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessageProcessor<RAW>, ApplicationContextAware {
-
     private MessageCodec messageCodec;
 
     @Override
     public boolean process(byte[] body, RAW raw) {
         // 反序列化
-        Message<T> message = null;
+        Message<T> message;
+        log.info("[mq] consume message raw body = {}", new String(body));
         try {
             message = messageCodec.decode(body, TypeUtil.getTypeArgument(getClass()));
         } catch (Exception e) {
