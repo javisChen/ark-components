@@ -1,7 +1,7 @@
 package com.kt.component.mq.exception;
 
 /**
- * OSS操作异常类
+ * MQ操作异常类
  * @author victor
  */
 public class MQException extends RuntimeException {

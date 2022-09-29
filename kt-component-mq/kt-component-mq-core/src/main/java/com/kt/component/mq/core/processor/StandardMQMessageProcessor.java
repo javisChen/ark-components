@@ -3,6 +3,7 @@ package com.kt.component.mq.core.processor;
 import cn.hutool.core.util.TypeUtil;
 import com.kt.component.mq.Message;
 import com.kt.component.mq.core.serializer.MessageCodec;
+import com.kt.component.mq.exception.MQDecodeException;
 import com.kt.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -28,7 +29,8 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         try {
             message = messageCodec.decode(body, TypeUtil.getTypeArgument(getClass()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("[mq] message decode error", e);
+            throw new MQDecodeException(e);
         }
         String msgId = message.getMsgId();
         // 消费幂等校验

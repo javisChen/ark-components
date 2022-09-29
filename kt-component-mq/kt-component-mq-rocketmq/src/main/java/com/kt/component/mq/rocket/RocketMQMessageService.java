@@ -15,9 +15,7 @@ import org.apache.rocketmq.client.producer.SendResult;
 
 @Slf4j
 public class RocketMQMessageService extends AbstractMQMessageService<org.apache.rocketmq.common.message.Message, SendResult> {
-
     private DefaultMQProducer defaultMQProducer;
-
     public RocketMQMessageService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         initProducer(mqConfiguration);
