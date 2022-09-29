@@ -5,17 +5,21 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Message<T> {
+public class Message {
 
-    private T body;
+    private Object body;
     private String msgId;
 
-    public Message(T body) {
+    public Message(Object body) {
         this.body = body;
     }
 
-    public Message(String msgId, T body) {
+    public Message(String msgId, Object body) {
         this.body = body;
         this.msgId = msgId;
+    }
+
+    public static Message of(Object body) {
+        return new Message(body);
     }
 }

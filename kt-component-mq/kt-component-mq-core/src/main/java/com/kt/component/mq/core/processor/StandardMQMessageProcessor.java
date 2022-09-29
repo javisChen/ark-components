@@ -1,6 +1,8 @@
 package com.kt.component.mq.core.processor;
 
 import cn.hutool.core.util.TypeUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.kt.component.mq.Message;
 import com.kt.component.mq.core.serializer.MessageCodec;
 import com.kt.component.mq.exception.MQDecodeException;
@@ -18,28 +20,29 @@ import org.springframework.context.ApplicationContextAware;
  * @param <T>
  */
 @Slf4j
+@SuppressWarnings("all")
 public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessageProcessor<RAW>, ApplicationContextAware {
     private MessageCodec messageCodec;
 
     @Override
     public boolean process(byte[] body, RAW raw) {
         // 反序列化
-        Message<T> message;
-        log.info("[mq] consume message raw body = {}", new String(body));
+        Message message;
         try {
-            message = messageCodec.decode(body, TypeUtil.getTypeArgument(getClass()));
+            message = messageCodec.decode(body, Message.class);
         } catch (Exception e) {
             log.error("[mq] message decode error", e);
             throw new MQDecodeException(e);
         }
         String msgId = message.getMsgId();
+        T msgBody = JSON.parseObject(JSON.toJSONString(message.getBody()), TypeUtil.getTypeArgument(getClass()));
         // 消费幂等校验
-        if (isRepeatMessage(msgId, message, raw)) {
+        if (isRepeatMessage(msgId, msgBody, raw)) {
             log.warn("[mq] message already consume");
             return true;
         }
         try {
-            handleMessage(msgId, message, raw);
+            handleMessage(msgId, msgBody, raw);
             if (log.isDebugEnabled()) {
                 log.debug("[mq] message handle success");
             }
@@ -50,9 +53,9 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         return true;
     }
 
-    protected abstract void handleMessage(String msgId, Message<T> message, RAW raw);
+    protected abstract void handleMessage(String msgId, T body, RAW raw);
 
-    protected boolean isRepeatMessage(String msgId, Message<T> data, RAW raw) {
+    protected boolean isRepeatMessage(String msgId, T body, RAW raw) {
         return false;
     }
 

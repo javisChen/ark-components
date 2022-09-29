@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 public class RocketMQTestProcessorMQ<T> extends SimpleMQMessageProcessor<T> {
 
     @Override
-    protected void handleMessage(String msgId, Message<T> message, Object o) {
+    protected void handleMessage(String msgId, T body, Object o) {
 
     }
-
 }
