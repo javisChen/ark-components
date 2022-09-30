@@ -37,7 +37,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
             consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
                 try {
                     for (MessageExt messageExt : msgList) {
-                        if (processor.process(messageExt.getBody(), messageExt)) {
+                        if (processor.process(messageExt.getBody(), messageExt.getMsgId(),messageExt)) {
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
                     }

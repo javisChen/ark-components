@@ -50,13 +50,13 @@ public class RocketMQMessageService extends AbstractMQMessageService<org.apache.
                                     long timeout,
                                     int delayLevel,
                                     MessageSendCallback callback,
-                                    String msgId) {
+                                    String sendId) {
         try {
             defaultMQProducer.send(message, new SendCallback() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     if (callback != null) {
-                        callback.onSuccess(convertToMQResponse(sendResult));
+                        callback.onSuccess(convertToMQResponse(sendResult, sendId));
                     }
                 }
 
@@ -73,15 +73,17 @@ public class RocketMQMessageService extends AbstractMQMessageService<org.apache.
         }
     }
 
-    protected MessageResponse convertToMQResponse(SendResult sendResult) {
+    protected MessageResponse convertToMQResponse(SendResult sendResult, String sendId) {
         return MessageResponse.builder()
+                .withSendId(sendId)
                 .withMsgId(sendResult.getMsgId())
                 .build();
     }
 
     @Override
     protected org.apache.rocketmq.common.message.Message buildMessage(String topic, String tag, int delayLevel, Message messagePayLoad) {
-        org.apache.rocketmq.common.message.Message message = new org.apache.rocketmq.common.message.Message(topic, tag, messagePayLoad.getMsgId(), JSONObject.toJSONBytes(messagePayLoad));
+        org.apache.rocketmq.common.message.Message message
+                = new org.apache.rocketmq.common.message.Message(topic, tag, messagePayLoad.getSendId(), JSONObject.toJSONBytes(messagePayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
     }

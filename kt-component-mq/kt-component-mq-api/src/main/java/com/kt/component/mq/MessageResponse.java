@@ -9,4 +9,6 @@ public class MessageResponse {
 
     private String msgId;
 
+    private String sendId;
+
 }

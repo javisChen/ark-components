@@ -8,15 +8,19 @@ import lombok.ToString;
 public class Message {
 
     private Object body;
-    private String msgId;
+
+    /**
+     * 组件自生成的Id
+     */
+    private String sendId;
 
     public Message(Object body) {
         this.body = body;
     }
 
-    public Message(String msgId, Object body) {
+    public Message(String sendId, Object body) {
         this.body = body;
-        this.msgId = msgId;
+        this.sendId = sendId;
     }
 
     public static Message of(Object body) {

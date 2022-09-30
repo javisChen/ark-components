@@ -13,6 +13,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ *
+ * @param <P> MQ发送对象
+ * @param <R> MQ发送响应对象
+ */
 @Slf4j
 public abstract class AbstractMQMessageService<P, R> implements MQMessageService, ApplicationContextAware {
     private final MQConfiguration mqConfiguration;
@@ -133,46 +138,46 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     }
 
     private MessageResponse doSend(String topic, String tag, Message payLoad, long timeout, int delayLevel) {
-        String msgId = messageIdGenerator.getId();
+        String sendId = messageIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
-        payLoad.setMsgId(msgId);
+        payLoad.setSendId(sendId);
         try {
-            P body = buildMessage(topic, tag, delayLevel, payLoad);
+            P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message msgId = {} topic = {} tag = {} payLoad = {} ",
-                        msgId, topic, tag, JSON.toJSONString(body));
+                log.debug("[MQ] start send message sendId = {} topic = {} tag = {} payLoad = {} ",
+                        sendId, topic, tag, JSON.toJSONString(message));
             }
-            R result = executeSend(topic, tag, body, timeout, delayLevel);
+            R result = executeSend(topic, tag, message, timeout, delayLevel);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] send message finish msgId = {} payLoad = {}", msgId, JSON.toJSONString(body));
+                log.debug("[MQ] send message finish sendId = {} payLoad = {}", sendId, JSON.toJSONString(message));
             }
-            return convertToMQResponse(result);
+            return convertToMQResponse(result, sendId);
         } catch (Exception e) {
-            log.error("[mq] send message error msgId:" + msgId, e);
+            log.error("[MQ] send message error sendId:" + sendId, e);
             throw new MQException(e);
         }
     }
 
     private void doAsyncSend(String topic, String tag, Message payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
-        String msgId = messageIdGenerator.getId();
+        String sendId = messageIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
-        payLoad.setMsgId(msgId);
+        payLoad.setSendId(sendId);
         try {
             P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[mq] start send message msgId = {} topic = {} tag = {} message = {} ",
-                        msgId, topic, tag, JSON.toJSONString(message));
+                log.debug("[MQ] start send message sendId = {} topic = {} tag = {} message = {} ",
+                        sendId, topic, tag, JSON.toJSONString(message));
             }
             executeAsyncSend(topic, tag, message, timeout, delayLevel, new MessageSendCallback() {
                 @Override
                 public void onSuccess(MessageResponse messageResponse) {
                     if (log.isDebugEnabled()) {
-                        log.debug("[mq] send message msgId = {} topic = {} tag = {} message = {} ",
-                                msgId, topic, tag, JSON.toJSONString(message));
+                        log.debug("[MQ] send message success, sendId = {} topic = {} tag = {} message = {} ",
+                                sendId, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
                         callback.onSuccess(messageResponse);
@@ -181,14 +186,14 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
 
                 @Override
                 public void onException(Throwable throwable) {
-                    log.error("[mq] send message error callback", throwable);
+                    log.error("[MQ] send message error", throwable);
                     if (callback != null) {
                         callback.onException(throwable);
                     }
                 }
-            }, msgId);
+            }, sendId);
         } catch (Exception e) {
-            log.error("[mq] send message error", e);
+            log.error("[MQ] send message error", e);
             throw new MQException(e);
         }
     }
@@ -206,11 +211,11 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback, String msgId);
+    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback, String sendId);
 
     /**
      * 转换回统一的MQ响应体
      */
-    protected abstract MessageResponse convertToMQResponse(R result);
+    protected abstract MessageResponse convertToMQResponse(R sendResult, String sendId);
 
 }
