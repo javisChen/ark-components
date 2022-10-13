@@ -1,0 +1,35 @@
+package com.ark.component.context.autoconfigure;
+
+import com.ark.component.cache.redis.RedisCacheService;
+import com.ark.component.context.core.interceptor.ServiceContextInterceptor;
+import com.ark.component.context.core.token.AccessTokenConfig;
+import com.ark.component.context.core.token.AccessTokenExtractor;
+import com.ark.component.context.core.token.AccessTokenStandardExtractor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * @ Description   :
+ * @ Author        :  Javis
+ * @ CreateDate    :  2020/11/09
+ * @ Version       :  1.0
+ */
+@Slf4j
+public class ServiceContextAutoConfiguration implements WebMvcConfigurer {
+
+    public ServiceContextAutoConfiguration() {
+        log.info("enable [ark-component-context-spring-boot-starter]");
+    }
+
+    @Bean
+    public AccessTokenExtractor accessTokenExtractor() {
+        return new AccessTokenStandardExtractor(new AccessTokenConfig());
+    }
+
+    @Bean
+    public ServiceContextInterceptor serviceContextInterceptor(RedisCacheService redisService,
+                                                               AccessTokenExtractor accessTokenExtractor) {
+        return new ServiceContextInterceptor(redisService, accessTokenExtractor);
+    }
+}

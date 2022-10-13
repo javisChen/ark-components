@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>ark-component-oss</name>
+    <groupId>com.ark.oss</groupId>
+    <artifactId>ark-component-oss</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ark-component-oss-api</module>
+        <module>ark-component-oss-minio</module>
+        <module>ark-component-oss-aliyun</module>
+        <module>ark-component-oss-minio-spring-boot-starter</module>
+        <module>ark-component-oss-aliyun-spring-boot-starter</module>
+    </modules>
+
+    <properties>
+        <ark-component-oss-api.version>1.0.0-SNAPSHOT</ark-component-oss-api.version>
+        <ark-component-oss-aliyun.version>1.0.0-SNAPSHOT</ark-component-oss-aliyun.version>
+        <ark-component-oss-minio.version>1.0.0-SNAPSHOT</ark-component-oss-minio.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.ark.boot</groupId>
+                <artifactId>ark-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.oss</groupId>
+                <artifactId>ark-component-oss-api</artifactId>
+                <version>${ark-component-oss-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.oss</groupId>
+                <artifactId>ark-component-oss-aliyun</artifactId>
+                <version>${ark-component-oss-aliyun.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.oss</groupId>
+                <artifactId>ark-component-oss-minio</artifactId>
+                <version>${ark-component-oss-minio.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

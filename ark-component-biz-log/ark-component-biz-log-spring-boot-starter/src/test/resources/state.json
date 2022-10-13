@@ -1,0 +1,50 @@
+{
+  "states": [
+    "UN_PAY",
+    "PAID",
+    "CLOSED"
+  ],
+  "events": [
+    "CREATE_ORDER",
+    "PAY",
+    "CLOSE"
+  ],
+  "initEvent": "CREATE_ORDER",
+  "initState": "UN_PAY",
+  "finalState": "CLOSED",
+  "transitions": [
+    {
+      "guards": [
+        "com.ark.component.biz.log.statemachine.guard.OrderCreateGuard"
+      ],
+      "source": "",
+      "event": "CREATE_ORDER",
+      "target": "UN_PAY",
+      "actions": [
+        "com.ark.component.biz.log.statemachine.action.OrderCreateAction"
+      ]
+    },
+    {
+      "guards": [
+        "com.ark.component.biz.log.statemachine.guard.OrderPayGuard"
+      ],
+      "source": "UN_PAY",
+      "event": "PAY",
+      "target": "PAID",
+      "actions": [
+        "com.ark.component.biz.log.statemachine.action.OrderPayAction"
+      ]
+    },
+    {
+      "guards": [
+        "com.ark.component.biz.log.statemachine.guard.OrderPayGuard"
+      ],
+      "source": "PAID",
+      "event": "CLOSE",
+      "target": "CLOSED",
+      "actions": [
+        "com.ark.component.biz.log.statemachine.action.OrderPayAction"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+ark:
+  mq:
+    rocketmq:
+      server: localhost:9876
+      producer:
+        group: 'pg_default'
+logging:
+  level:
+    root: debug

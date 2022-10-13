@@ -4,31 +4,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.kt.component</groupId>
-    <artifactId>kt-components</artifactId>
+    <groupId>com.ark.component</groupId>
+    <artifactId>ark-components</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>kt-component-common</module>
-        <module>kt-component-dto</module>
-        <module>kt-component-oss</module>
-        <module>kt-component-context</module>
-        <module>kt-component-orm</module>
-        <module>kt-component-search</module>
-        <module>kt-component-logger</module>
-        <module>kt-component-statemachine</module>
-        <module>kt-component-biz-log</module>
-        <module>kt-component-cache</module>
-        <module>kt-component-lock</module>
-        <module>kt-component-mq</module>
-        <module>kt-component-config</module>
-        <module>kt-component-exception</module>
-        <module>kt-component-validator</module>
-        <module>kt-component-openapi</module>
-        <module>kt-component-web</module>
-        <module>kt-component-microservice</module>
-        <module>kt-component-spring-boot-starters</module>
+        <module>ark-component-common</module>
+        <module>ark-component-dto</module>
+        <module>ark-component-oss</module>
+        <module>ark-component-context</module>
+        <module>ark-component-orm</module>
+        <module>ark-component-search</module>
+        <module>ark-component-logger</module>
+        <module>ark-component-statemachine</module>
+        <module>ark-component-biz-log</module>
+        <module>ark-component-cache</module>
+        <module>ark-component-lock</module>
+        <module>ark-component-mq</module>
+        <module>ark-component-config</module>
+        <module>ark-component-exception</module>
+        <module>ark-component-validator</module>
+        <module>ark-component-openapi</module>
+        <module>ark-component-web</module>
+        <module>ark-component-microservice</module>
+        <module>ark-component-spring-boot-starters</module>
     </modules>
 
 </project>

@@ -1,0 +1,22 @@
+package com.ark.component.statemachine.action;
+
+import com.ark.component.statemachine.core.StateMachineContext;
+import com.ark.component.statemachine.core.action.DefaultAction;
+import com.ark.component.statemachine.core.dto.OrderPayDTO;
+import com.ark.component.statemachine.dao.mapper.OrderMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+public class OrderCloseAction extends DefaultAction<OrderPayDTO> {
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Override
+    public void execute(StateMachineContext context, OrderPayDTO params) {
+        System.out.println("订单关闭");
+    }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ark.component.dao.PositionMapper">
+
+
+    <select id="selectAndDetail" resultType="com.ark.component.po.Position">
+        select *
+        from position p
+        inner join position_detail pd on pd.pid = p.id
+    </select>
+    <select id="selectPosition" resultType="java.util.Map">
+
+        select *
+        from position p
+                 inner join position_detail pd on pd.pid = p.id
+        where p.id = #{posId}
+    </select>
+</mapper>
