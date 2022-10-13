@@ -17,8 +17,8 @@ public class AliYunObjectStorageServiceTest {
     public void setUp() {
         AliYunOssProperties minIoConfiguration = new AliYunOssProperties();
         minIoConfiguration.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
-        minIoConfiguration.setAccessKey("LTAI5tB6EGUDPBWRtvwKFcxg");
-        minIoConfiguration.setSecretKey("M9gV934ETKDXtHvaBXrK8NEtZHzEEZ");
+        minIoConfiguration.setAccessKey("");
+        minIoConfiguration.setSecretKey("");
         iObjectStorageService = new AliYunObjectStorageService(minIoConfiguration);
     }
 
