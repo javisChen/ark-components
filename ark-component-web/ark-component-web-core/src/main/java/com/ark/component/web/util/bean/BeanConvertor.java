@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Bean转换器
@@ -36,18 +33,22 @@ public class BeanConvertor {
         return targetObj;
     }
 
-    public static <S, T> List<T> copyList(List<S> srcList, Class<T> targetClazz) {
+    public static <S, T> Collection<T> copyList(Collection<S> srcList, Class<T> targetClazz) {
         if (CollectionUtils.isEmpty(srcList)) {
             return Collections.emptyList();
         }
-        List<T> targetList = new ArrayList<>(srcList.size());
+        Collection<T> targetList = new ArrayList<>(srcList.size());
         srcList.forEach(s -> targetList.add(copy(s, targetClazz)));
         return targetList;
     }
 
     public static <S, T> PageResponse<T> copyPage(IPage<S> page, Class<T> targetClazz) {
-        List<S> srcList = page.getRecords();
-        List<T> targetList = null;
+        return toPage(page, targetClazz);
+    }
+
+    private static <S, T> PageResponse<T> toPage(IPage<S> page, Class<T> targetClazz) {
+        Collection<S> srcList = page.getRecords();
+        Collection<T> targetList = null;
         if (CollectionUtils.isNotEmpty(srcList)) {
             targetList = copyList(srcList, targetClazz);
         } else {
@@ -57,6 +58,22 @@ public class BeanConvertor {
         pageResponse.setTotal((int) page.getTotal());
         pageResponse.setSize((int) page.getSize());
         pageResponse.setCurrent((int) page.getCurrent());
+        pageResponse.setRecords(targetList);
+        return pageResponse;
+    }
+
+    public static <S, T> PageResponse<T> copyPage(PageResponse<S> page, Class<T> targetClazz) {
+        Collection<S> srcList = page.getRecords();
+        Collection<T> targetList = null;
+        if (CollectionUtils.isNotEmpty(srcList)) {
+            targetList = copyList(srcList, targetClazz);
+        } else {
+            targetList = Collections.emptyList();
+        }
+        PageResponse<T> pageResponse = new PageResponse<>();
+        pageResponse.setTotal(page.getTotal());
+        pageResponse.setSize(page.getSize());
+        pageResponse.setCurrent(page.getCurrent());
         pageResponse.setRecords(targetList);
         return pageResponse;
     }
