@@ -33,11 +33,11 @@ public class BeanConvertor {
         return targetObj;
     }
 
-    public static <S, T> Collection<T> copyList(Collection<S> srcList, Class<T> targetClazz) {
+    public static <S, T> List<T> copyList(Collection<S> srcList, Class<T> targetClazz) {
         if (CollectionUtils.isEmpty(srcList)) {
             return Collections.emptyList();
         }
-        Collection<T> targetList = new ArrayList<>(srcList.size());
+        List<T> targetList = new ArrayList<>(srcList.size());
         srcList.forEach(s -> targetList.add(copy(s, targetClazz)));
         return targetList;
     }
@@ -48,7 +48,7 @@ public class BeanConvertor {
 
     private static <S, T> PageResponse<T> toPage(IPage<S> page, Class<T> targetClazz) {
         Collection<S> srcList = page.getRecords();
-        Collection<T> targetList = null;
+        List<T> targetList = null;
         if (CollectionUtils.isNotEmpty(srcList)) {
             targetList = copyList(srcList, targetClazz);
         } else {
