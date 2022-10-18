@@ -58,6 +58,11 @@
             <artifactId>validation-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ark.validator</groupId>
+            <artifactId>ark-component-validator</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
