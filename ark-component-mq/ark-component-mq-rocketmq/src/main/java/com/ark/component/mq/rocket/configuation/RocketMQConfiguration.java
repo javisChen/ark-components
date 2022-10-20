@@ -12,7 +12,7 @@ import java.util.Map;
  * @author jc
  */
 @Data
-@ConfigurationProperties(prefix = "ark.mq.rocketmq")
+@ConfigurationProperties(prefix = "ark.component.mq.rocketmq")
 public class RocketMQConfiguration extends MQConfiguration {
 
     /**
