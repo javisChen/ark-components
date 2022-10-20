@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
+import com.ark.component.web.config.ArkWebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -58,7 +59,7 @@ public class CloudWebAutoConfiguration {
                 //分组名称
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("com.ark.cloud"))
+                .apis(RequestHandlerSelectors.basePackage("com.ark"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(getGlobalOperationParameters());

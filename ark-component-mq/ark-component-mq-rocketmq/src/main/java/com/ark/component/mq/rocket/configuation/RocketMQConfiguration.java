@@ -2,6 +2,7 @@ package com.ark.component.mq.rocket.configuation;
 
 import com.ark.component.mq.configuation.MQConfiguration;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
  * MQ配置
  * @author jc
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ConfigurationProperties(prefix = "ark.component.mq.rocketmq")
 public class RocketMQConfiguration extends MQConfiguration {
