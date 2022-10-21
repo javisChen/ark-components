@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 响应类型为分页列表的响应体
@@ -40,6 +43,12 @@ public class PageResponse<T> {
     }
     public static PageResponse<?> empty(IPage<?> page) {
         return new PageResponse<>((int)page.getCurrent(), (int)page.getSize(), (int)page.getTotal(), null);
+    }
+
+    public <R> PageResponse<R> convert(Function<? super T, ? extends R> mapper) {
+        Collection<R> collect = this.getRecords().stream().map(mapper).collect(Collectors.toList());
+        ((PageResponse<R>)this).setRecords(collect);
+        return (PageResponse<R>) this;
     }
 
 }
