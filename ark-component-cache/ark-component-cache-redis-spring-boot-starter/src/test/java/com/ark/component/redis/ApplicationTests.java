@@ -1,5 +1,6 @@
-package com.ark.component.search.es;
+package com.ark.component.redis;
 
+import com.ark.component.redis.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
