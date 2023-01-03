@@ -117,8 +117,9 @@ public class ElasticSearchServiceTest extends ApplicationTests  {
             IndexRequest hotel = new IndexRequest("hotel");
             hotel.id("2");
             hotel.source("{\n" +
-                    "  \"brand\": \"维也纳\",\n" +
-                    "  \"name\": \"维也纳\",\n" +
+                    "  \"brand\": \"维也纳酒店\",\n" +
+                    "  \"name\": \"广州小酒店\",\n" +
+                    "  \"price\": \"100\",\n" +
                     "  \"city\": \"广州\"\n" +
                     "}", XContentType.JSON);
             DocWriteResponse.Result result = client.index(hotel, RequestOptions.DEFAULT).getResult();
