@@ -36,8 +36,7 @@ public class RedisCacheService implements CacheService {
     public boolean set(String key, Object value, Long expireTime) {
         try {
             ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-            operations.set(key, value);
-            return Boolean.TRUE.equals(redisTemplate.expire(key, expireTime, TimeUnit.SECONDS));
+            return Boolean.TRUE.equals(operations.setIfAbsent(key, value, expireTime, TimeUnit.SECONDS));
         } catch (Exception e) {
             throw new CacheException(e);
         }
