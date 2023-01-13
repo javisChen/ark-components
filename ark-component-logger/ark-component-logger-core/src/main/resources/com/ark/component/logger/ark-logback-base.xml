@@ -1,22 +1,20 @@
 <included>
 
-    <!-- spring变量 -->
-    <springProperty scope="context" name="LOG_HOME" source="logback.path"/>
     <!-- 应用名称 -->
     <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name"/>
     <springProperty scope="context" name="CLIENT_IP" source="spring.cloud.client.ip-address"/>
 
     <!-- 日志格式 -->
     <property name="LOG_PATTERN"
-              value="[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5level][%thread][ip:${CLIENT_IP:-}][xid:%X{X-Trace-Id}] %logger{36}:%line - %msg%n"/>
+              value="${LOG_PATTERN:-[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5level][%thread][ip:${CLIENT_IP:-}][xid:%X{X-Trace-Id}] %logger{36}:%line - %msg%n}"/>
     <!-- 日志字符集 -->
-    <property name="LOG_CHARSET" value="UTF-8"/>
+    <property name="LOG_CHARSET" value="${LOG_CHARSET:-UTF-8}"/>
     <!-- 单个文件大小上限 -->
-    <property name="LOG_FILE_MAX_SIZE" value="1MB"/>
+    <property name="LOG_FILE_MAX_SIZE" value="${LOG_FILE_MAX_SIZE:-10MB}"/>
     <!-- 日志保留天数 -->
-    <property name="LOG_FILE_MAX_HISTORY" value="7"/>
+    <property name="LOG_FILE_MAX_HISTORY" value="${LOG_FILE_MAX_SIZE:-7}"/>
     <!-- 日志文件得上限大小,如果到达这个值就会删除旧日志 -->
-    <property name="LOG_FILE_TOTAL_SIZE_CAP" value="0"/>
+    <property name="LOG_FILE_TOTAL_SIZE_CAP" value="${LOG_FILE_MAX_SIZE:-0}"/>
     <!-- 日志保存目录 -->
     <property name="LOG_HOME" value="./logs/${SERVICE_NAME}"/>
 
@@ -32,7 +30,7 @@
     <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/${SERVICE_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/app-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- 单个文件大小上限 -->
             <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <!-- 日志保留天数 -->
