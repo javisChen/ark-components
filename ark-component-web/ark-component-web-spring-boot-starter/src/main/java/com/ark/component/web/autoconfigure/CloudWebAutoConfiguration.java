@@ -5,7 +5,6 @@ import com.alibaba.fastjson.serializer.ToStringSerializer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
-import com.ark.component.web.config.ArkWebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

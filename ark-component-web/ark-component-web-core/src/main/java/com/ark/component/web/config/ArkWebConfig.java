@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 /**
- * 应用通用配置
+ * 应用公共注入配置
  * @author jc
  */
 public class ArkWebConfig implements WebMvcConfigurer {
@@ -20,13 +20,13 @@ public class ArkWebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        handlerInterceptors.forEach(registry::addInterceptor);
+        for (HandlerInterceptor handlerInterceptor : handlerInterceptors) {
+            registry.addInterceptor(handlerInterceptor);
+        }
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("doc.html").addResourceLocations("classpath*:/META-INF/resources/");
-//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath*:/META-INF/resources/webjars/");
     }
 
     private static String serviceName;
@@ -40,7 +40,4 @@ public class ArkWebConfig implements WebMvcConfigurer {
         return serviceName;
     }
 
-//    public void setHandlerInterceptors(List<HandlerInterceptor> handlerInterceptors) {
-//        this.handlerInterceptors = handlerInterceptors;
-//    }
 }
