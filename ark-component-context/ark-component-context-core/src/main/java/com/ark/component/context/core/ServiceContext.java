@@ -1,12 +1,10 @@
 package com.ark.component.context.core;
 
+import com.ark.component.context.core.contants.ContextConstants;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.ark.component.context.core.contants.ContextConst.LOGIN_USER_CONTEXT_KEY;
-import static com.ark.component.context.core.contants.ContextConst.TRACE_ID_KEY;
 
 /**
  * 服务上下文
@@ -14,38 +12,46 @@ import static com.ark.component.context.core.contants.ContextConst.TRACE_ID_KEY;
  */
 public class ServiceContext {
 
-    private static final ThreadLocal<Map<String, Object>> THREAD_LOCAL
-            = ThreadLocal.withInitial(() -> new ConcurrentHashMap<>(16));
+    private static final ThreadLocal<Map<String, Object>> CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
 
+    /**
+     * 清空上下文
+     */
     public static void clearContext() {
-        if (THREAD_LOCAL.get() != null) {
-            THREAD_LOCAL.get().clear();
+        if (CONTEXT_THREAD_LOCAL.get() != null) {
+            CONTEXT_THREAD_LOCAL.get().clear();
         }
     }
 
-    public static void setContext(String key, Object value) {
-        Map<String, Object> contextMap = THREAD_LOCAL.get();
-        contextMap.put(key, value);
+    /**
+     * 添加数据到上下文
+     * @param key 键
+     * @param value 值
+     */
+    public static void addContext(String key, Object value) {
+        Map<String, Object> contextHolder = CONTEXT_THREAD_LOCAL.get();
+        if (contextHolder != null) {
+            contextHolder.put(key, value);
+        } else {
+            contextHolder = new ConcurrentHashMap<>(16);
+            contextHolder.put(key, value);
+            CONTEXT_THREAD_LOCAL.set(contextHolder);
+        }
     }
-
 
     public static LoginUserContext getCurrentUser() {
         Map<String, Object> context = getContext();
-        if (MapUtils.isNotEmpty(context)) {
-            return (LoginUserContext) context.get(LOGIN_USER_CONTEXT_KEY);
-        }
-        return null;
+        return MapUtils.isNotEmpty(context)
+                ? (LoginUserContext) context.get(ContextConstants.LOGIN_USER_CONTEXT_KEY) : null;
     }
 
     public static String getTraceId() {
         Map<String, Object> context = getContext();
-        if (MapUtils.isNotEmpty(context)) {
-            return (String) context.get(TRACE_ID_KEY);
-        }
-        return null;
+        return MapUtils.isNotEmpty(context)
+                ? (String) context.get(ContextConstants.TRACE_ID_KEY) : null;
     }
 
     public static Map<String, Object> getContext() {
-        return THREAD_LOCAL.get();
+        return CONTEXT_THREAD_LOCAL.get();
     }
 }

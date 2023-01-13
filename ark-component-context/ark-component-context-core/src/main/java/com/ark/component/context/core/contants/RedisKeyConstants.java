@@ -1,6 +1,6 @@
 package com.ark.component.context.core.contants;
 
-public interface RedisKeyConst {
+public interface RedisKeyConstants {
 
     /**
      * 值：登录用户信息
