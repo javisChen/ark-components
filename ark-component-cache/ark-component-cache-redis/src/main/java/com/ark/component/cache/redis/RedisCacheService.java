@@ -30,14 +30,22 @@ public class RedisCacheService implements CacheService {
     }
 
     /**
-     * 写入缓存设置时效时间（秒）
+     * 写入缓存设置时效时间（默认，秒）
      */
     @Override
-    public boolean set(String key, Object value, Long expireTime) {
+    public boolean set(String key, Object value, Long expires) {
+        return set(key, value, expires, TimeUnit.SECONDS);
+    }
+
+
+    /**
+     * 写入缓存设置时效时间
+     */
+    @Override
+    public boolean set(String key, Object value, Long expires, TimeUnit timeUnit) {
         try {
             ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-            operations.set(key, value);
-            return Boolean.TRUE.equals(redisTemplate.expire(key, expireTime, TimeUnit.SECONDS));
+            return Boolean.TRUE.equals(operations.setIfAbsent(key, value, expires, timeUnit));
         } catch (Exception e) {
             throw new CacheException(e);
         }
