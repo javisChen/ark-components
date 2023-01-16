@@ -1,26 +1,26 @@
-package com.ark.component.context.core.token;
+package com.ark.component.security.base.token;
 
 import lombok.Data;
 
 /**
- * token配置文件
+ * Token基础配置
  * @author javis
  */
 @Data
-public class AccessTokenConfig {
+public class AccessTokenProperties {
 
     /**
      * token的Header
      */
-    private String tokenHeader = "X-Authorization";
+    private String tokenHeader = "Authorization";
 
     /**
-     * 认证token前缀
+     * 认证Token前缀
      */
     private String tokenHeaderPrefix = "Bearer ";
 
     /**
-     * 认证token查询参数的key
+     * 认证Token查询参数的key
      */
     private String tokenQueryParam = "accessToken";
 }

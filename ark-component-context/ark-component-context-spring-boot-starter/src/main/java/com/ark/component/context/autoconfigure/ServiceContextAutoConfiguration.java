@@ -1,11 +1,13 @@
 package com.ark.component.context.autoconfigure;
 
-import com.ark.component.cache.redis.RedisCacheService;
 import com.ark.component.context.core.interceptor.ServiceContextInterceptor;
-import com.ark.component.context.core.token.AccessTokenConfig;
-import com.ark.component.context.core.token.AccessTokenExtractor;
-import com.ark.component.context.core.token.AccessTokenStandardExtractor;
+import com.ark.component.context.core.resolver.JwtUserResolver;
+import com.ark.component.context.core.resolver.UserResolver;
+import com.ark.component.security.base.token.AccessTokenProperties;
+import com.ark.component.security.base.token.extractor.AccessTokenExtractor;
+import com.ark.component.security.core.token.extractor.DefaultTokenExtractor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -24,12 +26,18 @@ public class ServiceContextAutoConfiguration implements WebMvcConfigurer {
 
     @Bean
     public AccessTokenExtractor accessTokenExtractor() {
-        return new AccessTokenStandardExtractor(new AccessTokenConfig());
+        return new DefaultTokenExtractor(new AccessTokenProperties());
     }
 
     @Bean
-    public ServiceContextInterceptor serviceContextInterceptor(RedisCacheService redisService,
-                                                               AccessTokenExtractor accessTokenExtractor) {
-        return new ServiceContextInterceptor(redisService, accessTokenExtractor);
+    @ConditionalOnMissingBean
+    public UserResolver userResolver() {
+        return new JwtUserResolver();
+    }
+
+    @Bean
+    public ServiceContextInterceptor serviceContextInterceptor(AccessTokenExtractor tokenExtractor,
+                                                               UserResolver userResolver) {
+        return new ServiceContextInterceptor(tokenExtractor, userResolver);
     }
 }

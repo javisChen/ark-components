@@ -1,4 +1,4 @@
-package com.ark.component.context.core;
+package com.ark.component.security.base.user;
 
 import lombok.Data;
 
@@ -21,7 +21,7 @@ public class LoginUserContext {
     /**
      * 用户名
      */
-    private String username;
+    private String userName;
 
     /**
      * 令牌

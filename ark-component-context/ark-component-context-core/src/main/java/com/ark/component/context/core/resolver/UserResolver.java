@@ -1,6 +1,7 @@
 package com.ark.component.context.core.resolver;
 
-import com.ark.component.context.core.LoginUserContext;
+
+import com.ark.component.security.base.user.LoginUserContext;
 
 /**
  * 访问用户解析

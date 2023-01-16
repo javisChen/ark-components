@@ -3,22 +3,26 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ark-component-context</artifactId>
-        <groupId>com.ark.context</groupId>
+        <artifactId>ark-component-security</artifactId>
+        <groupId>com.ark.security</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-
-    <name>ark-component-context-core</name>
-    <artifactId>ark-component-context-core</artifactId>
+    <name>ark-component-security-base</name>
+    <artifactId>ark-component-security-base</artifactId>
 
     <properties>
-
 
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -27,24 +31,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ark.cache</groupId>
-            <artifactId>ark-component-cache-redis</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.ark.common</groupId>
             <artifactId>ark-component-common-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ark.security</groupId>
-            <artifactId>ark-component-security-core</artifactId>
         </dependency>
 
         <dependency>

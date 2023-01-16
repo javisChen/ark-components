@@ -1,24 +1,19 @@
 
 package com.ark.component.context.core.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
-import com.ark.component.cache.redis.RedisCacheService;
 import com.ark.component.common.id.TraceIdUtils;
-import com.ark.component.context.core.LoginUserContext;
 import com.ark.component.context.core.ServiceContext;
-import com.ark.component.context.core.contants.RedisKeyConstants;
 import com.ark.component.context.core.resolver.UserResolver;
-import com.ark.component.context.core.token.AccessTokenExtractor;
+import com.ark.component.security.base.token.extractor.AccessTokenExtractor;
+import com.ark.component.security.base.user.LoginUserContext;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 import static com.ark.component.context.core.contants.ContextConstants.*;
 

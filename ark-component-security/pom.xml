@@ -3,18 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>ark-component-context</name>
-    <groupId>com.ark.context</groupId>
-    <artifactId>ark-component-context</artifactId>
+    <name>ark-component-security</name>
+    <groupId>com.ark.security</groupId>
+    <artifactId>ark-component-security</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>ark-component-context-core</module>
-        <module>ark-component-context-spring-boot-starter</module>
+        <module>ark-component-security-base</module>
+        <module>ark-component-security-core</module>
+        <module>ark-component-security-reactive-core</module>
+        <module>ark-component-security-spring-boot-starter</module>
+        <module>ark-component-security-reactive-spring-boot-starter</module>
     </modules>
 
     <properties>
+
     </properties>
 
     <dependencyManagement>
@@ -28,8 +32,20 @@
             </dependency>
 
             <dependency>
-                <groupId>com.ark.context</groupId>
-                <artifactId>ark-component-context-core</artifactId>
+                <groupId>com.ark.security</groupId>
+                <artifactId>ark-component-security-base</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.security</groupId>
+                <artifactId>ark-component-security-reactive-core</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.security</groupId>
+                <artifactId>ark-component-security-core</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

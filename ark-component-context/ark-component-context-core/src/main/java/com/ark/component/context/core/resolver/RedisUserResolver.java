@@ -2,15 +2,12 @@ package com.ark.component.context.core.resolver;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.cache.redis.RedisCacheService;
-import com.ark.component.context.core.LoginUserContext;
-import com.ark.component.context.core.ServiceContext;
 import com.ark.component.context.core.contants.RedisKeyConstants;
+import com.ark.component.security.base.user.LoginUserContext;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
-
-import static com.ark.component.context.core.contants.ContextConstants.LOGIN_USER_CONTEXT_KEY;
 
 /**
  * 从Redis查出用户信息

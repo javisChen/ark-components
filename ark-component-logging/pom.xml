@@ -3,15 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>ark-component-context</name>
-    <groupId>com.ark.context</groupId>
-    <artifactId>ark-component-context</artifactId>
+    <name>ark-component-logging</name>
+    <groupId>com.ark.logging</groupId>
+    <artifactId>ark-component-logging</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>ark-component-context-core</module>
-        <module>ark-component-context-spring-boot-starter</module>
+        <module>ark-component-logging-core</module>
     </modules>
 
     <properties>
@@ -28,8 +27,8 @@
             </dependency>
 
             <dependency>
-                <groupId>com.ark.context</groupId>
-                <artifactId>ark-component-context-core</artifactId>
+                <groupId>com.ark.logging</groupId>
+                <artifactId>ark-component-logging-core</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

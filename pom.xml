@@ -13,9 +13,11 @@
         <module>ark-component-common</module>
         <module>ark-component-dto</module>
         <module>ark-component-oss</module>
+        <module>ark-component-security</module>
         <module>ark-component-context</module>
         <module>ark-component-orm</module>
         <module>ark-component-search</module>
+        <module>ark-component-logging</module>
         <module>ark-component-logger</module>
         <module>ark-component-statemachine</module>
         <module>ark-component-biz-log</module>

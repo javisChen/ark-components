@@ -1,17 +1,15 @@
-package com.ark.component.context.core.token;
-
-import javax.servlet.http.HttpServletRequest;
+package com.ark.component.security.base.token.extractor;
 
 /**
  * Token提取，可自行实现提取方法
  * @author victor
  **/
-public interface AccessTokenExtractor {
+public interface AccessTokenExtractor<T> {
 
     /**
      * 从request中提取token
      * @param request HttpServletRequest
      * @return token
      */
-    String extract(HttpServletRequest request);
+    String extract(T request);
 }
