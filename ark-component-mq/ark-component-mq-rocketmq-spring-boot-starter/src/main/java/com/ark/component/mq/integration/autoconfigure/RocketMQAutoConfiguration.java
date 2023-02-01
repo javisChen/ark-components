@@ -31,7 +31,11 @@ public class RocketMQAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "ark.component.mq.rocketmq.producer", value = "enabled", havingValue = "true")
+    @ConditionalOnProperty(
+            prefix = "ark.component.mq.rocketmq.producer",
+            value = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public RocketMQMessageService rocketMessageService(RocketMQConfiguration configuration) {
         return new RocketMQMessageService(configuration);
