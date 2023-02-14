@@ -29,9 +29,9 @@ public interface CacheService {
      */
     void multiSet(Map<String, Object> map);
 
-    void increment(String key, Long value);
+    Long increment(String key, Long value);
 
-    void decrement(String key, Long value);
+    Long decrement(String key, Long value);
 
     Object get(String key);
 

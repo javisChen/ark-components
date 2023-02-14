@@ -53,18 +53,18 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void increment(String key, Long value) {
+    public Long increment(String key, Long value) {
         try {
-            redisTemplate.opsForValue().increment(key, value);
+            return redisTemplate.opsForValue().increment(key, value);
         } catch (Exception e) {
             throw new CacheException(e);
         }
     }
 
     @Override
-    public void decrement(String key, Long value) {
+    public Long decrement(String key, Long value) {
         try {
-            redisTemplate.opsForValue().decrement(key, value);
+            return redisTemplate.opsForValue().decrement(key, value);
         } catch (Exception e) {
             throw new CacheException(e);
         }
