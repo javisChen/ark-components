@@ -5,6 +5,7 @@ import com.ark.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -17,9 +18,6 @@ public class RedisCacheService implements CacheService {
         this.redisTemplate = redisTemplate;
     }
 
-    /**
-     * 写入缓存
-     */
     @Override
     public void set(String key, Object value) {
         try {
@@ -28,30 +26,13 @@ public class RedisCacheService implements CacheService {
             throw new CacheException(e);
         }
     }
-    /**
-     * 写入缓存
-     */
-    @Override
-    public void multiSet(Map<String, Object> map) {
-        try {
-            redisTemplate.opsForValue().multiSet(map);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
-    }
 
-    /**
-     * 写入缓存设置时效时间（默认，秒）
-     */
     @Override
     public boolean set(String key, Object value, Long expires) {
         return set(key, value, expires, TimeUnit.SECONDS);
     }
 
 
-    /**
-     * 写入缓存设置时效时间
-     */
     @Override
     public boolean set(String key, Object value, Long expires, TimeUnit timeUnit) {
         try {
@@ -62,9 +43,33 @@ public class RedisCacheService implements CacheService {
         }
     }
 
-    /**
-     * 读取缓存
-     */
+    @Override
+    public void multiSet(Map<String, Object> map) {
+        try {
+            redisTemplate.opsForValue().multiSet(map);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void increment(String key, Long value) {
+        try {
+            redisTemplate.opsForValue().increment(key, value);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void decrement(String key, Long value) {
+        try {
+            redisTemplate.opsForValue().decrement(key, value);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
     @Override
     public Object get(String key) {
         try {
@@ -75,19 +80,11 @@ public class RedisCacheService implements CacheService {
         }
     }
 
-    /**
-     * 批量删除对应的value
-     */
     @Override
     public void remove(String... keys) {
-        for (String key : keys) {
-            remove(key);
-        }
+        Arrays.stream(keys).forEach(this::remove);
     }
 
-    /**
-     * 批量删除key
-     */
     public void removePattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
         if (keys != null && keys.size() > 0) {
@@ -95,18 +92,12 @@ public class RedisCacheService implements CacheService {
         }
     }
 
-    /**
-     * 删除对应的value
-     */
     public void remove(String key) {
         if (exists(key)) {
             redisTemplate.delete(key);
         }
     }
 
-    /**
-     * 判断缓存中是否有对应的value
-     */
     public boolean exists(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }

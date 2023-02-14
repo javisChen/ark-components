@@ -20,14 +20,18 @@ public interface CacheService {
      */
     void set(String key, Object value);
 
+    boolean set(String key, Object value, Long expires);
+
+    boolean set(String key, Object value, Long expires, TimeUnit timeUnit);
+
     /**
      * 同时写入多个key
      */
     void multiSet(Map<String, Object> map);
 
-    boolean set(String key, Object value, Long expires);
+    void increment(String key, Long value);
 
-    boolean set(String key, Object value, Long expires, TimeUnit timeUnit);
+    void decrement(String key, Long value);
 
     Object get(String key);
 
