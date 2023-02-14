@@ -5,6 +5,7 @@ import com.ark.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +23,18 @@ public class RedisCacheService implements CacheService {
     @Override
     public void set(String key, Object value) {
         try {
-            ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-            operations.set(key, value);
+            redisTemplate.opsForValue().set(key, value);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+    /**
+     * 写入缓存
+     */
+    @Override
+    public void multiSet(Map<String, Object> map) {
+        try {
+            redisTemplate.opsForValue().multiSet(map);
         } catch (Exception e) {
             throw new CacheException(e);
         }
