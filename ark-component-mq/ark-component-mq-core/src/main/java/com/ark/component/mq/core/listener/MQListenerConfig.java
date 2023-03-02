@@ -3,8 +3,10 @@ package com.ark.component.mq.core.listener;
 import com.ark.component.mq.core.support.ConsumeMode;
 import com.ark.component.mq.core.support.MQType;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class MQListenerConfig {
 
     /**

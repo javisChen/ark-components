@@ -1,5 +1,6 @@
 package com.ark.component.mq.rocket.listener;
 
+import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.exception.MQListenException;
 import com.ark.component.mq.core.listener.MQListener;
 import com.ark.component.mq.core.listener.MQListenerConfig;
@@ -37,14 +38,13 @@ public class RocketMQListener implements MQListener<MessageExt> {
             consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
                 try {
                     for (MessageExt messageExt : msgList) {
-                        if (processor.process(messageExt.getBody(), messageExt.getMsgId(),messageExt)) {
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
+                        processor.process(messageExt.getBody(), messageExt.getMsgId(), messageExt);
                     }
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 } catch (Exception e) {
+                    log.error("MQ Process Error -> ", e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             });
             consumer.start();
         } catch (MQClientException e) {

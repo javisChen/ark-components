@@ -4,7 +4,7 @@ import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.Message;
 import com.ark.component.mq.core.serializer.MessageCodec;
-import com.ark.component.mq.exception.MQDecodeException;
+import com.ark.component.mq.exception.MQCodecException;
 import com.ark.component.mq.exception.MQException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -30,37 +30,36 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
     private MessageCodec messageCodec;
 
     @Override
-    public boolean process(byte[] body, String msgId, RAW raw) {
-        log.info("[MQ] Consume Message msgId = {}, bodySize = {}", msgId, body.length);
+    public void process(byte[] body, String msgId, RAW raw) throws MQException {
+        log.info("[MQ] Consume Message MsgId = {}, BodySize = {}", msgId, body.length);
         // 反序列化
         Message message;
         T msgBody;
         try {
             message = messageCodec.decode(body, Message.class);
-            log.info("[MQ] Consume Message msgId = {}, decode = {}", msgId, JSON.toJSONString(message));
+            log.info("[MQ] Consume Message MsgId = {}, Decode = {}", msgId, JSON.toJSONString(message));
             msgBody = convertMsgBody(message);
-        } catch (Exception e) {
-            log.error("[MQ] Consume Message decode error msgId = " + msgId, e);
-            throw new MQDecodeException(e);
+        } catch (MQCodecException e) {
+            log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);
+            throw new MQCodecException(e);
         }
         String sendId = message.getSendId();
         try {
             // 消费幂等校验
             if (isRepeatMessage(msgId, sendId, msgBody, raw)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("[MQ] Message already consume msgId = {}", msgId);
+                    log.debug("[MQ] Message Already Consume MsgId = {}", msgId);
                 }
-                return true;
+                return;
             }
             handleMessage(msgId, sendId, msgBody, raw);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] Message consume success");
+                log.debug("[MQ] Message Consume Success");
             }
         } catch (Exception e) {
-            log.error("[MQ] Message consume handle error", e);
+            log.error("[MQ] Message Consume Handle Rrror", e);
             throw new MQException(e);
         }
-        return true;
     }
 
     private T convertMsgBody(Message message) {

@@ -1,12 +1,15 @@
 package com.ark.component.mq.core.serializer;
 
 import com.alibaba.fastjson.JSON;
-import com.ark.component.mq.exception.MQException;
+import com.ark.component.mq.exception.MQCodecException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * FastJSON编解码器
+ */
 @Slf4j
 public class FastJSONCodec implements MessageCodec {
 
@@ -18,8 +21,8 @@ public class FastJSONCodec implements MessageCodec {
         try {
             return JSON.toJSONBytes(data);
         } catch (Exception e) {
-            log.error("mq message encode error", e);
-            throw new MQException(e);
+            log.error("MQ Message Encode Error", e);
+            throw new MQCodecException(e);
         }
     }
 
@@ -28,8 +31,8 @@ public class FastJSONCodec implements MessageCodec {
         try {
             return JSON.parseObject(bytes, typeArgument);
         } catch (Exception e) {
-            log.error("mq message decode error", e);
-            throw new MQException(e);
+            log.error("MQ Message Decode Error", e);
+            throw new MQCodecException(e);
         }
     }
 

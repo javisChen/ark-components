@@ -52,9 +52,9 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
             MQListener mqListener = listenerHolder.get(config.getMqType());
             try {
                 mqListener.listen(processor, config);
-                log.info("[mq listen] processor: [{}] listen success", processor.getClass().getName());
+                log.info("[mq listen] processor: [{}] listen success, config：[{}]", processor.getClass().getName(), config);
             } catch (Exception e) {
-                log.error("[mq listen] processor: [" + processor.getClass().getName() + "] listen error", e);
+                log.error("[mq listen] processor: [" + processor.getClass().getName() + "] listen error, config:[{}]", e, config);
                 throw new MQListenException(e);
             }
         }
