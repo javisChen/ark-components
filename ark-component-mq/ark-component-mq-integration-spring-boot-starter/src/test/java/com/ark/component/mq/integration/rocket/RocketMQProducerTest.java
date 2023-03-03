@@ -1,26 +1,28 @@
 package com.ark.component.mq.integration.rocket;
 
-import com.ark.component.mq.MQMessageService;
-import com.ark.component.mq.Message;
 import com.ark.component.mq.integration.ApplicationTests;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
+
+import java.nio.charset.StandardCharsets;
 
 public class RocketMQProducerTest extends ApplicationTests {
 
-    @Autowired
-    private MQMessageService mqMessageService;
+    public static void main(String[] args) throws MQBrokerException, RemotingException, InterruptedException, MQClientException {
+        DefaultMQProducer defaultMQProducer = new DefaultMQProducer();
+        defaultMQProducer.setProducerGroup("pg_edfault");
+        defaultMQProducer.setNamesrvAddr("localhost:9876");
+        defaultMQProducer.start();
 
-    @Test
-    public void send() {
         for (int i = 0; i < 10; i++) {
-            mqMessageService.send("test", new Message("test msg" + i));
-        }
-        try {
-            Thread.sleep(200000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            SendResult send = defaultMQProducer.send(new Message(MQTestConst.TOPIC,
+                    MQTestConst.TAG_BROAD_CASTING,
+                    ("TEST MSG：" + i).getBytes(StandardCharsets.UTF_8)));
+            System.out.println(send);
         }
     }
-
 }

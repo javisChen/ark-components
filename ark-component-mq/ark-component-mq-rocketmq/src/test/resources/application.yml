@@ -6,4 +6,6 @@ rocketmq:
     message-model:
 logging:
   level:
-    root: debug
+    root: info
+server:
+  port: 8080

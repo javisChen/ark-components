@@ -1,12 +1,13 @@
 package com.ark.component.mq.core;
 
 import com.alibaba.fastjson.JSON;
-import com.ark.component.mq.MQMessageService;
-import com.ark.component.mq.Message;
-import com.ark.component.mq.MessageResponse;
-import com.ark.component.mq.MessageSendCallback;
+import com.ark.component.mq.MQService;
+import com.ark.component.mq.MsgBody;
+import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.configuation.MQConfiguration;
-import com.ark.component.mq.core.generator.MessageIdGenerator;
+import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
+import com.ark.component.mq.core.generator.MsgIdGenerator;
 import com.ark.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -19,126 +20,126 @@ import org.springframework.context.ApplicationContextAware;
  * @param <R> MQ发送响应对象
  */
 @Slf4j
-public abstract class AbstractMQMessageService<P, R> implements MQMessageService, ApplicationContextAware {
+public abstract class AbstractMQService<P, R> implements MQService, ApplicationContextAware {
     private final MQConfiguration mqConfiguration;
 
-    private MessageIdGenerator messageIdGenerator;
+    private MsgIdGenerator msgIdGenerator = new DefaultMsgIdGenerator();
 
-    protected AbstractMQMessageService(MQConfiguration mqConfiguration) {
+    protected AbstractMQService(MQConfiguration mqConfiguration) {
         this.mqConfiguration = mqConfiguration;
     }
 
-    protected AbstractMQMessageService() {
+    protected AbstractMQService() {
         this.mqConfiguration = new MQConfiguration();
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.messageIdGenerator = applicationContext.getBean(MessageIdGenerator.class);
+        this.msgIdGenerator = applicationContext.getBean(MsgIdGenerator.class);
     }
 
     @Override
-    public MessageResponse send(String topic, Message payLoad, int timeout) {
+    public MQSendResponse send(String topic, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MessageResponse send(String topic, String tag, Message payLoad, int timeout) {
+    public MQSendResponse send(String topic, String tag, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, Message payLoad, int delay) {
+    public MQSendResponse delaySend(String topic, MsgBody payLoad, int delay) {
         return doSend(topic, null, payLoad, 0, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, Message payLoad, int delay, int timeout) {
+    public MQSendResponse delaySend(String topic, MsgBody payLoad, int delay, int timeout) {
         return doSend(topic, null, payLoad, timeout, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, String tag, int delay, Message payLoad) {
+    public MQSendResponse delaySend(String topic, String tag, int delay, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, 0, delay);
     }
 
     @Override
-    public MessageResponse delaySend(String topic, String tag, int delay, int timeout, Message payLoad) {
+    public MQSendResponse delaySend(String topic, String tag, int delay, int timeout, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, timeout, delay);
     }
 
     @Override
-    public MessageResponse send(String topic, Message payLoad) {
+    public MQSendResponse send(String topic, MsgBody payLoad) {
         return doSend(topic, null, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public MessageResponse send(String topic, String tag, Message payLoad) {
+    public MQSendResponse send(String topic, String tag, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public void asyncSend(String topic, Message payLoad) {
+    public void asyncSend(String topic, MsgBody payLoad) {
         doAsyncSend(topic, null, payLoad, null, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, Message payLoad, int timeout) {
+    public void asyncSend(String topic, MsgBody payLoad, int timeout) {
         doAsyncSend(topic, null, payLoad, null, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, Message payLoad) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad) {
         doAsyncSend(topic, tag, payLoad, null, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, Message payLoad, int timeout) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad, int timeout) {
         doAsyncSend(topic, tag, payLoad, null, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, Message payLoad, MessageSendCallback callback) {
+    public void asyncSend(String topic, MsgBody payLoad, MQSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, Message payLoad, int timeout, MessageSendCallback callback) {
+    public void asyncSend(String topic, MsgBody payLoad, int timeout, MQSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, Message payLoad, MessageSendCallback callback) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad, MQSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, Message payLoad, int timeout, MessageSendCallback callback) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad, int timeout, MQSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void delayAsyncSend(String topic, Message payLoad, int delay, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, MQSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, Message payLoad, int delay, int timeout, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, int timeout, MQSendCallback callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, Message payLoad, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, MsgBody payLoad, MQSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, int timeout, Message payLoad, MessageSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, int timeout, MsgBody payLoad, MQSendCallback callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, delay);
     }
 
-    private MessageResponse doSend(String topic, String tag, Message payLoad, long timeout, int delayLevel) {
-        String sendId = messageIdGenerator.getId();
+    private MQSendResponse doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
+        String sendId = msgIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
@@ -160,8 +161,8 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
         }
     }
 
-    private void doAsyncSend(String topic, String tag, Message payLoad, MessageSendCallback callback, long timeout, int delayLevel) {
-        String sendId = messageIdGenerator.getId();
+    private void doAsyncSend(String topic, String tag, MsgBody payLoad, MQSendCallback callback, long timeout, int delayLevel) {
+        String sendId = msgIdGenerator.getId();
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
@@ -172,15 +173,15 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
                 log.debug("[MQ] start send message sendId = {} topic = {} tag = {} message = {} ",
                         sendId, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend(topic, tag, message, timeout, delayLevel, new MessageSendCallback() {
+            executeAsyncSend(topic, tag, message, timeout, delayLevel, new MQSendCallback() {
                 @Override
-                public void onSuccess(MessageResponse messageResponse) {
+                public void onSuccess(MQSendResponse MQSendResponse) {
                     if (log.isDebugEnabled()) {
                         log.debug("[MQ] send message success, sendId = {} topic = {} tag = {} message = {} ",
                                 sendId, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
-                        callback.onSuccess(messageResponse);
+                        callback.onSuccess(MQSendResponse);
                     }
                 }
 
@@ -201,7 +202,7 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     /**
      * MQ实现构造自己的消息体
      */
-    protected abstract P buildMessage(String topic, String tag, int delayLevel, Message message);
+    protected abstract P buildMessage(String topic, String tag, int delayLevel, MsgBody msgBody);
 
     /**
      * 执行同步发送
@@ -211,11 +212,11 @@ public abstract class AbstractMQMessageService<P, R> implements MQMessageService
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MessageSendCallback callback, String sendId);
+    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback, String sendId);
 
     /**
      * 转换回统一的MQ响应体
      */
-    protected abstract MessageResponse convertToMQResponse(R sendResult, String sendId);
+    protected abstract MQSendResponse convertToMQResponse(R sendResult, String sendId);
 
 }

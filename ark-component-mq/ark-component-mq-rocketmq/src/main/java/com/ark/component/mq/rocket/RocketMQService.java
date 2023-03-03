@@ -1,10 +1,10 @@
 package com.ark.component.mq.rocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ark.component.mq.Message;
-import com.ark.component.mq.MessageResponse;
-import com.ark.component.mq.MessageSendCallback;
-import com.ark.component.mq.core.AbstractMQMessageService;
+import com.ark.component.mq.MsgBody;
+import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.MQSendCallback;
+import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +12,12 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 
 @Slf4j
-public class RocketMQMessageService extends AbstractMQMessageService<org.apache.rocketmq.common.message.Message, SendResult> {
+public class RocketMQService extends AbstractMQService<Message, SendResult> {
     private DefaultMQProducer defaultMQProducer;
-    public RocketMQMessageService(RocketMQConfiguration mqConfiguration) {
+    public RocketMQService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         initProducer(mqConfiguration);
     }
@@ -34,7 +35,7 @@ public class RocketMQMessageService extends AbstractMQMessageService<org.apache.
     }
 
     @Override
-    protected SendResult executeSend(String topic, String tag, org.apache.rocketmq.common.message.Message message, long timeout, int delayLevel) {
+    protected SendResult executeSend(String topic, String tag, Message message, long timeout, int delayLevel) {
         try {
             message.setDelayTimeLevel(delayLevel);
             return defaultMQProducer.send(message, timeout);
@@ -46,10 +47,10 @@ public class RocketMQMessageService extends AbstractMQMessageService<org.apache.
     @Override
     protected void executeAsyncSend(String topic,
                                     String tag,
-                                    org.apache.rocketmq.common.message.Message message,
+                                    Message message,
                                     long timeout,
                                     int delayLevel,
-                                    MessageSendCallback callback,
+                                    MQSendCallback callback,
                                     String sendId) {
         try {
             defaultMQProducer.send(message, new SendCallback() {
@@ -73,17 +74,16 @@ public class RocketMQMessageService extends AbstractMQMessageService<org.apache.
         }
     }
 
-    protected MessageResponse convertToMQResponse(SendResult sendResult, String sendId) {
-        return MessageResponse.builder()
+    protected MQSendResponse convertToMQResponse(SendResult sendResult, String sendId) {
+        return MQSendResponse.builder()
                 .withSendId(sendId)
                 .withMsgId(sendResult.getMsgId())
                 .build();
     }
 
     @Override
-    protected org.apache.rocketmq.common.message.Message buildMessage(String topic, String tag, int delayLevel, Message messagePayLoad) {
-        org.apache.rocketmq.common.message.Message message
-                = new org.apache.rocketmq.common.message.Message(topic, tag, messagePayLoad.getSendId(), JSONObject.toJSONBytes(messagePayLoad));
+    protected Message buildMessage(String topic, String tag, int delayLevel, MsgBody msgBodyPayLoad) {
+        Message message = new Message(topic, tag, msgBodyPayLoad.getSendId(), JSONObject.toJSONBytes(msgBodyPayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
     }

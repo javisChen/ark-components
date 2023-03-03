@@ -1,8 +1,8 @@
 package com.ark.component.mq.integration.autoconfigure;
 
-import com.ark.component.mq.MQMessageService;
+import com.ark.component.mq.MQService;
 import com.ark.component.mq.core.producer.MessageProducer;
-import com.ark.component.mq.rocket.RocketMQMessageService;
+import com.ark.component.mq.rocket.RocketMQService;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import com.ark.component.mq.rocket.listener.RocketMQListener;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +37,14 @@ public class RocketMQAutoConfiguration {
             havingValue = "true",
             matchIfMissing = true)
     @ConditionalOnMissingBean
-    public RocketMQMessageService rocketMessageService(RocketMQConfiguration configuration) {
-        return new RocketMQMessageService(configuration);
+    public RocketMQService rocketMessageService(RocketMQConfiguration configuration) {
+        return new RocketMQService(configuration);
     }
 
     @Bean
-    @ConditionalOnBean(MQMessageService.class)
+    @ConditionalOnBean(MQService.class)
     @ConditionalOnMissingBean
-    public MessageProducer messageProducer(MQMessageService messageService) {
+    public MessageProducer messageProducer(MQService messageService) {
         return new MessageProducer(messageService);
     }
 

@@ -35,6 +35,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
         try {
             consumer.setMessageModel(choiceMessageModel(listenerConfig.getConsumeMode()));
             consumer.subscribe(listenerConfig.getTopic(), listenerConfig.getTag());
+            consumer.setConsumeMessageBatchMaxSize(1);
             consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
                 try {
                     for (MessageExt messageExt : msgList) {
@@ -63,6 +64,6 @@ public class RocketMQListener implements MQListener<MessageExt> {
         } else if (consumeMode.equals(ConsumeMode.CLUSTERING)) {
             return MessageModel.CLUSTERING;
         }
-        throw new MQListenException("cannot support consume mode");
+        throw new MQListenException("Cannot Support Consume Mode");
     }
 }

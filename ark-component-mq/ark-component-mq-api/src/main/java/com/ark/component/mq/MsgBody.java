@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class Message {
+public class MsgBody {
 
     private Object body;
 
@@ -14,16 +14,16 @@ public class Message {
      */
     private String sendId;
 
-    public Message(Object body) {
+    public MsgBody(Object body) {
         this.body = body;
     }
 
-    public Message(String sendId, Object body) {
+    public MsgBody(String sendId, Object body) {
         this.body = body;
         this.sendId = sendId;
     }
 
-    public static Message of(Object body) {
-        return new Message(body);
+    public static MsgBody of(Object body) {
+        return new MsgBody(body);
     }
 }

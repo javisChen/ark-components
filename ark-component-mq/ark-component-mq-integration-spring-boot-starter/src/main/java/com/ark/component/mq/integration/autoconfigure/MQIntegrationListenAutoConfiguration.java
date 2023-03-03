@@ -1,7 +1,7 @@
 package com.ark.component.mq.integration.autoconfigure;
 
-import com.ark.component.mq.core.generator.DefaultMessageIdGenerator;
-import com.ark.component.mq.core.generator.MessageIdGenerator;
+import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
+import com.ark.component.mq.core.generator.MsgIdGenerator;
 import com.ark.component.mq.core.serializer.FastJSONCodec;
 import com.ark.component.mq.core.serializer.MessageCodec;
 import com.ark.component.mq.integration.MQListenStarter;
@@ -33,8 +33,8 @@ public class MQIntegrationListenAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MessageIdGenerator messageIdGenerator() {
-        return new DefaultMessageIdGenerator();
+    public MsgIdGenerator messageIdGenerator() {
+        return new DefaultMsgIdGenerator();
     }
 
 }

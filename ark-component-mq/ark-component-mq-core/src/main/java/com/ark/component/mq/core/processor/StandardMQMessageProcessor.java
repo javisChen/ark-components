@@ -2,11 +2,10 @@ package com.ark.component.mq.core.processor;
 
 import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson.JSON;
-import com.ark.component.mq.Message;
+import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.core.serializer.MessageCodec;
 import com.ark.component.mq.exception.MQCodecException;
 import com.ark.component.mq.exception.MQException;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -23,20 +22,16 @@ import org.springframework.context.ApplicationContextAware;
 @SuppressWarnings("all")
 public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessageProcessor<RAW>, ApplicationContextAware {
 
-    @Data
-    public static class User {
-        String name;
-    }
     private MessageCodec messageCodec;
 
     @Override
     public void process(byte[] body, String msgId, RAW raw) throws MQException {
         log.info("[MQ] Consume Message MsgId = {}, BodySize = {}", msgId, body.length);
         // 反序列化
-        Message message;
+        MsgBody message;
         T msgBody;
         try {
-            message = messageCodec.decode(body, Message.class);
+            message = messageCodec.decode(body, MsgBody.class);
             log.info("[MQ] Consume Message MsgId = {}, Decode = {}", msgId, JSON.toJSONString(message));
             msgBody = convertMsgBody(message);
         } catch (MQCodecException e) {
@@ -62,8 +57,8 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
         }
     }
 
-    private T convertMsgBody(Message message) {
-        return JSON.parseObject(JSON.toJSONString(message.getBody()), TypeUtil.getTypeArgument(getClass()));
+    private T convertMsgBody(MsgBody msgBody) {
+        return JSON.parseObject(JSON.toJSONString(msgBody.getBody()), TypeUtil.getTypeArgument(getClass()));
     }
 
     protected abstract void handleMessage(String msgId, String sendId, T body, RAW raw);

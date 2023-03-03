@@ -1,19 +1,19 @@
 package com.ark.component.mq.rocket;
 
-import com.ark.component.mq.Message;
-import com.ark.component.mq.MQMessageService;
+import com.ark.component.mq.MsgBody;
+import com.ark.component.mq.MQService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class RocketMQMessageServiceTest extends ApplicationTests {
+class RocketMQServiceTest extends ApplicationTests {
 
     @Autowired
-    private MQMessageService mqMessageService;
+    private MQService mqService;
 
     @Test
     public void send() {
         for (int i = 0; i < 10; i++) {
-            mqMessageService.send("test", new Message("test msg" + i));
+            mqService.send("test", new MsgBody("test msg" + i));
         }
         try {
             Thread.sleep(200000);
@@ -25,7 +25,7 @@ class RocketMQMessageServiceTest extends ApplicationTests {
     @Test
     public void asyncSend() {
 //        for (int i = 0; i < 10; i++) {
-        mqMessageService.asyncSend("test", new Message("test msg"));
+        mqService.asyncSend("test", new MsgBody("test msg"));
 //        }
         try {
             Thread.sleep(200000);

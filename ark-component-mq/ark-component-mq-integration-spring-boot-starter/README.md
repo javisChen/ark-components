@@ -1,3 +1,5 @@
+## 配置
+```yaml
 ark:
   component:
     mq:
@@ -5,6 +7,4 @@ ark:
         server: localhost:9876
         producer:
           group: 'pg_default'
-logging:
-  level:
-    root: info
+```

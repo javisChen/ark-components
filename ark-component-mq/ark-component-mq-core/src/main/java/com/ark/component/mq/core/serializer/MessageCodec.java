@@ -1,8 +1,5 @@
 package com.ark.component.mq.core.serializer;
 
-import com.alibaba.fastjson.TypeReference;
-import com.ark.component.mq.Message;
-
 import java.lang.reflect.Type;
 
 public interface MessageCodec {
