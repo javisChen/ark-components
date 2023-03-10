@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -139,46 +140,47 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     }
 
     private MQSendResponse doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
-        String sendId = msgIdGenerator.getId();
+        String bizKey = buildBizKey(payLoad);
+        payLoad.setBizKey(buildBizKey(payLoad));
+
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
-        payLoad.setSendId(sendId);
         try {
             P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] start send message sendId = {} topic = {} tag = {} payLoad = {} ",
-                        sendId, topic, tag, JSON.toJSONString(message));
+                log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} payLoad = {} ",
+                        bizKey, topic, tag, JSON.toJSONString(message));
             }
             R result = executeSend(topic, tag, message, timeout, delayLevel);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] send message finish sendId = {} payLoad = {}", sendId, JSON.toJSONString(message));
+                log.debug("[MQ] send message finish bizKey = {} payLoad = {}", bizKey, JSON.toJSONString(message));
             }
-            return convertToMQResponse(result, sendId);
+            return convertToMQResponse(result, bizKey);
         } catch (Exception e) {
-            log.error("[MQ] send message error sendId:" + sendId, e);
+            log.error("[MQ] send message error bizKey:" + bizKey, e);
             throw new MQException(e);
         }
     }
 
     private void doAsyncSend(String topic, String tag, MsgBody payLoad, MQSendCallback callback, long timeout, int delayLevel) {
-        String sendId = msgIdGenerator.getId();
+        String bizKey = buildBizKey(payLoad);
+        payLoad.setBizKey(bizKey);
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
-        payLoad.setSendId(sendId);
         try {
             P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] start send message sendId = {} topic = {} tag = {} message = {} ",
-                        sendId, topic, tag, JSON.toJSONString(message));
+                log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} message = {} ",
+                        bizKey, topic, tag, JSON.toJSONString(message));
             }
             executeAsyncSend(topic, tag, message, timeout, delayLevel, new MQSendCallback() {
                 @Override
                 public void onSuccess(MQSendResponse MQSendResponse) {
                     if (log.isDebugEnabled()) {
-                        log.debug("[MQ] send message success, sendId = {} topic = {} tag = {} message = {} ",
-                                sendId, topic, tag, JSON.toJSONString(message));
+                        log.debug("[MQ] send message success, bizKey = {} topic = {} tag = {} message = {} ",
+                                bizKey, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
                         callback.onSuccess(MQSendResponse);
@@ -192,11 +194,19 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                         callback.onException(throwable);
                     }
                 }
-            }, sendId);
+            }, bizKey);
         } catch (Exception e) {
             log.error("[MQ] send message error", e);
             throw new MQException(e);
         }
+    }
+
+    private String buildBizKey(MsgBody payLoad) {
+        String bizKey = payLoad.getBizKey();
+        if (StringUtils.hasLength(bizKey)) {
+            bizKey = msgIdGenerator.getId();
+        }
+        return bizKey;
     }
 
     /**

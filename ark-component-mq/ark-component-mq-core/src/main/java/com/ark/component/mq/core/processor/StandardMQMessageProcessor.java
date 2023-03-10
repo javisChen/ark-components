@@ -38,7 +38,7 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
             log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);
             throw new MQCodecException(e);
         }
-        String sendId = message.getSendId();
+        String sendId = message.getBizKey();
         try {
             // 消费幂等校验
             if (isRepeatMessage(msgId, sendId, msgBody, raw)) {

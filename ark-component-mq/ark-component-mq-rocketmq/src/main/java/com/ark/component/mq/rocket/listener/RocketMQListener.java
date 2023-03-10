@@ -16,6 +16,8 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
+import java.util.Map;
+
 @Slf4j
 public class RocketMQListener implements MQListener<MessageExt> {
 
@@ -32,25 +34,38 @@ public class RocketMQListener implements MQListener<MessageExt> {
         consumer.setNamesrvAddr(configuration.getServer());
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());
         consumer.setConsumeTimeout(listenerConfig.getConsumeTimeout());
+        consumer.setConsumeMessageBatchMaxSize(1);
         try {
             consumer.setMessageModel(choiceMessageModel(listenerConfig.getConsumeMode()));
             consumer.subscribe(listenerConfig.getTopic(), listenerConfig.getTag());
-            consumer.setConsumeMessageBatchMaxSize(1);
-            consumer.registerMessageListener((MessageListenerConcurrently) (msgList, context) -> {
-                try {
-                    for (MessageExt messageExt : msgList) {
-                        processor.process(messageExt.getBody(), messageExt.getMsgId(), messageExt);
-                    }
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                } catch (Exception e) {
-                    log.error("MQ Process Error -> ", e);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                }
-            });
+            consumer.registerMessageListener(registryMessageListener(processor));
             consumer.start();
         } catch (MQClientException e) {
             throw new MQListenException(e);
+        } finally {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    consumer.shutdown();
+                    log.info("Consumer：[{}] shutdown success......", processor.getClass());
+                } catch (Exception e) {
+                    log.info("Consumer：[{}] shutdown error......", processor.getClass());
+                }
+            }));
         }
+    }
+
+    private MessageListenerConcurrently registryMessageListener(MQMessageProcessor<MessageExt> processor) {
+        return (msgList, context) -> {
+            try {
+                for (MessageExt messageExt : msgList) {
+                    processor.process(messageExt.getBody(), messageExt.getMsgId(), messageExt);
+                }
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            } catch (Exception e) {
+                log.error("MQ Process Error -> ", e);
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+        };
     }
 
     @Override

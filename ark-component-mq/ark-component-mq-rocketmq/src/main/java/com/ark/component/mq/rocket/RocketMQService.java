@@ -83,7 +83,7 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
 
     @Override
     protected Message buildMessage(String topic, String tag, int delayLevel, MsgBody msgBodyPayLoad) {
-        Message message = new Message(topic, tag, msgBodyPayLoad.getSendId(), JSONObject.toJSONBytes(msgBodyPayLoad));
+        Message message = new Message(topic, tag, msgBodyPayLoad.getBizKey(), JSONObject.toJSONBytes(msgBodyPayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
     }

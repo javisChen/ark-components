@@ -7,20 +7,23 @@ import lombok.ToString;
 @ToString
 public class MsgBody {
 
+    /**
+     * 消息存放内容
+     */
     private Object body;
 
     /**
-     * 组件自生成的Id
+     * 业务标识
      */
-    private String sendId;
+    private String bizKey;
 
     public MsgBody(Object body) {
         this.body = body;
     }
 
-    public MsgBody(String sendId, Object body) {
+    public MsgBody(String bizKey, Object body) {
         this.body = body;
-        this.sendId = sendId;
+        this.bizKey = bizKey;
     }
 
     public static MsgBody of(Object body) {
