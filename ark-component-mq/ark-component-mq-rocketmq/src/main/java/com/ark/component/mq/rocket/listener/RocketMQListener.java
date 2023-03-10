@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class RocketMQListener implements MQListener<MessageExt> {
 
-    private RocketMQConfiguration configuration;
+    private final RocketMQConfiguration configuration;
 
     public RocketMQListener(RocketMQConfiguration configuration) {
         this.configuration = configuration;
