@@ -35,6 +35,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());
         consumer.setConsumeTimeout(listenerConfig.getConsumeTimeout());
         consumer.setConsumeMessageBatchMaxSize(1);
+        consumer.setMaxReconsumeTimes(10);
         try {
             consumer.setMessageModel(choiceMessageModel(listenerConfig.getConsumeMode()));
             consumer.subscribe(listenerConfig.getTopic(), listenerConfig.getTag());
@@ -69,7 +70,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
     }
 
     @Override
-    public MQType mqType() {
+    public MQType getMqType() {
         return MQType.ROCKET;
     }
 

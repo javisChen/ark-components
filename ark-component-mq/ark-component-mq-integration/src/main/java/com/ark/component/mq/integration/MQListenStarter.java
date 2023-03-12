@@ -1,6 +1,7 @@
 package com.ark.component.mq.integration;
 
 
+import cn.hutool.core.map.MapUtil;
 import com.ark.component.mq.core.annotations.MQMessageListener;
 import com.ark.component.mq.exception.MQListenException;
 import com.ark.component.mq.core.listener.MQListener;
@@ -40,12 +41,21 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
     }
 
     private void prepareListeners() {
-        Map<String, MQListener> map = applicationContext.getBeansOfType(MQListener.class);
-        listenerHolder = new HashMap<>(map.size());
-        map.forEach((key, listener) -> listenerHolder.put(listener.mqType(), listener));
+        Map<String, MQListener> listenerMap = applicationContext.getBeansOfType(MQListener.class);
+        if (MapUtil.isEmpty(listenerMap)) {
+            return;
+        }
+        listenerHolder = new HashMap<>(listenerMap.size());
+        for (Map.Entry<String, MQListener> entry : listenerMap.entrySet()) {
+            MQListener listener = entry.getValue();
+            listenerHolder.put(listener.getMqType(), listener);
+        }
     }
 
     public void doListen(MQMessageProcessor processor) {
+        if (MapUtil.isEmpty(listenerHolder)) {
+            return;
+        }
         MQMessageListener annotation = processor.getClass().getAnnotation(MQMessageListener.class);
         if (annotation != null) {
             MQListenerConfig config = buildConfig(annotation);
@@ -53,9 +63,9 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
             String processClazzName = processor.getClass().getName();
             try {
                 mqListener.listen(processor, config);
-                log.info("[MQ] Listen successfully,Processor = [{}],Config = [{}]", processClazzName, config);
+                log.info("[MQ] Consumer listen successfully,Processor = [{}],Config = [{}]", processClazzName, config);
             } catch (Exception e) {
-                log.error("[MQ] Failed to listen,[" + processClazzName + "] listen error, config:[" + config + "]", e);
+                log.error("[MQ] Consumer failed to listen,[" + processClazzName + "] listen error, config:[" + config + "]", e);
                 throw new MQListenException(e);
             }
         }

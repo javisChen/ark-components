@@ -1,4 +1,4 @@
-package com.ark.component.mq.integration.autoconfigure;
+package com.ark.component.mq.rocket.autoconfigure;
 
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.core.producer.MessageProducer;

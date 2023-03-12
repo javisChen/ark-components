@@ -7,6 +7,6 @@ public interface MQListener<RAW> {
 
     void listen(MQMessageProcessor<RAW> processor, MQListenerConfig annotation);
 
-    MQType mqType();
+    MQType getMqType();
 
 }

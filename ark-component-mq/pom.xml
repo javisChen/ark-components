@@ -17,6 +17,7 @@
         <module>ark-component-mq-rabbitmq</module>
         <module>ark-component-mq-integration</module>
         <module>ark-component-mq-integration-spring-boot-starter</module>
+        <module>ark-component-mq-integration-spring-boot-starter-test</module>
     </modules>
 
     <properties>

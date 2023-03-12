@@ -217,16 +217,16 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行同步发送
      */
-    protected abstract R executeSend(String destination, String tag, P messagePayLoad, long timeout, int delayLevel);
+    protected abstract R executeSend(String topic, String tag, P msgBody, long timeout, int delayLevel);
 
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback, String sendId);
+    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback, String bizKey);
 
     /**
      * 转换回统一的MQ响应体
      */
-    protected abstract MQSendResponse convertToMQResponse(R sendResult, String sendId);
+    protected abstract MQSendResponse convertToMQResponse(R sendResult, String bizKey);
 
 }

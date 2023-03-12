@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>ark-component-mq-integration</artifactId>
-    <name>ark-component-mq-integration</name>
+    <artifactId>ark-component-mq-integration-spring-boot-starter-test</artifactId>
+    <name>ark-component-mq-integration-spring-boot-starter-test</name>
 
     <properties>
 
@@ -18,19 +18,19 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>com.ark.mq</groupId>-->
-<!--            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.ark.mq</groupId>
+            <artifactId>ark-component-mq-integration-spring-boot-starter</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.ark.mq</groupId>
-            <artifactId>ark-component-mq-core</artifactId>
+            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>
         </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>com.ark.mq</groupId>-->
-<!--            <artifactId>ark-component-mq-rabbitmq</artifactId>-->
+<!--            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>-->
 <!--        </dependency>-->
 
         <dependency>

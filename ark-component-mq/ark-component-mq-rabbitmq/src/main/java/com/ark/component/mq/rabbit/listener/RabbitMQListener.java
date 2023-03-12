@@ -14,7 +14,7 @@ public class RabbitMQListener implements MQListener {
     }
 
     @Override
-    public MQType mqType() {
+    public MQType getMqType() {
         return MQType.RABBIT;
     }
 }

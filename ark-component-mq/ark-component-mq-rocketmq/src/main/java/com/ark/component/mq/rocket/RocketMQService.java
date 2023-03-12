@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.message.Message;
 @Slf4j
 public class RocketMQService extends AbstractMQService<Message, SendResult> {
     private DefaultMQProducer defaultMQProducer;
+
     public RocketMQService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         initProducer(mqConfiguration);
@@ -35,10 +36,10 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected SendResult executeSend(String topic, String tag, Message message, long timeout, int delayLevel) {
+    protected SendResult executeSend(String topic, String tag, Message msgBody, long timeout, int delayLevel) {
         try {
-            message.setDelayTimeLevel(delayLevel);
-            return defaultMQProducer.send(message, timeout);
+            msgBody.setDelayTimeLevel(delayLevel);
+            return defaultMQProducer.send(msgBody, timeout);
         } catch (Exception e) {
             throw new MQException(e);
         }
@@ -51,13 +52,13 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
                                     long timeout,
                                     int delayLevel,
                                     MQSendCallback callback,
-                                    String sendId) {
+                                    String bizKey) {
         try {
             defaultMQProducer.send(message, new SendCallback() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     if (callback != null) {
-                        callback.onSuccess(convertToMQResponse(sendResult, sendId));
+                        callback.onSuccess(convertToMQResponse(sendResult, bizKey));
                     }
                 }
 
@@ -74,9 +75,9 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
         }
     }
 
-    protected MQSendResponse convertToMQResponse(SendResult sendResult, String sendId) {
+    protected MQSendResponse convertToMQResponse(SendResult sendResult, String bizKey) {
         return MQSendResponse.builder()
-                .withSendId(sendId)
+                .withSendId(bizKey)
                 .withMsgId(sendResult.getMsgId())
                 .build();
     }

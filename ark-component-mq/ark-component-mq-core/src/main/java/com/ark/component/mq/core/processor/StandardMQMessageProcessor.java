@@ -38,16 +38,16 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
             log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);
             throw new MQCodecException(e);
         }
-        String sendId = message.getBizKey();
+        String bizKey = message.getBizKey();
         try {
             // 消费幂等校验
-            if (isRepeatMessage(msgId, sendId, msgBody, raw)) {
+            if (isRepeatMessage(msgId, bizKey, msgBody, raw)) {
                 if (log.isDebugEnabled()) {
                     log.debug("[MQ] Message Already Consume MsgId = {}", msgId);
                 }
                 return;
             }
-            handleMessage(msgId, sendId, msgBody, raw);
+            handleMessage(msgId, bizKey, msgBody, raw);
             if (log.isDebugEnabled()) {
                 log.debug("[MQ] Message Consume Success");
             }

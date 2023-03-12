@@ -1,2 +1,6 @@
-rocketmq:
-  name-server: localhost:9876
+spring:
+  rabbitmq:
+    addresses:
+    username:
+    host:
+    port:

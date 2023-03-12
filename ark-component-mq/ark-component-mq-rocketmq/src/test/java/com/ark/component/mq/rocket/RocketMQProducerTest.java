@@ -1,6 +1,5 @@
-package com.ark.component.mq.integration.rocket;
+package com.ark.component.mq.rocket;
 
-import com.ark.component.mq.integration.ApplicationTests;
 import com.ark.component.mq.rocket.common.DelayLevel;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
