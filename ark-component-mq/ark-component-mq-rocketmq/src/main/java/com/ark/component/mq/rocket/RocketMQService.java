@@ -36,7 +36,7 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected SendResult executeSend(String topic, String tag, Message msgBody, long timeout, int delayLevel) {
+    protected SendResult executeSend(String bizKey, String topic, String tag, Message msgBody, long timeout, int delayLevel) {
         try {
             msgBody.setDelayTimeLevel(delayLevel);
             return defaultMQProducer.send(msgBody, timeout);
@@ -77,7 +77,7 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
 
     protected MQSendResponse convertToMQResponse(SendResult sendResult, String bizKey) {
         return MQSendResponse.builder()
-                .withSendId(bizKey)
+                .withBizKey(bizKey)
                 .withMsgId(sendResult.getMsgId())
                 .build();
     }

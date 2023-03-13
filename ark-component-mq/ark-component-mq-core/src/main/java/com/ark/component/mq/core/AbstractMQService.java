@@ -34,6 +34,10 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         this.mqConfiguration = new MQConfiguration();
     }
 
+    public MsgIdGenerator getMsgIdGenerator() {
+        return msgIdGenerator;
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.msgIdGenerator = applicationContext.getBean(MsgIdGenerator.class);
@@ -152,7 +156,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                 log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} payLoad = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
-            R result = executeSend(topic, tag, message, timeout, delayLevel);
+            R result = executeSend(bizKey, topic, tag, message, timeout, delayLevel);
             if (log.isDebugEnabled()) {
                 log.debug("[MQ] send message finish bizKey = {} payLoad = {}", bizKey, JSON.toJSONString(message));
             }
@@ -217,7 +221,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行同步发送
      */
-    protected abstract R executeSend(String topic, String tag, P msgBody, long timeout, int delayLevel);
+    protected abstract R executeSend(String bizKey, String topic, String tag, P msgBody, long timeout, int delayLevel);
 
     /**
      * 执行异步发送，通过callback接收发送结果

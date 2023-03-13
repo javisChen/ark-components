@@ -12,6 +12,6 @@ public class MQSendResponse {
 
     private String msgId;
 
-    private String sendId;
+    private String bizKey;
 
 }
