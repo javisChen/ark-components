@@ -19,38 +19,50 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RabbitMQService extends AbstractMQService<byte[], Object> {
 
-    private Channel channel;
+    private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
-    private RabbitMQConfiguration mqConfiguration;
+    private final RabbitMQConfiguration mqConfiguration;
+
+    private Channel channel;
 
     public RabbitMQService(RabbitMQConfiguration mqConfiguration) {
         super(mqConfiguration);
         this.mqConfiguration = mqConfiguration;
-        initProducer();
+        init();
     }
 
-    private void initProducer() {
+    private synchronized void init() {
+        if (this.channel != null  && this.channel.isOpen()) {
+            log.info("[RabbitMQ]:已存在可用连接 {}", channel.getConnection());
+            return;
+        }
+
+        Connection connection = null;
         try {
-            this.channel = getConnection(this.mqConfiguration).createChannel();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
+            connection = getConnection(this.mqConfiguration);
+            log.info("[RabbitMQ]:连接服务器成功 {}", connection.getAddress().toString());
+            this.channel = connection.createChannel();
+        } catch (Exception e) {
+            try {
+                connection.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         }
     }
 
     private Connection getConnection(RabbitMQConfiguration rabbitMQConfiguration) throws IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
         List<Address> addresses = resolveAddresses(rabbitMQConfiguration);
-        return factory.newConnection(addresses);
+        return connectionFactory.newConnection(addresses);
     }
 
+    /**
+     * 解析服务端集群地址
+     */
     private List<Address> resolveAddresses(RabbitMQConfiguration rabbitMQConfiguration) {
         return StrUtil.split(rabbitMQConfiguration.getServer(), ",", true, true).stream()
-                .map(address -> {
-                    List<String> hostPort = StrUtil.split(address, ":");
-                    return new Address(hostPort.get(0), Integer.parseInt(hostPort.get(1)));
-                })
+                .map(Address::parseAddress)
                 .collect(Collectors.toList());
     }
 
@@ -61,7 +73,7 @@ public class RabbitMQService extends AbstractMQService<byte[], Object> {
 
     @Override
     protected Object executeSend(String topic, String tag, byte[] msgBody, long timeout, int delayLevel) {
-        Connection connection = null;
+        Connection connection;
         try {
             connection = getConnection(mqConfiguration);
         } catch (Exception e) {
