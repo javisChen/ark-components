@@ -179,7 +179,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                 log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} message = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend(topic, tag, message, timeout, delayLevel, new MQSendCallback() {
+            executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new MQSendCallback() {
                 @Override
                 public void onSuccess(MQSendResponse MQSendResponse) {
                     if (log.isDebugEnabled()) {
@@ -198,7 +198,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                         callback.onException(throwable);
                     }
                 }
-            }, bizKey);
+            });
         } catch (Exception e) {
             log.error("[MQ] send message error", e);
             throw new MQException(e);
@@ -226,7 +226,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback, String bizKey);
+    protected abstract void executeAsyncSend(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback);
 
     /**
      * 转换回统一的MQ响应体

@@ -5,7 +5,7 @@ import com.ark.component.mq.core.support.MQType;
 
 public interface MQListener<RAW> {
 
-    void listen(MQMessageProcessor<RAW> processor, MQListenerConfig annotation);
+    void listen(MQMessageProcessor<RAW> processor, MQListenerConfig listenerConfig);
 
     MQType getMqType();
 

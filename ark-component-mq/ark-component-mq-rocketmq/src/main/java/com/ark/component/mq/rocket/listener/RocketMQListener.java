@@ -44,15 +44,19 @@ public class RocketMQListener implements MQListener<MessageExt> {
         } catch (MQClientException e) {
             throw new MQListenException(e);
         } finally {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    consumer.shutdown();
-                    log.info("Consumer：[{}] shutdown success......", processor.getClass());
-                } catch (Exception e) {
-                    log.info("Consumer：[{}] shutdown error......", processor.getClass());
-                }
-            }));
+            close(processor, consumer);
         }
+    }
+
+    private void close(MQMessageProcessor<MessageExt> processor, DefaultMQPushConsumer consumer) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                consumer.shutdown();
+                log.info("Consumer：[{}] shutdown success......", processor.getClass());
+            } catch (Exception e) {
+                log.info("Consumer：[{}] shutdown error......", processor.getClass());
+            }
+        }));
     }
 
     private MessageListenerConcurrently registryMessageListener(MQMessageProcessor<MessageExt> processor) {

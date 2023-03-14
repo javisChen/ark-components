@@ -3,6 +3,7 @@ package com.ark.component.mq.rabbit.configuation;
 import com.ark.component.mq.configuation.MQConfiguration;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.HashMap;
@@ -18,42 +19,18 @@ import java.util.Map;
 public class RabbitMQConfiguration extends MQConfiguration {
 
     /**
-     * 发送消息超时时间，默认3s
+     * Login user to authenticate to the broker.
      */
-    private Producer producer;
+    private String username = "guest";
 
-    private Consumer consumer;
+    /**
+     * Login to authenticate against the broker.
+     */
+    private String password = "guest";
 
-    @Data
-    public static class Producer {
-        private Boolean enabled = false;
-        private String group;
-        private int sendMessageTimeout = 30000;
-        private int compressMessageBodyThreshold = 4096;
-        private int retryTimesWhenSendFailed = 2;
-        private int retryTimesWhenSendAsyncFailed = 2;
-        private boolean retryNextServer = false;
-        private int maxMessageSize = 4194304;
-        private String accessKey;
-        private String secretKey;
-        private boolean enableMsgTrace = false;
-        private String customizedTraceTopic = "RMQ_SYS_TRACE_TOPIC";
-    }
-
-    @Data
-    public static final class Consumer {
-        private Boolean enabled = false;
-        private String group;
-        private String topic;
-        private String messageModel = "CLUSTERING";
-        private String selectorType = "TAG";
-        private String selectorExpression = "*";
-        private String accessKey;
-        private String secretKey;
-        private int pullBatchSize = 10;
-        private boolean enableMsgTrace = false;
-        private String customizedTraceTopic = "RMQ_SYS_TRACE_TOPIC";
-        private Map<String, Map<String, Boolean>> listeners = new HashMap();
-    }
+    /**
+     * Virtual host to use when connecting to the broker.
+     */
+    private String virtualHost;
 
 }

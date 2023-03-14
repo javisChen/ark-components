@@ -5,6 +5,8 @@ ark:
         server: localhost:9876
         producer:
           group: 'pg_default'
+      rabbitmq:
+        server: localhost:5672
 logging:
   level:
     root: info

@@ -8,6 +8,7 @@ import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rabbit.configuation.RabbitMQConfiguration;
+import com.ark.component.mq.rabbit.support.ConnectionManager;
 import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +19,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
-
-    private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
     private final RabbitMQConfiguration mqConfiguration;
 
@@ -39,8 +38,7 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
 
         Connection connection = null;
         try {
-            connection = getConnection(this.mqConfiguration);
-            log.info("[RabbitMQ]:连接服务器成功 {}", connection.getAddress().toString());
+            connection = ConnectionManager.getConnection(this.mqConfiguration);
             this.channel = connection.createChannel();
 
             // 一旦消息被投递到所有匹配的队列之后，broker就会发送一个确认给生产者(包含消息的唯一ID)，
@@ -66,20 +64,6 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             }
             throw new RuntimeException(e);
         }
-    }
-
-    private Connection getConnection(RabbitMQConfiguration rabbitMQConfiguration) throws IOException, TimeoutException {
-        List<Address> addresses = resolveAddresses(rabbitMQConfiguration);
-        return connectionFactory.newConnection(addresses);
-    }
-
-    /**
-     * 解析服务端集群地址
-     */
-    private List<Address> resolveAddresses(RabbitMQConfiguration rabbitMQConfiguration) {
-        return StrUtil.split(rabbitMQConfiguration.getServer(), ",", true, true).stream()
-                .map(Address::parseAddress)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -116,6 +100,16 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
         }
     }
 
+    @Override
+    protected void executeAsyncSend(String bizKey, String topic, String tag, byte[] body, long timeout, int delayLevel, MQSendCallback callback) {
+        executeSend(bizKey, topic, tag, body, timeout, delayLevel);
+    }
+
+    @Override
+    protected MQSendResponse convertToMQResponse(MQSendResponse sendResult, String bizKey) {
+        return sendResult;
+    }
+
     private ReturnCallback returnCallback() {
         return aReturn -> log.info("[RabbitMQ]:路由到队列失败：{}", aReturn);
     }
@@ -132,15 +126,5 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
                 log.info("deliveryTag = {} 发送失败, multiple = {}", deliveryTag, multiple);
             }
         };
-    }
-
-    @Override
-    protected void executeAsyncSend(String topic, String tag, byte[] body, long timeout, int delayLevel, MQSendCallback callback, String bizKey) {
-
-    }
-
-    @Override
-    protected MQSendResponse convertToMQResponse(MQSendResponse sendResult, String bizKey) {
-        return sendResult;
     }
 }

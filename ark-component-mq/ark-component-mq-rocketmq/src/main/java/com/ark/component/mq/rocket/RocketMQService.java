@@ -46,13 +46,13 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected void executeAsyncSend(String topic,
+    protected void executeAsyncSend(String bizKey,
+                                    String topic,
                                     String tag,
                                     Message message,
                                     long timeout,
                                     int delayLevel,
-                                    MQSendCallback callback,
-                                    String bizKey) {
+                                    MQSendCallback callback) {
         try {
             defaultMQProducer.send(message, new SendCallback() {
                 @Override
