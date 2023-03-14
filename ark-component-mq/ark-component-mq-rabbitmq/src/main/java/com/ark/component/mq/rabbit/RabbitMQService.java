@@ -1,6 +1,5 @@
 package com.ark.component.mq.rabbit;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.MQSendResponse;
@@ -9,13 +8,11 @@ import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rabbit.configuation.RabbitMQConfiguration;
 import com.ark.component.mq.rabbit.support.ConnectionManager;
+import com.ark.component.mq.rabbit.support.Utils;
 import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
@@ -72,10 +69,15 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
     }
 
     @Override
-    protected MQSendResponse executeSend(String bizKey, String topic, String tag, byte[] msgBody, long timeout, int delayLevel) {
+    protected MQSendResponse executeSend(String bizKey, String exchange, String routingKey, byte[] msgBody, long timeout, int delayLevel) {
         try {
+            String queue = Utils.buildQueueName(exchange, routingKey);
             // 声明交换机
-            channel.exchangeDeclare(topic, BuiltinExchangeType.DIRECT);
+            channel.exchangeDeclare(exchange, BuiltinExchangeType.TOPIC, true, false, false, null);
+            // 声明队列
+            channel.queueDeclare(queue, true, false, false, null);
+            // 队列绑定
+            channel.queueBind(queue, exchange, routingKey);
 
             // 如果为true, 消息不能路由到指定的队列时会触发addReturnListener注册的监听器；如果为false，则broker会直接将消息丢弃
             boolean mandatory = true;
@@ -89,7 +91,7 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
                     .messageId(messageId)
                     .build();
 
-            channel.basicPublish(topic, tag, mandatory, immediate, basicProperties, msgBody);
+            channel.basicPublish(exchange, routingKey, mandatory, immediate, basicProperties, msgBody);
 
             return MQSendResponse.builder()
                     .withBizKey(bizKey)

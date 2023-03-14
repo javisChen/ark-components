@@ -1,18 +1,20 @@
-package com.ark.component.mq.integration.rocket;
+package com.ark.component.mq.integration.processor;
 
 
 import com.ark.component.mq.core.annotations.MQMessageListener;
 import com.ark.component.mq.core.processor.MQMessageProcessor;
 import com.ark.component.mq.core.support.ConsumeMode;
 import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.exception.ConsumeExceptions;
 import com.ark.component.mq.exception.MQException;
+import com.ark.component.mq.integration.MQTestConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @MQMessageListener(
         consumerGroup = "GID_TEST",
         topic = MQTestConst.TOPIC2,
-        tags = MQTestConst.TAG_CLUSTER,
+        tags = MQTestConst.TAG_ORDER_CREATED,
         mq = MQType.RABBIT,
         consumeMode = ConsumeMode.CLUSTERING)
 @Component
@@ -22,6 +24,7 @@ public class ClusterTestProcessorMQ<T> implements MQMessageProcessor<Object> {
     @Override
     public void process(byte[] body, String msgId, Object s) throws MQException {
         log.info("cluster msgId = {}, body = {}", msgId, new String(body));
+        throw ConsumeExceptions.requeue("暂不消费...");
     }
 
 }

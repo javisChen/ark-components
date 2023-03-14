@@ -4,7 +4,7 @@ package com.ark.component.mq.exception;
  * MQ解编码异常
  * @author victor
  */
-public class MQCodecException extends RuntimeException {
+public class MQCodecException extends MQException {
 
     public MQCodecException() {
     }

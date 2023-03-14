@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,7 +21,7 @@ public class ConnectionManager {
 
     private static volatile Connection connection;
 
-    private static final Object lock = new Object();
+    private static final Lock lock = new ReentrantLock();
 
 
     private ConnectionManager() {}
@@ -29,14 +31,20 @@ public class ConnectionManager {
             log.info("[RabbitMQ]:已连接服务器 {}", connection.getAddress());
             return connection;
         }
-        synchronized (lock) {
-            if (connection == null) {
-                List<Address> addresses = resolveAddresses(rabbitMQConfiguration);
-                connection = connectionFactory.newConnection(addresses);
-                log.info("[RabbitMQ]:连接服务器成功 {}", connection.getAddress());
+        try {
+            lock.lock();
+            if (connection != null) {
+                return connection;
             }
+            List<Address> addresses = resolveAddresses(rabbitMQConfiguration);
+            connection = connectionFactory.newConnection(addresses);
+            log.info("[RabbitMQ]:连接服务器成功 {}", connection.getAddress());
+            return connection;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
         }
-        return connection;
     }
 
 

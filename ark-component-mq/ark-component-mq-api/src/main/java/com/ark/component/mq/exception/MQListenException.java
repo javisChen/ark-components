@@ -3,7 +3,7 @@ package com.ark.component.mq.exception;
 /**
  * MQ注册消费监听异常
  */
-public class MQListenException extends RuntimeException {
+public class MQListenException extends MQException {
 
     public MQListenException() {
     }

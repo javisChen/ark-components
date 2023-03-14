@@ -1,5 +1,6 @@
 package com.ark.component.mq.rocket.listener;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.exception.MQListenException;
 import com.ark.component.mq.core.listener.MQListener;
@@ -7,6 +8,8 @@ import com.ark.component.mq.core.listener.MQListenerConfig;
 import com.ark.component.mq.core.processor.MQMessageProcessor;
 import com.ark.component.mq.core.support.ConsumeMode;
 import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.exception.MessageDiscardException;
+import com.ark.component.mq.exception.MessageRequeueException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -17,6 +20,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RocketMQListener implements MQListener<MessageExt> {
@@ -61,14 +65,22 @@ public class RocketMQListener implements MQListener<MessageExt> {
 
     private MessageListenerConcurrently registryMessageListener(MQMessageProcessor<MessageExt> processor) {
         return (msgList, context) -> {
+            String msgIds = msgList.stream().map(MessageExt::getMsgId).collect(Collectors.joining(","));
+            log.info("[RocketMQ]接收消息 -> msgId=[{}]", msgIds);
             try {
                 for (MessageExt messageExt : msgList) {
                     processor.process(messageExt.getBody(), messageExt.getMsgId(), messageExt);
                 }
+                log.info("[RocketMQ]消费成功 -> msgId=[{}]", msgIds);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } catch (Exception e) {
-                log.error("MQ Process Error -> ", e);
+            } catch (MessageRequeueException e) {
+                log.error("[RocketMQ]消费失败,重新放回队列 -> msgId=[{}], err={}",
+                        msgIds, ExceptionUtil.stacktraceToString(e));
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            } catch (MQException e) {
+                log.error("[RocketMQ]消费失败,丢弃消息 -> msgId=[{}], err={}",
+                        msgIds, ExceptionUtil.stacktraceToString(e));
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         };
     }
