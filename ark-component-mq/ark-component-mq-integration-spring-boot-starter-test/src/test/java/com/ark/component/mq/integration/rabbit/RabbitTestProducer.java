@@ -1,7 +1,6 @@
 package com.ark.component.mq.integration.rabbit;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.mq.integration.MQTestConst;
 import com.ark.component.mq.rabbit.support.Utils;
@@ -13,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 public class RabbitTestProducer {
 
     private final static String exchange = MQTestConst.TOPIC_ORDER;
-    private final static String routingKey = MQTestConst.TAG_ORDER_CREATED;
+    private final static String routingKey = "";
 
     public static void main(String[] args) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
@@ -25,9 +24,9 @@ public class RabbitTestProducer {
             // exclusive：是否排外  即只允许该channel访问该队列   一般等于true的话用于一个队列只能有一个消费者来消费的场景
             // autoDelete：是否自动删除  消费完删除
             // arguments：其他属性
-            String queue = Utils.buildQueueName(exchange, routingKey);
+            String queue = Utils.createQueueName(exchange, routingKey, BuiltinExchangeType.FANOUT);
             // 声明交换机
-            channel.exchangeDeclare(exchange, BuiltinExchangeType.TOPIC, true, false, false, null);
+            channel.exchangeDeclare(exchange, BuiltinExchangeType.FANOUT, true, false, false, null);
             // 声明队列
             channel.queueDeclare(queue, true, false, false, null);
             // 队列绑定
@@ -41,7 +40,7 @@ public class RabbitTestProducer {
                         .builder()
                         .messageId(IdUtil.fastSimpleUUID())
                         .build();
-                channel.basicPublish(exchange, routingKey, props, message.getBytes());
+                channel.basicPublish(exchange, "", props, message.getBytes());
                 System.out.println(" [x] Sent '" + message + "'");
             }
         }

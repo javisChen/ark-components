@@ -17,12 +17,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ConnectionManager {
 
-    private final static ConnectionFactory connectionFactory = new ConnectionFactory();
+    private final static ConnectionFactory CONNECTION_FACTORY = new ConnectionFactory();
 
     private static volatile Connection connection;
 
     private static final Lock lock = new ReentrantLock();
-
 
     private ConnectionManager() {}
 
@@ -37,7 +36,7 @@ public class ConnectionManager {
                 return connection;
             }
             List<Address> addresses = resolveAddresses(rabbitMQConfiguration);
-            connection = connectionFactory.newConnection(addresses);
+            connection = CONNECTION_FACTORY.newConnection(addresses);
             log.info("[RabbitMQ]:连接服务器成功 {}", connection.getAddress());
             return connection;
         } catch (Exception e) {

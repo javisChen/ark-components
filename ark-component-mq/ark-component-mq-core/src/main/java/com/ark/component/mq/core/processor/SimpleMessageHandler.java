@@ -7,5 +7,5 @@ import lombok.extern.slf4j.Slf4j;
  * @param <T>
  */
 @Slf4j
-public abstract class SimpleMQMessageProcessor<T> extends StandardMQMessageProcessor<T, Object> {
+public abstract class SimpleMessageHandler<T> extends StandardMessageHandler<T, Object> {
 }

@@ -1,6 +1,6 @@
 package com.ark.component.mq.rocket.processor;
 
-import com.ark.component.mq.core.processor.StandardMQMessageProcessor;
+import com.ark.component.mq.core.processor.StandardMessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 
@@ -12,6 +12,6 @@ import org.apache.rocketmq.common.message.MessageExt;
  * @param <T>
  */
 @Slf4j
-public abstract class RocketMQMessageProcessor<T> extends StandardMQMessageProcessor<T, MessageExt> {
+public abstract class RocketMessageHandler<T> extends StandardMessageHandler<T, MessageExt> {
 
 }

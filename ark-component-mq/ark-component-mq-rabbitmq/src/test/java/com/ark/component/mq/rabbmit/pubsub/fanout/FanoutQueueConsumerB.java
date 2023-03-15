@@ -25,9 +25,6 @@ public class FanoutQueueConsumerB {
                 // arguments：其他属性
                 channel.queueDeclare(QUEUE_NAME, false, false, false, null);
                 channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
-
-                // 定义队列的消费者
-
                 // 监听队列
                 channel.basicConsume(QUEUE_NAME, false, new MyDefaultConsumer(channel));
 

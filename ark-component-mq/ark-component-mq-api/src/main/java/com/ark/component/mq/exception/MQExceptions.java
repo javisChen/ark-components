@@ -3,7 +3,7 @@ package com.ark.component.mq.exception;
 /**
  * 消费过程统一使用该工具类抛出异常
  */
-public class ConsumeExceptions {
+public class MQExceptions {
 
     /**
      * 丢弃消息

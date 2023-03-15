@@ -3,7 +3,8 @@ package com.ark.component.mq.rabbit.listener;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import com.ark.component.mq.core.listener.MQListener;
 import com.ark.component.mq.core.listener.MQListenerConfig;
-import com.ark.component.mq.core.processor.MQMessageProcessor;
+import com.ark.component.mq.core.processor.MessageHandler;
+import com.ark.component.mq.core.support.ConsumeMode;
 import com.ark.component.mq.core.support.MQType;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.exception.MQListenException;
@@ -25,39 +26,50 @@ public class RabbitMQListener implements MQListener<Envelope> {
         this.configuration = configuration;
     }
 
-
     @Override
-    public void listen(MQMessageProcessor<Envelope> processor,
+    public void listen(MessageHandler<Envelope> handler,
                        MQListenerConfig listenerConfig) {
 
+        String routingKey = listenerConfig.getTag();
+        String exchange = listenerConfig.getTopic();
+        BuiltinExchangeType exchangeType = convertExchangeType(listenerConfig.getConsumeMode());
+        String queue = Utils.createQueueName(exchange, routingKey, exchangeType);
         Connection connection = null;
-
         Channel channel = null;
 
         try {
             connection = ConnectionManager.getConnection(configuration);
             channel = connection.createChannel();
-
-            String routingKey = listenerConfig.getTag();
-            String exchange = listenerConfig.getTopic();
-            String queue = Utils.buildQueueName(exchange, routingKey);
-
             // 声明交换机
-            channel.exchangeDeclare(exchange, BuiltinExchangeType.TOPIC, true, false, false, null);
-            // 声明队列
-            channel.queueDeclare(queue, true, false, false, null);
+            channel.exchangeDeclare(exchange, exchangeType, true, false, false, null);
+            // 如果交换机是Fanout类型，队列无须持久话，消费者下线后自动删除
+            if (exchangeType.equals(BuiltinExchangeType.FANOUT)) {
+                channel.queueDeclare(queue, false, true, true, null);
+            } else {
+                channel.queueDeclare(queue, true, false, false, null);
+            }
+
             // 队列绑定
             channel.queueBind(queue, exchange, routingKey);
             // 注册消费者
-            channel.basicConsume(queue, getConsumer(channel, processor));
+            channel.basicConsume(queue, false, consumer(channel, handler));
         } catch (Exception e) {
             throw new MQListenException(e);
         } finally {
-            registyShutdownHook(processor, connection, channel);
+            registryShutdownHook(handler, connection, channel);
         }
     }
 
-    private DefaultConsumer getConsumer(Channel channel, MQMessageProcessor<Envelope> processor) {
+    private BuiltinExchangeType convertExchangeType(ConsumeMode consumeMode) {
+        if (consumeMode.equals(ConsumeMode.BROADCASTING)) {
+            return BuiltinExchangeType.FANOUT;
+        } else if (consumeMode.equals(ConsumeMode.CLUSTERING)) {
+            return BuiltinExchangeType.TOPIC;
+        }
+        throw new MQListenException("[RabbitMQ]:Cannot support consume mode");
+    }
+
+    private DefaultConsumer consumer(Channel channel, MessageHandler<Envelope> processor) {
         return new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag,
@@ -66,38 +78,36 @@ public class RabbitMQListener implements MQListener<Envelope> {
                                        byte[] body) throws IOException {
                 long deliveryTag = envelope.getDeliveryTag();
                 String messageId = properties.getMessageId();
-                log.info("[RabbitMQ]接收消息 -> msgId=[{}], tag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
+                log.info("[RabbitMQ]:Receive message -> msgId=[{}], tag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
                 Channel channel = getChannel();
                 try {
-                    processor.process(body, messageId, envelope);
+                    processor.handle(body, messageId, envelope);
                     channel.basicAck(deliveryTag, false);
-                    log.info("[RabbitMQ]消费成功 -> msgId=[{}], tag=[{}], envelope=[{}]",
-                            messageId, deliveryTag, envelope);
+                    log.info("[RabbitMQ]:Consume successfully -> msgId=[{}], tag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
                 } catch (MessageRequeueException e) {
                     channel.basicReject(deliveryTag, true);
-                    log.info("[RabbitMQ]消费失败，重新放回队列 -> msgId=[{}], tag=[{}], envelope=[{}], err={}",
-                            messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
+                    log.info("[RabbitMQ]:Consume Failed, message back to the queue -> msgId=[{}], tag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
                 } catch (MQException e) {
                     channel.basicReject(deliveryTag, false);
-                    log.info("[RabbitMQ]消费失败,丢弃消息 -> msgId=[{}], tag=[{}], envelope=[{}], err={}",
-                            messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
+                    log.info("[RabbitMQ]:Failed to consume, message discarded -> msgId=[{}], tag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
                 }
             }
         };
     }
 
-    private void registyShutdownHook(MQMessageProcessor<Envelope> processor, Connection connection, Channel channel) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                channel.close();
-                connection.close();
-                log.info("Consumer：[{}] shutdown success......", processor.getClass());
-            } catch (Exception e) {
-                log.info("Consumer：[{}] shutdown error......", processor.getClass());
-            }
-        }));
+    private void registryShutdownHook(MessageHandler<Envelope> processor, Connection connection, Channel channel) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> close(processor, connection, channel)));
     }
 
+    private static void close(MessageHandler<Envelope> processor, Connection connection, Channel channel) {
+        try {
+            channel.close();
+            connection.close();
+            log.info("[RabbitMQ]：消费者：[{}] 停止成功......", processor.getClass());
+        } catch (Exception e) {
+            log.info("[RabbitMQ]：消费者：[{}] 停止失败......", processor.getClass());
+        }
+    }
 
     @Override
     public MQType getMqType() {

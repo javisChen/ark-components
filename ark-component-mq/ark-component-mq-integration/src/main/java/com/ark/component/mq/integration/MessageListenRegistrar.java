@@ -6,7 +6,7 @@ import com.ark.component.mq.core.annotations.MQMessageListener;
 import com.ark.component.mq.exception.MQListenException;
 import com.ark.component.mq.core.listener.MQListener;
 import com.ark.component.mq.core.listener.MQListenerConfig;
-import com.ark.component.mq.core.processor.MQMessageProcessor;
+import com.ark.component.mq.core.processor.MessageHandler;
 import com.ark.component.mq.core.support.MQType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @SuppressWarnings("all")
-public class MQListenStarter implements ApplicationRunner, ApplicationContextAware {
+public class MessageListenRegistrar implements ApplicationRunner, ApplicationContextAware {
 
     private Map<MQType, MQListener<?>> listenerHolder;
 
@@ -31,12 +31,12 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
 
         prepareListeners();
 
-        startListen();
+        start();
 
     }
 
-    private void startListen() {
-        Map<String, MQMessageProcessor> processorMap = applicationContext.getBeansOfType(MQMessageProcessor.class);
+    private void start() {
+        Map<String, MessageHandler> processorMap = applicationContext.getBeansOfType(MessageHandler.class);
         processorMap.forEach((key, processor) -> doListen(processor));
     }
 
@@ -52,20 +52,20 @@ public class MQListenStarter implements ApplicationRunner, ApplicationContextAwa
         }
     }
 
-    public void doListen(MQMessageProcessor processor) {
+    public void doListen(MessageHandler handler) {
         if (MapUtil.isEmpty(listenerHolder)) {
             return;
         }
-        MQMessageListener annotation = processor.getClass().getAnnotation(MQMessageListener.class);
+        MQMessageListener annotation = handler.getClass().getAnnotation(MQMessageListener.class);
         if (annotation != null) {
             MQListenerConfig config = buildConfig(annotation);
             MQListener mqListener = listenerHolder.get(config.getMqType());
-            String processClazzName = processor.getClass().getName();
+            String handleClazzName = handler.getClass().getName();
             try {
-                mqListener.listen(processor, config);
-                log.info("[MQ] Consumer listen successfully,Processor = [{}],Config = [{}]", processClazzName, config);
+                mqListener.listen(handler, config);
+                log.info("[MQ] Consumer listen successfully,Handler = [{}],Config = [{}]", handleClazzName, config);
             } catch (Exception e) {
-                log.error("[MQ] Consumer failed to listen,[" + processClazzName + "] listen error, config:[" + config + "]", e);
+                log.error("[MQ] Consumer failed to listen,[" + handleClazzName + "] listen error, config:[" + config + "]", e);
                 throw new MQListenException(e);
             }
         }

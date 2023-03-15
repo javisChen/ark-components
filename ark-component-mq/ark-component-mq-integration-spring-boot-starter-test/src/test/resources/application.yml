@@ -7,6 +7,11 @@ ark:
           group: 'pg_default'
       rabbitmq:
         server: localhost:5672
+        exchanges:
+          - name: order
+            type: fanout
 logging:
   level:
     root: info
+server:
+  port: 8080

@@ -3,8 +3,8 @@ package com.ark.component.mq.core.processor;
 import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.core.serializer.MessageCodec;
-import com.ark.component.mq.exception.MQCodecException;
+import com.ark.component.mq.core.serializer.MessageSerializer;
+import com.ark.component.mq.exception.MQSerializerException;
 import com.ark.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -20,23 +20,23 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Slf4j
 @SuppressWarnings("all")
-public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessageProcessor<RAW>, ApplicationContextAware {
+public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<RAW>, ApplicationContextAware {
 
-    private MessageCodec messageCodec;
+    private MessageSerializer messageSerializer;
 
     @Override
-    public void process(byte[] body, String msgId, RAW raw) throws MQException {
+    public void handle(byte[] body, String msgId, RAW raw) throws MQException {
         log.info("[MQ] Consume Message MsgId = {}, BodySize = {}", msgId, body.length);
         // 反序列化
         MsgBody message;
         T msgBody;
         try {
-            message = messageCodec.decode(body, MsgBody.class);
+            message = messageSerializer.deserialize(body, MsgBody.class);
             log.info("[MQ] Consume Message MsgId = {}, Decode = {}", msgId, JSON.toJSONString(message));
             msgBody = convertMsgBody(message);
-        } catch (MQCodecException e) {
+        } catch (MQSerializerException e) {
             log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);
-            throw new MQCodecException(e);
+            throw new MQSerializerException(e);
         }
         String bizKey = message.getBizKey();
         try {
@@ -69,10 +69,10 @@ public abstract class StandardMQMessageProcessor<T, RAW> implements MQMessagePro
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        setMessageCodec(applicationContext.getBean(MessageCodec.class));
+        setMessageCodec(applicationContext.getBean(MessageSerializer.class));
     }
 
-    public void setMessageCodec(MessageCodec messageCodec) {
-        this.messageCodec = messageCodec;
+    public void setMessageCodec(MessageSerializer messageSerializer) {
+        this.messageSerializer = messageSerializer;
     }
 }

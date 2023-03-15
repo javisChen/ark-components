@@ -13,6 +13,7 @@ import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
@@ -71,9 +72,11 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
     @Override
     protected MQSendResponse executeSend(String bizKey, String exchange, String routingKey, byte[] msgBody, long timeout, int delayLevel) {
         try {
-            String queue = Utils.buildQueueName(exchange, routingKey);
+            BuiltinExchangeType exchangeType = getExchangeType(exchange);
+
+            String queue = Utils.createQueueName(exchange, routingKey, exchangeType);
             // 声明交换机
-            channel.exchangeDeclare(exchange, BuiltinExchangeType.TOPIC, true, false, false, null);
+            channel.exchangeDeclare(exchange, exchangeType, true, false, false, null);
             // 声明队列
             channel.queueDeclare(queue, true, false, false, null);
             // 队列绑定
@@ -100,6 +103,18 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
         } catch (Exception e) {
             throw new MQException(e);
         }
+    }
+
+    /**
+     * 根据交换机名称从配置中拿到具体的类型
+     */
+    private BuiltinExchangeType getExchangeType(String exchange) {
+        List<RabbitMQConfiguration.Exchange> exchanges = mqConfiguration.getExchanges();
+        return exchanges.stream()
+                .filter(exc -> exc.getName().equals(exchange))
+                .findFirst()
+                .orElseThrow(() -> new MQException("[RabbitMQ]:Exchange[" + exchange + "]未配置"))
+                .getType();
     }
 
     @Override

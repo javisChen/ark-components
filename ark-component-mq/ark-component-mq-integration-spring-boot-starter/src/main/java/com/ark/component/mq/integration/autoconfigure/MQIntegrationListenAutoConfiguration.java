@@ -2,9 +2,9 @@ package com.ark.component.mq.integration.autoconfigure;
 
 import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
 import com.ark.component.mq.core.generator.MsgIdGenerator;
-import com.ark.component.mq.core.serializer.FastJSONCodec;
-import com.ark.component.mq.core.serializer.MessageCodec;
-import com.ark.component.mq.integration.MQListenStarter;
+import com.ark.component.mq.core.serializer.FastJSONSerializer;
+import com.ark.component.mq.core.serializer.MessageSerializer;
+import com.ark.component.mq.integration.MessageListenRegistrar;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -21,14 +21,14 @@ public class MQIntegrationListenAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MQListenStarter mqListenStarter() {
-        return new MQListenStarter();
+    public MessageListenRegistrar mqListenStarter() {
+        return new MessageListenRegistrar();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public MessageCodec messageCodec() {
-        return new FastJSONCodec();
+    public MessageSerializer messageSerializer() {
+        return new FastJSONSerializer();
     }
 
     @Bean
