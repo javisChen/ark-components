@@ -1,6 +1,7 @@
 package com.ark.component.mq.rocket;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.MQSendResponse;
 import com.ark.component.mq.MQSendCallback;
@@ -89,4 +90,8 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
         return message;
     }
 
+    @Override
+    public MQType mqType() {
+        return MQType.ROCKET;
+    }
 }

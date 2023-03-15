@@ -1,4 +1,4 @@
-package com.ark.component.mq.core.support;
+package com.ark.component.mq;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

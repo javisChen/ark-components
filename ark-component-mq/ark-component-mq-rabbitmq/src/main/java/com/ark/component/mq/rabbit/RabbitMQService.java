@@ -3,6 +3,7 @@ package com.ark.component.mq.rabbit;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
@@ -143,5 +144,10 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
                 log.info("deliveryTag = {} 发送失败, multiple = {}", deliveryTag, multiple);
             }
         };
+    }
+
+    @Override
+    public MQType mqType() {
+        return MQType.RABBIT;
     }
 }

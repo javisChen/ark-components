@@ -5,11 +5,6 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.core.annotations.MQMessageListener;
-import com.ark.component.mq.core.processor.MessageHandler;
-import com.ark.component.mq.core.support.ConsumeMode;
-import com.ark.component.mq.core.support.MQType;
-import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.integration.ApplicationTests;
 import com.ark.component.mq.integration.MQTestConst;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +14,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class OrderCreatedTestProducer<T> extends ApplicationTests {
+public class RabbitOrderCreatedTestProducer extends ApplicationTests {
 
     @Autowired
     private MQService mqService;
-
 
     @Test
     public void test() {

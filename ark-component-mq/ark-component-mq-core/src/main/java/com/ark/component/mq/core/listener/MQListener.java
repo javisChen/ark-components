@@ -1,7 +1,7 @@
 package com.ark.component.mq.core.listener;
 
 import com.ark.component.mq.core.processor.MessageHandler;
-import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.MQType;
 
 /**
  * MQ消费者监听行为

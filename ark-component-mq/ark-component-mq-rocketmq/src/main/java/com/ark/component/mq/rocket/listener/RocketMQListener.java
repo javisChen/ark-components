@@ -7,7 +7,7 @@ import com.ark.component.mq.core.listener.MQListener;
 import com.ark.component.mq.core.listener.MQListenerConfig;
 import com.ark.component.mq.core.processor.MessageHandler;
 import com.ark.component.mq.core.support.ConsumeMode;
-import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.MQType;
 import com.ark.component.mq.exception.MessageRequeueException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;

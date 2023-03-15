@@ -1,26 +1,24 @@
 package com.ark.component.mq.integration;
 
-
 import cn.hutool.core.map.MapUtil;
 import com.ark.component.mq.core.annotations.MQMessageListener;
 import com.ark.component.mq.exception.MQListenException;
 import com.ark.component.mq.core.listener.MQListener;
 import com.ark.component.mq.core.listener.MQListenerConfig;
 import com.ark.component.mq.core.processor.MessageHandler;
-import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.MQType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @SuppressWarnings("all")
-public class MessageListenRegistrar implements ApplicationRunner, ApplicationContextAware {
+public class MessageListenRegister implements ApplicationRunner, ApplicationContextAware {
 
     private Map<MQType, MQListener<?>> listenerHolder;
 
@@ -57,17 +55,18 @@ public class MessageListenRegistrar implements ApplicationRunner, ApplicationCon
             return;
         }
         MQMessageListener annotation = handler.getClass().getAnnotation(MQMessageListener.class);
-        if (annotation != null) {
-            MQListenerConfig config = buildConfig(annotation);
-            MQListener mqListener = listenerHolder.get(config.getMqType());
-            String handleClazzName = handler.getClass().getName();
-            try {
-                mqListener.listen(handler, config);
-                log.info("[MQ] Consumer listen successfully,Handler = [{}],Config = [{}]", handleClazzName, config);
-            } catch (Exception e) {
-                log.error("[MQ] Consumer failed to listen,[" + handleClazzName + "] listen error, config:[" + config + "]", e);
-                throw new MQListenException(e);
-            }
+        if (annotation == null) {
+            return;
+        }
+        MQListenerConfig config = buildConfig(annotation);
+        MQListener mqListener = listenerHolder.get(config.getMqType());
+        String handleClazzName = handler.getClass().getName();
+        try {
+            mqListener.listen(handler, config);
+            log.info("[MQ] Consumer listen successfully,Handler = [{}],Config = [{}]", handleClazzName, config);
+        } catch (Exception e) {
+            log.error("[MQ] Consumer failed to listen,[" + handleClazzName + "] listen error, config:[" + config + "]", e);
+            throw new MQListenException(e);
         }
     }
 

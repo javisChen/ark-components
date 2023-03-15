@@ -4,7 +4,7 @@ import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
 import com.ark.component.mq.core.generator.MsgIdGenerator;
 import com.ark.component.mq.core.serializer.FastJSONSerializer;
 import com.ark.component.mq.core.serializer.MessageSerializer;
-import com.ark.component.mq.integration.MessageListenRegistrar;
+import com.ark.component.mq.integration.MessageListenRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +21,8 @@ public class MQIntegrationListenAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MessageListenRegistrar mqListenStarter() {
-        return new MessageListenRegistrar();
+    public MessageListenRegister mqListenStarter() {
+        return new MessageListenRegister();
     }
 
     @Bean

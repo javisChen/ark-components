@@ -1,7 +1,7 @@
 package com.ark.component.mq.core.annotations;
 
 import com.ark.component.mq.core.support.ConsumeMode;
-import com.ark.component.mq.core.support.MQType;
+import com.ark.component.mq.MQType;
 
 import java.lang.annotation.*;
 

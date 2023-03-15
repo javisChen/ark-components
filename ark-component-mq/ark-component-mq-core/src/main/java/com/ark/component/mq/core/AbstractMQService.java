@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 public abstract class AbstractMQService<P, R> implements MQService, ApplicationContextAware {
+
     private final MQConfiguration mqConfiguration;
 
     private MsgIdGenerator msgIdGenerator = new DefaultMsgIdGenerator();

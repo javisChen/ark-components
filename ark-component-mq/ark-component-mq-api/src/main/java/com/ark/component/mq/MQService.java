@@ -13,6 +13,8 @@ package com.ark.component.mq;
  */
 public interface MQService {
 
+    MQType mqType();
+
     /*
         同步发送
      */
