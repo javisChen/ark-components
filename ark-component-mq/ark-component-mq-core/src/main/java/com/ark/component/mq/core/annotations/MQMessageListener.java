@@ -12,7 +12,7 @@ public @interface MQMessageListener {
 
     MQType mq() default MQType.ROCKET;
 
-    String consumerGroup();
+    String consumerGroup() default "";
 
     String topic();
 

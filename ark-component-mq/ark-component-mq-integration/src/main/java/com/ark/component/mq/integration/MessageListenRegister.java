@@ -63,9 +63,9 @@ public class MessageListenRegister implements ApplicationRunner, ApplicationCont
         String handleClazzName = handler.getClass().getName();
         try {
             mqListener.listen(handler, config);
-            log.info("[MQ] Consumer listen successfully,Handler = [{}],Config = [{}]", handleClazzName, config);
+            log.info("[MQ]:Consumer listen successfully,Handler = [{}],Config = [{}]", handleClazzName, config);
         } catch (Exception e) {
-            log.error("[MQ] Consumer failed to listen,[" + handleClazzName + "] listen error, config:[" + config + "]", e);
+            log.error("[MQ]:Consumer failed to listen,[" + handleClazzName + "] listen error, config:[" + config + "]", e);
             throw new MQListenException(e);
         }
     }

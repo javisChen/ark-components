@@ -47,9 +47,6 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             // 表示到这个序列号之前的所有消息都已经得到了处理
             this.channel.confirmSelect();
 
-            // 添加确认监听器，消息成功发送后broker会回传确认消息，最终回调给监听器
-            this.channel.addConfirmListener(confirmListener());
-
             // mandatory=true时, 如果消息不能路由到指定的队列时，
             // 则会调用basic.return方法将消息返回给生产者,会触发addReturnListener注册的监听器
             this.channel.addReturnListener(returnCallback());
@@ -82,6 +79,9 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             channel.queueDeclare(queue, true, false, false, null);
             // 队列绑定
             channel.queueBind(queue, exchange, routingKey);
+
+            // 添加确认监听器，消息成功发送后broker会回传确认消息，最终回调给监听器
+            this.channel.addConfirmListener(confirmListener());
 
             // 如果为true, 消息不能路由到指定的队列时会触发addReturnListener注册的监听器；如果为false，则broker会直接将消息丢弃
             boolean mandatory = true;
@@ -136,12 +136,12 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
         return new ConfirmListener() {
             @Override
             public void handleAck(long deliveryTag, boolean multiple) throws IOException {
-                log.info("deliveryTag = {} 发送成功, multiple = {}", deliveryTag, multiple);
+                log.info("[RabbitMQ]:消息发送成功，deliveryTag = {} 发送成功, multiple = {}", deliveryTag, multiple);
             }
 
             @Override
             public void handleNack(long deliveryTag, boolean multiple) throws IOException {
-                log.info("deliveryTag = {} 发送失败, multiple = {}", deliveryTag, multiple);
+                log.info("[RabbitMQ]:消息发送失败，deliveryTag = {} 发送失败, multiple = {}", deliveryTag, multiple);
             }
         };
     }

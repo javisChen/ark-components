@@ -37,15 +37,15 @@ public class RocketMQAutoConfiguration {
             havingValue = "true",
             matchIfMissing = true)
     @ConditionalOnMissingBean
-    public RocketMQService rocketMessageService(RocketMQConfiguration configuration) {
+    public RocketMQService rocketMQService(RocketMQConfiguration configuration) {
         return new RocketMQService(configuration);
     }
 
-    @Bean
-    @ConditionalOnBean(MQService.class)
-    @ConditionalOnMissingBean
-    public MessageProducer messageProducer(MQService messageService) {
-        return new MessageProducer(messageService);
-    }
+//    @Bean
+//    @ConditionalOnBean(RocketMQService.class)
+//    @ConditionalOnMissingBean
+//    public MessageProducer messageProducer(RocketMQService messageService) {
+//        return new MessageProducer(messageService);
+//    }
 
 }

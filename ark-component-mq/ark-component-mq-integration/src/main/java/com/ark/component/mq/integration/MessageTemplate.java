@@ -1,11 +1,12 @@
 package com.ark.component.mq.integration;
 
+import cn.hutool.core.lang.Assert;
 import com.ark.component.mq.*;
+import com.ark.component.mq.exception.MQException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,92 +104,98 @@ public class MessageTemplate implements ApplicationContextAware {
     }
 
     public MQSendResponse send(MQType mqType, String topic, MsgBody msg) {
-        return mqServiceHolder.get(mqType).send(topic, msg);
+        return getMqService(mqType).send(topic, msg);
     }
 
     public MQSendResponse send(MQType mqType, String topic, MsgBody msg, int timeout) {
-        return mqServiceHolder.get(mqType).send(topic, msg, timeout);
+        return getMqService(mqType).send(topic, msg, timeout);
     }
 
     public MQSendResponse send(MQType mqType, String topic, String tag, MsgBody msg) {
-        return mqServiceHolder.get(mqType).send(topic, tag, msg);
+        return getMqService(mqType).send(topic, tag, msg);
     }
 
     public MQSendResponse send(MQType mqType, String topic, String tag, MsgBody msg, int timeout) {
-        return mqServiceHolder.get(mqType).send(topic, tag, msg, timeout);
+        return getMqService(mqType).send(topic, tag, msg, timeout);
     }
 
     /*
         同步发送延迟消息
      */
     public MQSendResponse delaySend(MQType mqType, String topic, MsgBody msg, int delay) {
-        return mqServiceHolder.get(mqType).delaySend(topic, msg, delay);
+        return getMqService(mqType).delaySend(topic, msg, delay);
     }
 
     public MQSendResponse delaySend(MQType mqType, String topic, MsgBody msg, int delay, int timeout) {
-        return mqServiceHolder.get(mqType).delaySend(topic, msg, delay, timeout);
+        return getMqService(mqType).delaySend(topic, msg, delay, timeout);
     }
 
     public MQSendResponse delaySend(MQType mqType, String topic, String tag, int delay, MsgBody msg) {
-        return mqServiceHolder.get(mqType).delaySend(topic, tag, delay, msg);
+        return getMqService(mqType).delaySend(topic, tag, delay, msg);
     }
 
     public MQSendResponse delaySend(MQType mqType, String topic, String tag, int delay, int timeout, MsgBody msg) {
-        return mqServiceHolder.get(mqType).delaySend(topic, tag, delay, timeout, msg);
+        return getMqService(mqType).delaySend(topic, tag, delay, timeout, msg);
     }
 
     /*
         异步发送
      */
     public void asyncSend(MQType mqType, String topic, MsgBody msg) {
-        mqServiceHolder.get(mqType).asyncSend(topic, msg);
+        getMqService(mqType).asyncSend(topic, msg);
     }
 
     public void asyncSend(MQType mqType, String topic, MsgBody msg, int timeout) {
-        mqServiceHolder.get(mqType).asyncSend(topic, msg, timeout);
+        getMqService(mqType).asyncSend(topic, msg, timeout);
     }
 
     public void asyncSend(MQType mqType, String topic, String tag, MsgBody msg) {
-        mqServiceHolder.get(mqType).asyncSend(topic, tag, msg);
+        getMqService(mqType).asyncSend(topic, tag, msg);
     }
 
     public void asyncSend(MQType mqType, String topic, String tag, MsgBody msg, int timeout) {
-        mqServiceHolder.get(mqType).asyncSend(topic, tag, msg, timeout);
+        getMqService(mqType).asyncSend(topic, tag, msg, timeout);
     }
 
     public void asyncSend(MQType mqType, String topic, MsgBody msg, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).asyncSend(topic, msg, callback);
+        getMqService(mqType).asyncSend(topic, msg, callback);
     }
 
     public void asyncSend(MQType mqType, String topic, MsgBody msg, int timeout, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).asyncSend(topic, msg, timeout, callback);
+        getMqService(mqType).asyncSend(topic, msg, timeout, callback);
     }
 
     public void asyncSend(MQType mqType, String topic, String tag, MsgBody msg, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).asyncSend(topic, tag, msg, callback);
+        getMqService(mqType).asyncSend(topic, tag, msg, callback);
     }
 
     public void asyncSend(MQType mqType, String topic, String tag, MsgBody msg, int timeout, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).asyncSend(topic, tag, msg, timeout, callback);
+        getMqService(mqType).asyncSend(topic, tag, msg, timeout, callback);
     }
 
     /*
         异步发送延迟消息
      */
     public void delayAsyncSend(MQType mqType, String topic, MsgBody msg, int delay, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).delayAsyncSend(topic, msg, delay, callback);
+        getMqService(mqType).delayAsyncSend(topic, msg, delay, callback);
     }
 
     public void delayAsyncSend(MQType mqType, String topic, MsgBody msg, int delay, int timeout, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).delayAsyncSend(topic, msg, delay, timeout, callback);
+        getMqService(mqType).delayAsyncSend(topic, msg, delay, timeout, callback);
     }
 
     public void delayAsyncSend(MQType mqType, String topic, String tag, int delay, MsgBody msg, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).delayAsyncSend(topic, tag, delay, msg, callback);
+        getMqService(mqType).delayAsyncSend(topic, tag, delay, msg, callback);
+    }
+
+    private MQService getMqService(MQType mqType) {
+        MQService mqService = mqServiceHolder.get(mqType);
+        Assert.notNull(mqService, () -> new MQException("[MQ]:[" + mqType.getName() + "]MQ服务未注入"));
+        return mqService;
     }
 
     public void delayAsyncSend(MQType mqType, String topic, String tag, int delay, int timeout, MsgBody msg, MQSendCallback callback) {
-        mqServiceHolder.get(mqType).delayAsyncSend(topic, tag, delay, timeout, msg, callback);
+        getMqService(mqType).delayAsyncSend(topic, tag, delay, timeout, msg, callback);
     }
 
     @Override

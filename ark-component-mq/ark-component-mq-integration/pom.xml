@@ -18,20 +18,10 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>com.ark.mq</groupId>-->
-<!--            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.ark.mq</groupId>
             <artifactId>ark-component-mq-core</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.ark.mq</groupId>-->
-<!--            <artifactId>ark-component-mq-rabbitmq</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>

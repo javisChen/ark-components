@@ -25,7 +25,7 @@ public class RabbitMQAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RabbitMQListener mqListener(RabbitMQConfiguration configuration) {
+    public RabbitMQListener rabbitMqListener(RabbitMQConfiguration configuration) {
         return new RabbitMQListener(configuration);
     }
 
@@ -36,15 +36,15 @@ public class RabbitMQAutoConfiguration {
 //            havingValue = "true",
 //            matchIfMissing = true)
     @ConditionalOnMissingBean
-    public RabbitMQService mqService(RabbitMQConfiguration configuration) {
+    public RabbitMQService rabbitMQService(RabbitMQConfiguration configuration) {
         return new RabbitMQService(configuration);
     }
 
-    @Bean("rabbitMQMessageProducer")
-    @ConditionalOnBean(RabbitMQService.class)
-    @ConditionalOnMissingBean
-    public MessageProducer mqProducer(MQService messageService) {
-        return new MessageProducer(messageService);
-    }
+//    @Bean
+//    @ConditionalOnBean(RabbitMQService.class)
+//    @ConditionalOnMissingBean
+//    public MessageProducer messageProducer(RabbitMQService rabbitMQService) {
+//        return new MessageProducer(rabbitMQService);
+//    }
 
 }
