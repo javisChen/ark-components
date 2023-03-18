@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
         consumerGroup = "GID_ORDER_GROUP",
         topic = MQTestConst.TOPIC_ORDER,
         tags = MQTestConst.TAG_ORDER_CREATED,
-        mq = MQType.ROCKET,
-        consumeMode = ConsumeMode.BROADCASTING)
+        mq = MQType.ROCKET
+)
 @Component
 @Slf4j
 public class RocketOrderCreatedMessageHandler<T> implements MessageHandler<Object> {

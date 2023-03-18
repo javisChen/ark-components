@@ -16,6 +16,10 @@ public class MessageTemplateTest extends ApplicationTests {
     public void testSendToRabbit() {
         MsgBody msgBody = buildBody();
         messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody);
+
+        messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody);
+
+        messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody);
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
