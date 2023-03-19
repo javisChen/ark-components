@@ -12,6 +12,7 @@ import com.ark.component.mq.rabbit.support.ConnectionManager;
 import com.ark.component.mq.rabbit.support.Utils;
 import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +21,8 @@ import java.util.List;
 public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
 
     private final RabbitMQConfiguration mqConfiguration;
+
+    private RabbitTemplate rabbitTemplate;
 
     private Connection connection = null;
 
@@ -70,6 +73,9 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             // 如果为true, 消息不能路由到指定的队列时会触发addReturnListener注册的监听器；如果为false，则broker会直接将消息丢弃
             publish(exchange, routingKey, msgBody, channel, basicProperties);
 
+            // 阻塞等待broker接收成功
+            channel.waitForConfirms();
+
             return MQSendResponse.builder()
                     .withBizKey(bizKey)
                     .withMsgId(messageId)
@@ -85,7 +91,6 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
     protected void executeAsyncSend(String bizKey, String exchange, String routingKey, byte[] msgBody, long timeout, int delayLevel, MQSendCallback callback) {
         Channel channel = null;
         try {
-
             channel = initChannel(exchange, routingKey);
 
             String messageId = getMsgIdGenerator().getId();
@@ -95,7 +100,7 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
                     .build();
 
             // 添加确认监听器，消息成功发送后broker会回传确认消息，最终回调给监听器
-            channel.addConfirmListener(confirmListener(callback));
+            channel.addConfirmListener(confirmListener(callback, bizKey, messageId, channel));
 
             // mandatory=true时, 如果消息不能路由到指定的队列时，
             // 则会调用basic.return方法将消息返回给生产者,会触发addReturnListener注册的监听器
@@ -104,9 +109,8 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             publish(exchange, routingKey, msgBody, channel, basicProperties);
 
         } catch (Exception e) {
-            throw new MQException(e);
-        } finally {
             closeChannel(channel);
+            throw new MQException(e);
         }
     }
 
@@ -139,16 +143,34 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
         return aReturn -> log.info("[RabbitMQ]:路由到队列失败：{}", aReturn);
     }
 
-    private ConfirmListener confirmListener(MQSendCallback callback) {
+    private ConfirmListener confirmListener(MQSendCallback callback, String bizKey, String messageId, Channel channel) {
         return new ConfirmListener() {
             @Override
             public void handleAck(long deliveryTag, boolean multiple) throws IOException {
                 log.info("[RabbitMQ]:消息发送成功，deliveryTag = {} 发送成功, multiple = {}", deliveryTag, multiple);
+                try {
+                    if (callback != null) {
+                        MQSendResponse response = MQSendResponse.builder()
+                                .withBizKey(bizKey)
+                                .withMsgId(messageId)
+                                .build();
+                        callback.onSuccess(response);
+                    }
+                } finally {
+                    closeChannel(channel);
+                }
             }
 
             @Override
             public void handleNack(long deliveryTag, boolean multiple) throws IOException {
                 log.info("[RabbitMQ]:消息发送失败，deliveryTag = {} 发送失败, multiple = {}", deliveryTag, multiple);
+                try {
+                    if (callback != null) {
+                        callback.onException(new MQException("消息[" + bizKey + "]发送失败"));
+                    }
+                } finally {
+                    closeChannel(channel);
+                }
             }
         };
     }
@@ -156,7 +178,12 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
     private void closeChannel(Channel channel) {
         try {
             if (channel != null) {
-                channel.close();
+                while (true) {
+                    if (!channel.isOpen()) {
+                        channel.close();
+                    }
+                    Thread.sleep(1000);
+                }
             }
         } catch (Exception e) {
             log.warn("[RabbitMQ]:关闭channel失败", e);
@@ -177,12 +204,12 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             String queue = Utils.createQueueName(exchange, routingKey, exchangeType);
             // 声明交换机
             channel.exchangeDeclare(exchange, exchangeType, true, false, false, null);
-            // 声明队列
-            channel.queueDeclare(queue, true, false, false, null);
-            // 队列绑定
-            channel.queueBind(queue, exchange, routingKey);
+            // 如果交换机是Fanout类型，生产者无需声明和绑定队列
+            if (!exchangeType.equals(BuiltinExchangeType.FANOUT)) {
+                channel.queueDeclare(queue, true, false, false, null);
+                channel.queueBind(queue, exchange, routingKey);
+            }
         } catch (IOException e) {
-            closeChannel(channel);
             throw new MQException(e);
         }
         return channel;

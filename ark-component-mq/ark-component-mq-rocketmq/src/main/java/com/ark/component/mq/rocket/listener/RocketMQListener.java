@@ -60,7 +60,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
                 consumer.shutdown();
                 log.info("Consumer：[{}] shutdown success......", processor.getClass());
             } catch (Exception e) {
-                log.info("Consumer：[{}] shutdown error......", processor.getClass());
+                log.info("Consumer：[{}] shutdown error......", processor.getClass(), e);
             }
         }));
     }

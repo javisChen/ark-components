@@ -10,6 +10,8 @@ ark:
         exchanges:
           - name: order
             type: fanout
+          - name: pay
+            type: topic
 logging:
   level:
     root: info
