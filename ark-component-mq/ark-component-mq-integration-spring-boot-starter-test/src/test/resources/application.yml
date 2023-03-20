@@ -2,10 +2,12 @@ ark:
   component:
     mq:
       rocketmq:
+        enabled: false
         server: localhost:9876
         producer:
           group: 'pg_default'
       rabbitmq:
+        enabled: true
         server: localhost:5672
         exchanges:
           - name: order

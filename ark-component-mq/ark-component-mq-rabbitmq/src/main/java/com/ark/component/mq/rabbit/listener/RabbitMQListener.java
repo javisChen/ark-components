@@ -29,7 +29,10 @@ public class RabbitMQListener implements MQListener<Envelope> {
     @Override
     public void listen(MessageHandler<Envelope> handler,
                        MQListenerConfig listenerConfig) {
-
+        if (!configuration.getEnabled()) {
+            log.info("[RabbitMQ]:RabbitMQ组件未启用");
+            return;
+        }
         String routingKey = listenerConfig.getTag();
         String exchange = listenerConfig.getTopic();
         BuiltinExchangeType exchangeType = convertExchangeType(listenerConfig.getConsumeMode());
@@ -48,7 +51,6 @@ public class RabbitMQListener implements MQListener<Envelope> {
             } else {
                 channel.queueDeclare(queue, true, false, false, null);
             }
-
             // 队列绑定
             channel.queueBind(queue, exchange, routingKey);
             // 注册消费者
@@ -78,18 +80,18 @@ public class RabbitMQListener implements MQListener<Envelope> {
                                        byte[] body) throws IOException {
                 long deliveryTag = envelope.getDeliveryTag();
                 String messageId = properties.getMessageId();
-                log.info("[RabbitMQ]:Receive message -> msgId=[{}], tag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
+                log.info("[RabbitMQ]:Receive message -> msgId=[{}], deliveryTag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
                 Channel channel = getChannel();
                 try {
                     processor.handle(body, messageId, envelope);
                     channel.basicAck(deliveryTag, false);
-                    log.info("[RabbitMQ]:Consume successfully -> msgId=[{}], tag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
+                    log.info("[RabbitMQ]:Consume successfully -> msgId=[{}], deliveryTag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
                 } catch (MessageRequeueException e) {
                     channel.basicReject(deliveryTag, true);
-                    log.info("[RabbitMQ]:Consume Failed, message back to the queue -> msgId=[{}], tag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
+                    log.info("[RabbitMQ]:Consume Failed, message back to the queue -> msgId=[{}], deliveryTag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
                 } catch (MQException e) {
                     channel.basicReject(deliveryTag, false);
-                    log.info("[RabbitMQ]:Failed to consume, message discarded -> msgId=[{}], tag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
+                    log.info("[RabbitMQ]:Failed to consume, message discarded -> msgId=[{}], deliveryTag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
                 }
             }
         };

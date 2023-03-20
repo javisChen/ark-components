@@ -31,6 +31,10 @@ public class RocketMQListener implements MQListener<MessageExt> {
     @Override
     public void listen(MessageHandler<MessageExt> processor,
                        MQListenerConfig listenerConfig) {
+        if (!configuration.getEnabled()) {
+            log.info("[RocketMQ]:RocketMQ组件未启用");
+            return;
+        }
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
         consumer.setNamesrvAddr(configuration.getServer());
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());

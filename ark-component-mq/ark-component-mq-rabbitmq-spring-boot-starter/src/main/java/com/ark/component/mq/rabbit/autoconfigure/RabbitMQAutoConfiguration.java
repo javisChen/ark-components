@@ -5,11 +5,18 @@ import com.ark.component.mq.core.producer.MessageProducer;
 import com.ark.component.mq.rabbit.RabbitMQService;
 import com.ark.component.mq.rabbit.configuation.RabbitMQConfiguration;
 import com.ark.component.mq.rabbit.listener.RabbitMQListener;
+import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.PublisherCallbackChannel;
+import org.springframework.amqp.rabbit.connection.PublisherCallbackChannelFactory;
+import org.springframework.amqp.rabbit.connection.PublisherCallbackChannelImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -24,6 +31,11 @@ public class RabbitMQAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(
+            prefix = "ark.component.mq.rabbitmq",
+            value = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public RabbitMQListener rabbitMqListener(RabbitMQConfiguration configuration) {
         return new RabbitMQListener(configuration);
@@ -39,12 +51,5 @@ public class RabbitMQAutoConfiguration {
     public RabbitMQService rabbitMQService(RabbitMQConfiguration configuration) {
         return new RabbitMQService(configuration);
     }
-
-//    @Bean
-//    @ConditionalOnBean(RabbitMQService.class)
-//    @ConditionalOnMissingBean
-//    public MessageProducer messageProducer(RabbitMQService rabbitMQService) {
-//        return new MessageProducer(rabbitMQService);
-//    }
 
 }

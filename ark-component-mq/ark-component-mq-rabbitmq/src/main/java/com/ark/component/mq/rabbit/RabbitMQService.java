@@ -74,7 +74,7 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             publish(exchange, routingKey, msgBody, channel, basicProperties);
 
             // 阻塞等待broker接收成功
-            channel.waitForConfirms();
+            channel.waitForConfirms(timeout);
 
             return MQSendResponse.builder()
                     .withBizKey(bizKey)
@@ -175,21 +175,6 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
         };
     }
 
-    private void closeChannel(Channel channel) {
-        try {
-            if (channel != null) {
-                while (true) {
-                    if (!channel.isOpen()) {
-                        channel.close();
-                    }
-                    Thread.sleep(1000);
-                }
-            }
-        } catch (Exception e) {
-            log.warn("[RabbitMQ]:关闭channel失败", e);
-        }
-    }
-
     private Channel initChannel(String exchange, String routingKey) {
         Channel channel = null;
         try {
@@ -213,6 +198,18 @@ public class RabbitMQService extends AbstractMQService<byte[], MQSendResponse> {
             throw new MQException(e);
         }
         return channel;
+    }
+
+    private void closeChannel(Channel channel) {
+        try {
+            if (channel != null) {
+                if (!channel.isOpen()) {
+                    channel.close();
+                }
+            }
+        } catch (Exception e) {
+            log.warn("[RabbitMQ]:关闭channel失败", e);
+        }
     }
 
     @Override

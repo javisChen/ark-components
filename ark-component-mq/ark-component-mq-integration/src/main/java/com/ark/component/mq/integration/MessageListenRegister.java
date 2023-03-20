@@ -41,6 +41,7 @@ public class MessageListenRegister implements ApplicationRunner, ApplicationCont
     private void prepareListeners() {
         Map<String, MQListener> listenerMap = applicationContext.getBeansOfType(MQListener.class);
         if (MapUtil.isEmpty(listenerMap)) {
+            log.info("[MQ]:Cannot found [MQListener] inject");
             return;
         }
         listenerHolder = new HashMap<>(listenerMap.size());
@@ -52,14 +53,20 @@ public class MessageListenRegister implements ApplicationRunner, ApplicationCont
 
     public void doListen(MessageHandler handler) {
         if (MapUtil.isEmpty(listenerHolder)) {
+            log.info("[MQ]:Cannot found [MQListener] inject");
             return;
         }
         MQMessageListener annotation = handler.getClass().getAnnotation(MQMessageListener.class);
         if (annotation == null) {
+            log.info("[MQ]:MQListener cannot not found [@MQMessageListener] annotation");
             return;
         }
         MQListenerConfig config = buildConfig(annotation);
         MQListener mqListener = listenerHolder.get(config.getMqType());
+        if (mqListener == null) {
+            log.info("[MQ]:MQListener type [{}] not enabled or not imported");
+            return;
+        }
         String handleClazzName = handler.getClass().getName();
         try {
             mqListener.listen(handler, config);

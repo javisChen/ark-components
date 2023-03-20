@@ -25,6 +25,11 @@ public class RocketMQAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(
+            prefix = "ark.component.mq.rocketmq",
+            value = "enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     @ConditionalOnMissingBean
     public RocketMQListener rocketMQListener(RocketMQConfiguration configuration) {
         return new RocketMQListener(configuration);
