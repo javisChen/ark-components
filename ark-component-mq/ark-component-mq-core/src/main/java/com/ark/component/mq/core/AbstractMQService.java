@@ -3,7 +3,7 @@ package com.ark.component.mq.core;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.SendConfirm;
 import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.configuation.MQConfiguration;
 import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
@@ -45,42 +45,42 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     }
 
     @Override
-    public MQSendResponse send(String topic, MsgBody payLoad, int timeout) {
+    public SendConfirm send(String topic, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MQSendResponse send(String topic, String tag, MsgBody payLoad, int timeout) {
+    public SendConfirm send(String topic, String tag, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public MQSendResponse delaySend(String topic, MsgBody payLoad, int delay) {
+    public SendConfirm delaySend(String topic, MsgBody payLoad, int delay) {
         return doSend(topic, null, payLoad, 0, delay);
     }
 
     @Override
-    public MQSendResponse delaySend(String topic, MsgBody payLoad, int delay, int timeout) {
+    public SendConfirm delaySend(String topic, MsgBody payLoad, int delay, int timeout) {
         return doSend(topic, null, payLoad, timeout, delay);
     }
 
     @Override
-    public MQSendResponse delaySend(String topic, String tag, int delay, MsgBody payLoad) {
+    public SendConfirm delaySend(String topic, String tag, int delay, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, 0, delay);
     }
 
     @Override
-    public MQSendResponse delaySend(String topic, String tag, int delay, int timeout, MsgBody payLoad) {
+    public SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, timeout, delay);
     }
 
     @Override
-    public MQSendResponse send(String topic, MsgBody payLoad) {
+    public SendConfirm send(String topic, MsgBody payLoad) {
         return doSend(topic, null, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public MQSendResponse send(String topic, String tag, MsgBody payLoad) {
+    public SendConfirm send(String topic, String tag, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
@@ -144,7 +144,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         doAsyncSend(topic, tag, payLoad, callback, timeout, delay);
     }
 
-    private MQSendResponse doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
+    private SendConfirm doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
         String bizKey = buildBizKey(payLoad);
         payLoad.setBizKey(buildBizKey(payLoad));
 
@@ -154,16 +154,16 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         try {
             P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} payLoad = {} ",
+                log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} payLoad = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
             R result = executeSend(bizKey, topic, tag, message, timeout, delayLevel);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] send message finish bizKey = {} payLoad = {}", bizKey, JSON.toJSONString(message));
+                log.debug("[MQ]:send message finish bizKey = {} payLoad = {}", bizKey, JSON.toJSONString(message));
             }
-            return convertToMQResponse(result, bizKey);
+            return toResponse(result, bizKey);
         } catch (Exception e) {
-            log.error("[MQ] send message error bizKey:" + bizKey, e);
+            log.error("[MQ]:send message error bizKey:" + bizKey, e);
             throw new MQException(e);
         }
     }
@@ -177,31 +177,31 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         try {
             P message = buildMessage(topic, tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] start send message bizKey = {} topic = {} tag = {} message = {} ",
+                log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} message = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
             executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new MQSendCallback() {
                 @Override
-                public void onSuccess(MQSendResponse MQSendResponse) {
+                public void onSuccess(SendConfirm sendConfirm) {
                     if (log.isDebugEnabled()) {
-                        log.debug("[MQ] send message success, bizKey = {} topic = {} tag = {} message = {} ",
+                        log.debug("[MQ]:send message success, bizKey = {} topic = {} tag = {} message = {} ",
                                 bizKey, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
-                        callback.onSuccess(MQSendResponse);
+                        callback.onSuccess(sendConfirm);
                     }
                 }
 
                 @Override
-                public void onException(Throwable throwable) {
-                    log.error("[MQ] send message error", throwable);
+                public void onException(SendConfirm sendConfirm) {
+                    log.error("[MQ]:send message error", sendConfirm.getThrowable());
                     if (callback != null) {
-                        callback.onException(throwable);
+                        callback.onException(sendConfirm);
                     }
                 }
             });
         } catch (Exception e) {
-            log.error("[MQ] send message error", e);
+            log.error("[MQ]:send message error", e);
             throw new MQException(e);
         }
     }
@@ -232,6 +232,6 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 转换回统一的MQ响应体
      */
-    protected abstract MQSendResponse convertToMQResponse(R sendResult, String bizKey);
+    protected abstract SendConfirm toResponse(R sendResult, String bizKey);
 
 }

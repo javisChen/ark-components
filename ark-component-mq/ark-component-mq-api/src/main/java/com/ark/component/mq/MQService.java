@@ -18,24 +18,24 @@ public interface MQService {
     /*
         同步发送
      */
-    MQSendResponse send(String topic, MsgBody msg);
+    SendConfirm send(String topic, MsgBody msg);
 
-    MQSendResponse send(String topic, MsgBody msg, int timeout);
+    SendConfirm send(String topic, MsgBody msg, int timeout);
 
-    MQSendResponse send(String topic, String tag, MsgBody msg);
+    SendConfirm send(String topic, String tag, MsgBody msg);
 
-    MQSendResponse send(String topic, String tag, MsgBody msg, int timeout);
+    SendConfirm send(String topic, String tag, MsgBody msg, int timeout);
 
     /*
         同步发送延迟消息
      */
-    MQSendResponse delaySend(String topic, MsgBody msg, int delay);
+    SendConfirm delaySend(String topic, MsgBody msg, int delay);
 
-    MQSendResponse delaySend(String topic, MsgBody msg, int delay, int timeout);
+    SendConfirm delaySend(String topic, MsgBody msg, int delay, int timeout);
 
-    MQSendResponse delaySend(String topic, String tag, int delay, MsgBody msg);
+    SendConfirm delaySend(String topic, String tag, int delay, MsgBody msg);
 
-    MQSendResponse delaySend(String topic, String tag, int delay, int timeout, MsgBody msg);
+    SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody msg);
 
     /*
         异步发送

@@ -14,38 +14,38 @@ public class MessageTemplate implements ApplicationContextAware {
 
     private Map<MQType, MQService> mqServiceHolder;
 
-    public MQSendResponse send(String topic, MsgBody msg) {
+    public SendConfirm send(String topic, MsgBody msg) {
         return send(MQType.ROCKET, topic, msg);
     }
 
-    public MQSendResponse send(String topic, MsgBody msg, int timeout) {
+    public SendConfirm send(String topic, MsgBody msg, int timeout) {
         return send(MQType.ROCKET, topic, msg, timeout);
     }
 
-    public MQSendResponse send(String topic, String tag, MsgBody msg) {
+    public SendConfirm send(String topic, String tag, MsgBody msg) {
         return send(MQType.ROCKET, topic, tag, msg);
     }
 
-    public MQSendResponse send(String topic, String tag, MsgBody msg, int timeout) {
+    public SendConfirm send(String topic, String tag, MsgBody msg, int timeout) {
         return send(MQType.ROCKET, topic, tag, msg, timeout);
     }
 
     /*
         同步发送延迟消息
      */
-    public MQSendResponse delaySend(String topic, MsgBody msg, int delay) {
+    public SendConfirm delaySend(String topic, MsgBody msg, int delay) {
         return delaySend(MQType.ROCKET, topic, msg, delay);
     }
 
-    public MQSendResponse delaySend(String topic, MsgBody msg, int delay, int timeout) {
+    public SendConfirm delaySend(String topic, MsgBody msg, int delay, int timeout) {
         return delaySend(MQType.ROCKET, topic, msg, delay, timeout);
     }
 
-    public MQSendResponse delaySend(String topic, String tag, int delay, MsgBody msg) {
+    public SendConfirm delaySend(String topic, String tag, int delay, MsgBody msg) {
         return delaySend(MQType.ROCKET, topic, tag, delay, msg);
     }
 
-    public MQSendResponse delaySend(String topic, String tag, int delay, int timeout, MsgBody msg) {
+    public SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody msg) {
         return delaySend(MQType.ROCKET, topic, tag, delay, timeout, msg);
     }
 
@@ -103,38 +103,38 @@ public class MessageTemplate implements ApplicationContextAware {
         delayAsyncSend(MQType.ROCKET, topic, tag, delay, timeout, msg, callback);
     }
 
-    public MQSendResponse send(MQType mqType, String topic, MsgBody msg) {
+    public SendConfirm send(MQType mqType, String topic, MsgBody msg) {
         return getMqService(mqType).send(topic, msg);
     }
 
-    public MQSendResponse send(MQType mqType, String topic, MsgBody msg, int timeout) {
+    public SendConfirm send(MQType mqType, String topic, MsgBody msg, int timeout) {
         return getMqService(mqType).send(topic, msg, timeout);
     }
 
-    public MQSendResponse send(MQType mqType, String topic, String tag, MsgBody msg) {
+    public SendConfirm send(MQType mqType, String topic, String tag, MsgBody msg) {
         return getMqService(mqType).send(topic, tag, msg);
     }
 
-    public MQSendResponse send(MQType mqType, String topic, String tag, MsgBody msg, int timeout) {
+    public SendConfirm send(MQType mqType, String topic, String tag, MsgBody msg, int timeout) {
         return getMqService(mqType).send(topic, tag, msg, timeout);
     }
 
     /*
         同步发送延迟消息
      */
-    public MQSendResponse delaySend(MQType mqType, String topic, MsgBody msg, int delay) {
+    public SendConfirm delaySend(MQType mqType, String topic, MsgBody msg, int delay) {
         return getMqService(mqType).delaySend(topic, msg, delay);
     }
 
-    public MQSendResponse delaySend(MQType mqType, String topic, MsgBody msg, int delay, int timeout) {
+    public SendConfirm delaySend(MQType mqType, String topic, MsgBody msg, int delay, int timeout) {
         return getMqService(mqType).delaySend(topic, msg, delay, timeout);
     }
 
-    public MQSendResponse delaySend(MQType mqType, String topic, String tag, int delay, MsgBody msg) {
+    public SendConfirm delaySend(MQType mqType, String topic, String tag, int delay, MsgBody msg) {
         return getMqService(mqType).delaySend(topic, tag, delay, msg);
     }
 
-    public MQSendResponse delaySend(MQType mqType, String topic, String tag, int delay, int timeout, MsgBody msg) {
+    public SendConfirm delaySend(MQType mqType, String topic, String tag, int delay, int timeout, MsgBody msg) {
         return getMqService(mqType).delaySend(topic, tag, delay, timeout, msg);
     }
 

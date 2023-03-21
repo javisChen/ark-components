@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
         consumeMode = ConsumeMode.CLUSTERING)
 @Component
 @Slf4j
-public class RabbitPayrSuccessMessageHandler<T> implements MessageHandler<Object> {
+public class RabbitPaySuccessMessageHandler<T> implements MessageHandler<Object> {
 
     @Override
     public void handle(byte[] body, String msgId, Object s) throws MQException {

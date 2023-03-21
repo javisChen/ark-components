@@ -8,10 +8,14 @@ import lombok.Data;
  */
 @Data
 @Builder(setterPrefix = "with")
-public class MQSendResponse {
+public class SendConfirm {
 
     private String msgId;
 
     private String bizKey;
+
+    private String note;
+
+    private Throwable Throwable;
 
 }

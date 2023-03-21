@@ -1,7 +1,7 @@
 package com.ark.component.mq.core.producer;
 
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.SendConfirm;
 import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.MQService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,35 +15,35 @@ public class MessageProducer {
         this.MQService = MQService;
     }
 
-    public MQSendResponse send(String topic, MsgBody msg) {
+    public SendConfirm send(String topic, MsgBody msg) {
         return MQService.send(topic, msg);
     }
 
-    public MQSendResponse send(String topic, MsgBody msg, int timeout) {
+    public SendConfirm send(String topic, MsgBody msg, int timeout) {
         return MQService.send(topic, msg, timeout);
     }
 
-    public MQSendResponse send(String topic, String tag, MsgBody msg) {
+    public SendConfirm send(String topic, String tag, MsgBody msg) {
         return MQService.send(topic, tag, msg);
     }
 
-    public MQSendResponse send(String topic, String tag, MsgBody msg, int timeout) {
+    public SendConfirm send(String topic, String tag, MsgBody msg, int timeout) {
         return MQService.send(topic, tag, msg, timeout);
     }
 
-    public MQSendResponse delaySend(String topic, MsgBody msg, int delay) {
+    public SendConfirm delaySend(String topic, MsgBody msg, int delay) {
         return MQService.delaySend(topic, msg, delay);
     }
 
-    public MQSendResponse delaySend(String topic, MsgBody msg, int delay, int timeout) {
+    public SendConfirm delaySend(String topic, MsgBody msg, int delay, int timeout) {
         return MQService.delaySend(topic, msg, delay, timeout);
     }
 
-    public MQSendResponse delaySend(String topic, String tag, int delay, MsgBody msg) {
+    public SendConfirm delaySend(String topic, String tag, int delay, MsgBody msg) {
         return MQService.delaySend(topic, tag, delay, msg);
     }
 
-    public MQSendResponse delaySend(String topic, String tag, int delay, int timeout, MsgBody msg) {
+    public SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody msg) {
         return MQService.delaySend(topic, tag, delay, timeout, msg);
     }
 

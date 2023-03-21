@@ -2,8 +2,8 @@ package com.ark.component.mq;
 
 public interface MQSendCallback {
 
-    void onSuccess(MQSendResponse MQSendResponse);
+    void onSuccess(SendConfirm sendConfirm);
 
-    void onException(Throwable throwable);
+    void onException(SendConfirm sendConfirm);
 
 }

@@ -3,7 +3,7 @@ package com.ark.component.mq.rocket;
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.MQSendResponse;
+import com.ark.component.mq.SendConfirm;
 import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
@@ -59,27 +59,37 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     if (callback != null) {
-                        callback.onSuccess(convertToMQResponse(sendResult, bizKey));
+                        SendConfirm response = SendConfirm.builder()
+                                .withMsgId(sendResult.getMsgId())
+                                .withBizKey(bizKey)
+                                .build();
+                        callback.onSuccess(response);
                     }
                 }
 
                 @Override
                 public void onException(Throwable throwable) {
                     if (callback != null) {
-                        callback.onException(throwable);
+                        SendConfirm response = SendConfirm.builder()
+                                .withBizKey(bizKey)
+                                .withNote(throwable.getMessage())
+                                .withThrowable(throwable)
+                                .build();
+                        callback.onException(response);
                     }
                 }
             }, timeout);
         } catch (Exception e) {
-            log.error("[rocket mq] send message error", e);
+            log.error("[RocketMQ]:send message error", e);
             throw new MQException(e);
         }
     }
 
-    protected MQSendResponse convertToMQResponse(SendResult sendResult, String bizKey) {
-        return MQSendResponse.builder()
-                .withBizKey(bizKey)
+    @Override
+    protected SendConfirm toResponse(SendResult sendResult, String bizKey) {
+        return SendConfirm.builder()
                 .withMsgId(sendResult.getMsgId())
+                .withBizKey(bizKey)
                 .build();
     }
 

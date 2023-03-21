@@ -1,4 +1,4 @@
-package com.ark.component.mq.integration.rabbit;
+package com.ark.component.mq.integration.rabbit.raw;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,7 @@ import com.rabbitmq.client.*;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class RabbitTestProducer {
+public class RabbitRawProducerTest {
 
     private final static String exchange = MQTestConst.TOPIC_ORDER;
     private final static String routingKey = "";
