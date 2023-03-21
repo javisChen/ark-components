@@ -3,8 +3,8 @@ package com.ark.component.mq.rocket;
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.SendConfirm;
-import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
@@ -12,11 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
-import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 
 @Slf4j
-public class RocketMQService extends AbstractMQService<Message, SendResult> {
+public class RocketMQService extends AbstractMQService<Message, org.apache.rocketmq.client.producer.SendResult> {
     private DefaultMQProducer defaultMQProducer;
 
     public RocketMQService(RocketMQConfiguration mqConfiguration) {
@@ -37,7 +36,7 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected SendResult executeSend(String bizKey, String topic, String tag, Message msgBody, long timeout, int delayLevel) {
+    protected org.apache.rocketmq.client.producer.SendResult executeSend(String bizKey, String topic, String tag, Message msgBody, long timeout, int delayLevel) {
         try {
             msgBody.setDelayTimeLevel(delayLevel);
             return defaultMQProducer.send(msgBody, timeout);
@@ -53,13 +52,13 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
                                     Message message,
                                     long timeout,
                                     int delayLevel,
-                                    MQSendCallback callback) {
+                                    SendConfirm callback) {
         try {
             defaultMQProducer.send(message, new SendCallback() {
                 @Override
-                public void onSuccess(SendResult sendResult) {
+                public void onSuccess(org.apache.rocketmq.client.producer.SendResult sendResult) {
                     if (callback != null) {
-                        SendConfirm response = SendConfirm.builder()
+                        SendResult response = SendResult.builder()
                                 .withMsgId(sendResult.getMsgId())
                                 .withBizKey(bizKey)
                                 .build();
@@ -70,7 +69,7 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
                 @Override
                 public void onException(Throwable throwable) {
                     if (callback != null) {
-                        SendConfirm response = SendConfirm.builder()
+                        SendResult response = SendResult.builder()
                                 .withBizKey(bizKey)
                                 .withNote(throwable.getMessage())
                                 .withThrowable(throwable)
@@ -86,8 +85,8 @@ public class RocketMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected SendConfirm toResponse(SendResult sendResult, String bizKey) {
-        return SendConfirm.builder()
+    protected SendResult toResponse(org.apache.rocketmq.client.producer.SendResult sendResult, String bizKey) {
+        return SendResult.builder()
                 .withMsgId(sendResult.getMsgId())
                 .withBizKey(bizKey)
                 .build();

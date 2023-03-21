@@ -18,24 +18,24 @@ public interface MQService {
     /*
         同步发送
      */
-    SendConfirm send(String topic, MsgBody msg);
+    SendResult send(String topic, MsgBody msg);
 
-    SendConfirm send(String topic, MsgBody msg, int timeout);
+    SendResult send(String topic, MsgBody msg, int timeout);
 
-    SendConfirm send(String topic, String tag, MsgBody msg);
+    SendResult send(String topic, String tag, MsgBody msg);
 
-    SendConfirm send(String topic, String tag, MsgBody msg, int timeout);
+    SendResult send(String topic, String tag, MsgBody msg, int timeout);
 
     /*
         同步发送延迟消息
      */
-    SendConfirm delaySend(String topic, MsgBody msg, int delay);
+    SendResult delaySend(String topic, MsgBody msg, int delay);
 
-    SendConfirm delaySend(String topic, MsgBody msg, int delay, int timeout);
+    SendResult delaySend(String topic, MsgBody msg, int delay, int timeout);
 
-    SendConfirm delaySend(String topic, String tag, int delay, MsgBody msg);
+    SendResult delaySend(String topic, String tag, int delay, MsgBody msg);
 
-    SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody msg);
+    SendResult delaySend(String topic, String tag, int delay, int timeout, MsgBody msg);
 
     /*
         异步发送
@@ -48,23 +48,23 @@ public interface MQService {
 
     void asyncSend(String topic, String tag, MsgBody msg, int timeout);
 
-    void asyncSend(String topic, MsgBody msg, MQSendCallback callback);
+    void asyncSend(String topic, MsgBody msg, SendConfirm callback);
 
-    void asyncSend(String topic, MsgBody msg, int timeout, MQSendCallback callback);
+    void asyncSend(String topic, MsgBody msg, int timeout, SendConfirm callback);
 
-    void asyncSend(String topic, String tag, MsgBody msg, MQSendCallback callback);
+    void asyncSend(String topic, String tag, MsgBody msg, SendConfirm callback);
 
-    void asyncSend(String topic, String tag, MsgBody msg, int timeout, MQSendCallback callback);
+    void asyncSend(String topic, String tag, MsgBody msg, int timeout, SendConfirm callback);
 
     /*
         异步发送延迟消息
      */
-    void delayAsyncSend(String topic, MsgBody msg, int delay, MQSendCallback callback);
+    void delayAsyncSend(String topic, MsgBody msg, int delay, SendConfirm callback);
 
-    void delayAsyncSend(String topic, MsgBody msg, int delay, int timeout, MQSendCallback callback);
+    void delayAsyncSend(String topic, MsgBody msg, int delay, int timeout, SendConfirm callback);
 
-    void delayAsyncSend(String topic, String tag, int delay, MsgBody msg, MQSendCallback callback);
+    void delayAsyncSend(String topic, String tag, int delay, MsgBody msg, SendConfirm callback);
 
-    void delayAsyncSend(String topic, String tag, int delay, int timeout, MsgBody msg, MQSendCallback callback);
+    void delayAsyncSend(String topic, String tag, int delay, int timeout, MsgBody msg, SendConfirm callback);
 
 }

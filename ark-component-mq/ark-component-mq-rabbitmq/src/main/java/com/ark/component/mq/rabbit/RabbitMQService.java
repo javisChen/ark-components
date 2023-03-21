@@ -2,8 +2,8 @@ package com.ark.component.mq.rabbit;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
-import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.SendConfirm;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.core.AbstractMQService;
@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j
-public class RabbitMQService extends AbstractMQService<Message, SendConfirm> {
+public class RabbitMQService extends AbstractMQService<Message, SendResult> {
 
     private final RabbitMQConfiguration mqConfiguration;
 
@@ -46,7 +46,7 @@ public class RabbitMQService extends AbstractMQService<Message, SendConfirm> {
     }
 
     @Override
-    protected SendConfirm executeSend(String bizKey, String exchange, String routingKey, Message msgBody, long timeout, int delay) {
+    protected SendResult executeSend(String bizKey, String exchange, String routingKey, Message msgBody, long timeout, int delay) {
         try {
             if (delay > 0) {
                 msgBody.getMessageProperties().setDelay(delay);
@@ -54,7 +54,7 @@ public class RabbitMQService extends AbstractMQService<Message, SendConfirm> {
             CorrelationData correlationData = buildCorrelationData(bizKey, msgBody);
             rabbitTemplate.sendAndReceive(exchange, routingKey, msgBody, correlationData);
 
-            return SendConfirm.builder()
+            return SendResult.builder()
                     .withBizKey(bizKey)
                     .withMsgId(msgBody.getMessageProperties().getMessageId())
                     .build();
@@ -76,7 +76,7 @@ public class RabbitMQService extends AbstractMQService<Message, SendConfirm> {
                                     Message msgBody,
                                     long timeout,
                                     int delay,
-                                    MQSendCallback callback) {
+                                    SendConfirm callback) {
         String messageId = msgBody.getMessageProperties().getMessageId();
         try {
             if (delay > 0) {
@@ -105,7 +105,7 @@ public class RabbitMQService extends AbstractMQService<Message, SendConfirm> {
     }
 
     @Override
-    protected SendConfirm toResponse(SendConfirm sendResult, String bizKey) {
+    protected SendResult toResponse(SendResult sendResult, String bizKey) {
         return sendResult;
     }
 

@@ -3,8 +3,8 @@ package com.ark.component.mq.core;
 import com.alibaba.fastjson.JSON;
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.MsgBody;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.SendConfirm;
-import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.configuation.MQConfiguration;
 import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
 import com.ark.component.mq.core.generator.MsgIdGenerator;
@@ -45,42 +45,42 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     }
 
     @Override
-    public SendConfirm send(String topic, MsgBody payLoad, int timeout) {
+    public SendResult send(String topic, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public SendConfirm send(String topic, String tag, MsgBody payLoad, int timeout) {
+    public SendResult send(String topic, String tag, MsgBody payLoad, int timeout) {
         return doSend(topic, null, payLoad, timeout, 0);
     }
 
     @Override
-    public SendConfirm delaySend(String topic, MsgBody payLoad, int delay) {
+    public SendResult delaySend(String topic, MsgBody payLoad, int delay) {
         return doSend(topic, null, payLoad, 0, delay);
     }
 
     @Override
-    public SendConfirm delaySend(String topic, MsgBody payLoad, int delay, int timeout) {
+    public SendResult delaySend(String topic, MsgBody payLoad, int delay, int timeout) {
         return doSend(topic, null, payLoad, timeout, delay);
     }
 
     @Override
-    public SendConfirm delaySend(String topic, String tag, int delay, MsgBody payLoad) {
+    public SendResult delaySend(String topic, String tag, int delay, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, 0, delay);
     }
 
     @Override
-    public SendConfirm delaySend(String topic, String tag, int delay, int timeout, MsgBody payLoad) {
+    public SendResult delaySend(String topic, String tag, int delay, int timeout, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, timeout, delay);
     }
 
     @Override
-    public SendConfirm send(String topic, MsgBody payLoad) {
+    public SendResult send(String topic, MsgBody payLoad) {
         return doSend(topic, null, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
     @Override
-    public SendConfirm send(String topic, String tag, MsgBody payLoad) {
+    public SendResult send(String topic, String tag, MsgBody payLoad) {
         return doSend(topic, tag, payLoad, mqConfiguration.getSendMessageTimeout(), 0);
     }
 
@@ -105,46 +105,46 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     }
 
     @Override
-    public void asyncSend(String topic, MsgBody payLoad, MQSendCallback callback) {
+    public void asyncSend(String topic, MsgBody payLoad, SendConfirm callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, MsgBody payLoad, int timeout, MQSendCallback callback) {
+    public void asyncSend(String topic, MsgBody payLoad, int timeout, SendConfirm callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MsgBody payLoad, MQSendCallback callback) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, 0);
     }
 
     @Override
-    public void asyncSend(String topic, String tag, MsgBody payLoad, int timeout, MQSendCallback callback) {
+    public void asyncSend(String topic, String tag, MsgBody payLoad, int timeout, SendConfirm callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, 0);
     }
 
     @Override
-    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, MQSendCallback callback) {
+    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, SendConfirm callback) {
         doAsyncSend(topic, null, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, int timeout, MQSendCallback callback) {
+    public void delayAsyncSend(String topic, MsgBody payLoad, int delay, int timeout, SendConfirm callback) {
         doAsyncSend(topic, null, payLoad, callback, timeout, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, MsgBody payLoad, MQSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, MsgBody payLoad, SendConfirm callback) {
         doAsyncSend(topic, tag, payLoad, callback, 0, delay);
     }
 
     @Override
-    public void delayAsyncSend(String topic, String tag, int delay, int timeout, MsgBody payLoad, MQSendCallback callback) {
+    public void delayAsyncSend(String topic, String tag, int delay, int timeout, MsgBody payLoad, SendConfirm callback) {
         doAsyncSend(topic, tag, payLoad, callback, timeout, delay);
     }
 
-    private SendConfirm doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
+    private SendResult doSend(String topic, String tag, MsgBody payLoad, long timeout, int delayLevel) {
         String bizKey = buildBizKey(payLoad);
         payLoad.setBizKey(buildBizKey(payLoad));
 
@@ -168,7 +168,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         }
     }
 
-    private void doAsyncSend(String topic, String tag, MsgBody payLoad, MQSendCallback callback, long timeout, int delayLevel) {
+    private void doAsyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback, long timeout, int delayLevel) {
         String bizKey = buildBizKey(payLoad);
         payLoad.setBizKey(bizKey);
         if (timeout <= 0) {
@@ -180,23 +180,23 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                 log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} message = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new MQSendCallback() {
+            executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new SendConfirm() {
                 @Override
-                public void onSuccess(SendConfirm sendConfirm) {
+                public void onSuccess(SendResult sendResult) {
                     if (log.isDebugEnabled()) {
                         log.debug("[MQ]:send message success, bizKey = {} topic = {} tag = {} message = {} ",
                                 bizKey, topic, tag, JSON.toJSONString(message));
                     }
                     if (callback != null) {
-                        callback.onSuccess(sendConfirm);
+                        callback.onSuccess(sendResult);
                     }
                 }
 
                 @Override
-                public void onException(SendConfirm sendConfirm) {
-                    log.error("[MQ]:send message error", sendConfirm.getThrowable());
+                public void onException(SendResult sendResult) {
+                    log.error("[MQ]:send message error", sendResult.getThrowable());
                     if (callback != null) {
-                        callback.onException(sendConfirm);
+                        callback.onException(sendResult);
                     }
                 }
             });
@@ -227,11 +227,11 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, MQSendCallback callback);
+    protected abstract void executeAsyncSend(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, SendConfirm callback);
 
     /**
      * 转换回统一的MQ响应体
      */
-    protected abstract SendConfirm toResponse(R sendResult, String bizKey);
+    protected abstract SendResult toResponse(R sendResult, String bizKey);
 
 }

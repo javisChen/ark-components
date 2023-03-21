@@ -1,21 +1,9 @@
 package com.ark.component.mq;
 
-import lombok.Builder;
-import lombok.Data;
+public interface SendConfirm {
 
-/**
- * 消息发送响应结果
- */
-@Data
-@Builder(setterPrefix = "with")
-public class SendConfirm {
+    void onSuccess(SendResult sendResult);
 
-    private String msgId;
-
-    private String bizKey;
-
-    private String note;
-
-    private Throwable Throwable;
+    void onException(SendResult sendResult);
 
 }

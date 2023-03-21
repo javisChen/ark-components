@@ -2,8 +2,8 @@ package com.ark.component.mq.integration.rabbit;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.SendConfirm;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.integration.ApplicationTests;
@@ -27,11 +27,11 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
         for (int i = 0; i < 5 ; i++) {
             MsgBody msgBody = buildBody(i + 1);
             new Thread(() -> {
-                SendConfirm sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody);
+                SendResult sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody);
                 log.info("推送成功：{}", sendResponse.getBizKey());
             }).start();
             new Thread(() -> {
-                SendConfirm sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_PAY, MQTestConst.TAG_PAY_NOTIFY, msgBody);
+                SendResult sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_PAY, MQTestConst.TAG_PAY_NOTIFY, msgBody);
                 log.info("推送成功：{}", sendResponse.getBizKey());
             }).start();
         }
@@ -51,15 +51,15 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
         for (int i = 0; i < 10 ; i++) {
             MsgBody msgBody = buildBody(i + 1);
             new Thread(()-> {
-                messageTemplate.asyncSend(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody, new MQSendCallback() {
+                messageTemplate.asyncSend(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody, new SendConfirm() {
                     @Override
-                    public void onSuccess(SendConfirm sendConfirm) {
-                        log.info("推送成功：response = " + sendConfirm);
+                    public void onSuccess(SendResult sendResult) {
+                        log.info("推送成功：response = " + sendResult);
                     }
 
                     @Override
-                    public void onException(SendConfirm sendConfirm) {
-                        log.info("推送失败：response = " + sendConfirm);
+                    public void onException(SendResult sendResult) {
+                        log.info("推送失败：response = " + sendResult);
                     }
                 });
             }).start();
@@ -79,7 +79,7 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
         stopWatch.start();
         for (int i = 0; i < 1; i++) {
             MsgBody msgBody = buildBody(i + 1);
-            SendConfirm sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_PAY, MQTestConst.TAG_PAY_NOTIFY, msgBody);
+            SendResult sendResponse = messageTemplate.send(MQType.RABBIT, MQTestConst.TOPIC_PAY, MQTestConst.TAG_PAY_NOTIFY, msgBody);
             log.info("消费成功：{}", sendResponse.getBizKey());
         }
         stopWatch.stop();
@@ -108,15 +108,15 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
         }
     }
 
-    private MQSendCallback getCallback() {
-        return new MQSendCallback() {
+    private SendConfirm getCallback() {
+        return new SendConfirm() {
             @Override
-            public void onSuccess(SendConfirm sendConfirm) {
-                log.info("消费成功：{}", sendConfirm.getBizKey());
+            public void onSuccess(SendResult sendResult) {
+                log.info("消费成功：{}", sendResult.getBizKey());
             }
 
             @Override
-            public void onException(SendConfirm sendConfirm) {
+            public void onException(SendResult sendResult) {
 
             }
         };

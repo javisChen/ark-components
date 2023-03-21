@@ -1,7 +1,7 @@
 package com.ark.component.mq.rabbit;
 
-import com.ark.component.mq.MQSendCallback;
 import com.ark.component.mq.SendConfirm;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rabbit.support.ConfirmManager;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,9 @@ public class DefaultConfirmCallback implements RabbitTemplate.ConfirmCallback {
             messageId = messageProperties.getMessageId();
         }
         log.info("[RabbitMQ]:消息发送结果确认,msgId={}, bizKey={}", messageId, bizKey);
-        MQSendCallback callback = ConfirmManager.get(messageId, bizKey);
+        SendConfirm callback = ConfirmManager.get(messageId, bizKey);
         try {
-            SendConfirm.SendConfirmBuilder confirmBuilder = SendConfirm.builder()
+            SendResult.SendConfirmBuilder confirmBuilder = SendResult.builder()
                     .withBizKey(bizKey)
                     .withMsgId(messageId);
             if (ack) {
@@ -34,7 +34,7 @@ public class DefaultConfirmCallback implements RabbitTemplate.ConfirmCallback {
                 }
             } else {
                 if (callback != null) {
-                    SendConfirm response = confirmBuilder
+                    SendResult response = confirmBuilder
                             .withThrowable(new MQException(cause))
                             .withNote(cause)
                             .build();

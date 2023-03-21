@@ -1,6 +1,6 @@
 package com.ark.component.mq.rabbit.support;
 
-import com.ark.component.mq.MQSendCallback;
+import com.ark.component.mq.SendConfirm;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -17,13 +17,13 @@ public class ConfirmManager {
      * 存储需要通知发送成功事件
      * key=MessageId+CorrelationId,value是回调钩子
      */
-    private static final Map<String, MQSendCallback> PENDING_CONFIRMS = new ConcurrentHashMap<>();
+    private static final Map<String, SendConfirm> PENDING_CONFIRMS = new ConcurrentHashMap<>();
 
-    public static void put(String messageId, String correlationId, MQSendCallback sendCallback) {
+    public static void put(String messageId, String correlationId, SendConfirm sendCallback) {
         PENDING_CONFIRMS.put(buildKey(messageId, correlationId), sendCallback);
     }
 
-    public static MQSendCallback get(String messageId, String correlationId) {
+    public static SendConfirm get(String messageId, String correlationId) {
         if (StringUtils.isEmpty(messageId) || StringUtils.isEmpty(correlationId)) {
             return null;
         }
