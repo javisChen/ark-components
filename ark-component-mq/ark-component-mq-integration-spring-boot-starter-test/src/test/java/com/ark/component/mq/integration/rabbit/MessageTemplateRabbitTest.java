@@ -48,8 +48,9 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
     public void testSendFanoutAsync() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        for (int i = 0; i < 5 ; i++) {
+        for (int i = 0; i < 10 ; i++) {
             MsgBody msgBody = buildBody(i + 1);
+            new Thread(()-> {
                 messageTemplate.asyncSend(MQType.RABBIT, MQTestConst.TOPIC_ORDER, MQTestConst.TAG_ORDER_CREATED, msgBody, new MQSendCallback() {
                     @Override
                     public void onSuccess(SendConfirm sendConfirm) {
@@ -61,6 +62,7 @@ public class MessageTemplateRabbitTest extends ApplicationTests {
                         log.info("推送失败：response = " + sendConfirm);
                     }
                 });
+            }).start();
         }
         stopWatch.stop();
         log.info("耗时：{}", stopWatch.getLastTaskTimeMillis());
