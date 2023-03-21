@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>ark-component-mq-integration-spring-boot-starter-test</artifactId>
-    <name>ark-component-mq-integration-spring-boot-starter-test</name>
+    <artifactId>ark-component-mq-kafka-spring-boot-starter</artifactId>
+    <name>ark-component-mq-kafka-spring-boot-starter</name>
 
     <properties>
 
@@ -20,28 +20,8 @@
 
         <dependency>
             <groupId>com.ark.mq</groupId>
-            <artifactId>ark-component-mq-integration-spring-boot-starter</artifactId>
+            <artifactId>ark-component-mq-kafka</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.ark.mq</groupId>
-            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ark.mq</groupId>
-            <artifactId>ark-component-mq-rabbitmq-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ark.mq</groupId>
-            <artifactId>ark-component-mq-kafka-spring-boot-starter</artifactId>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.ark.mq</groupId>-->
-<!--            <artifactId>ark-component-mq-rocketmq-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -58,6 +38,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
             <scope>provided</scope>
         </dependency>
 

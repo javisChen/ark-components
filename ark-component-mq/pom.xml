@@ -20,6 +20,8 @@
         <module>ark-component-mq-rocketmq-spring-boot-starter</module>
         <module>ark-component-mq-rabbitmq</module>
         <module>ark-component-mq-rabbitmq-spring-boot-starter</module>
+        <module>ark-component-mq-kafka</module>
+        <module>ark-component-mq-kafka-spring-boot-starter</module>
         <module>ark-component-mq-integration</module>
         <module>ark-component-mq-integration-spring-boot-starter</module>
         <module>ark-component-mq-integration-spring-boot-starter-test</module>
@@ -68,6 +70,18 @@
             <dependency>
                 <groupId>com.ark.mq</groupId>
                 <artifactId>ark-component-mq-rabbitmq-spring-boot-starter</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.mq</groupId>
+                <artifactId>ark-component-mq-kafka</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.mq</groupId>
+                <artifactId>ark-component-mq-kafka-spring-boot-starter</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

@@ -1,0 +1,11 @@
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: test_group
+  consumer:
+    message-model:
+logging:
+  level:
+    root: info
+server:
+  port: 8080
