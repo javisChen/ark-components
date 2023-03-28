@@ -19,7 +19,7 @@ public class kafkaProducer {
         configs.put(ProducerConfig.ACKS_CONFIG, "all");
         KafkaProducer<Integer, String> kafkaProducer = new KafkaProducer<Integer, String>(configs);
         //发送100条消息
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             ProducerRecord<Integer, String> producerRecord = new ProducerRecord<>
                     ("test_topic_1",
                             0,
