@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MessageTemplateTest extends ApplicationTests {

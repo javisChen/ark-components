@@ -2,7 +2,7 @@ package com.ark.component.mq.integration.rabbit.spring;
 
 import com.ark.component.mq.integration.ApplicationTests;
 import com.ark.component.mq.integration.MQTestConst;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

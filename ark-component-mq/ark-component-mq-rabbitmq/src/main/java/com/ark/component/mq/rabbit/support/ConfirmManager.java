@@ -1,6 +1,7 @@
 package com.ark.component.mq.rabbit.support;
 
 import com.ark.component.mq.SendConfirm;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ConfirmManager {
     }
 
     public static SendConfirm get(String messageId, String correlationId) {
-        if (StringUtils.isEmpty(messageId) || StringUtils.isEmpty(correlationId)) {
+        if (ObjectUtils.isEmpty(messageId) || ObjectUtils.isEmpty(correlationId)) {
             return null;
         }
         return PENDING_CONFIRMS.get(buildKey(messageId, correlationId));

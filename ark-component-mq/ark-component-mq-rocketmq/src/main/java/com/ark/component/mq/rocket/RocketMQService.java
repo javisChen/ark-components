@@ -13,10 +13,12 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 
 @Slf4j
 public class RocketMQService extends AbstractMQService<Message, org.apache.rocketmq.client.producer.SendResult> {
     private DefaultMQProducer defaultMQProducer;
+    private RocketMQTemplate rocketMQTemplate;
 
     public RocketMQService(RocketMQConfiguration mqConfiguration) {
         super(mqConfiguration);

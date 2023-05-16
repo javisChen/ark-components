@@ -1,7 +1,7 @@
 package com.ark.component.statemachine.core;
 
 import com.ark.component.statemachine.ApplicationTests;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class StateMachineTest extends ApplicationTests {

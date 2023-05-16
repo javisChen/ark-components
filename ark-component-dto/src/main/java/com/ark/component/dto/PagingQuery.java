@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.Max;
+import jakarta.validation.constraints.Max;
 import java.io.Serializable;
 
 /**

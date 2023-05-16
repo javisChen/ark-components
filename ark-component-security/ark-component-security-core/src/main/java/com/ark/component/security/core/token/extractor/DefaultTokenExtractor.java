@@ -5,7 +5,7 @@ import com.ark.component.security.base.token.AccessTokenProperties;
 import com.ark.component.security.base.token.extractor.AccessTokenExtractor;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Token提取器默认实现

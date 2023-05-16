@@ -4,9 +4,8 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ark.component.dao.*;
 import com.ark.component.po.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,7 +19,6 @@ import java.util.Map;
  * 分库分表
  */
 @SpringBootTest(classes = {TestApp.class})
-@RunWith(SpringRunner.class)
 @ActiveProfiles("sharding-database") // 分库
 public class ShardingTableTest {
 
@@ -37,7 +35,7 @@ public class ShardingTableTest {
 
     private SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator(1, 1);
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
     }

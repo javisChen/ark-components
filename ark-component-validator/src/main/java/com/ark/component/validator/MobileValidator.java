@@ -3,8 +3,8 @@ package com.ark.component.validator;
 import cn.hutool.core.lang.Validator;
 import com.ark.component.validator.constraints.Mobile;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 手机号码校验器

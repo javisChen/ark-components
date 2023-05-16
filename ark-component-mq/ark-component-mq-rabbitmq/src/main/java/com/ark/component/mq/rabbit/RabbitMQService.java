@@ -65,7 +65,6 @@ public class RabbitMQService extends AbstractMQService<Message, SendResult> {
 
     private CorrelationData buildCorrelationData(String bizKey, Message msgBody) {
         CorrelationData correlationData = new CorrelationData(bizKey);
-        correlationData.setReturnedMessage(msgBody);
         return correlationData;
     }
 

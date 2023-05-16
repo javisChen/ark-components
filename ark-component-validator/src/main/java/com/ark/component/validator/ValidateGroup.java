@@ -6,9 +6,9 @@ package com.ark.component.validator;
  */
 public class ValidateGroup {
 
-    public interface Add extends javax.validation.groups.Default {
+    public interface Add extends jakarta.validation.groups.Default {
     }
 
-    public interface Update extends javax.validation.groups.Default {
+    public interface Update extends jakarta.validation.groups.Default {
     }
 }

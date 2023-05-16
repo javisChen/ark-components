@@ -2,9 +2,9 @@ package com.ark.component.oss.minio;
 
 import cn.hutool.core.io.IoUtil;
 import com.ark.component.oss.IObjectStorageService;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,7 @@ public class MinIoOssObjectStorageServiceTest {
 
     private IObjectStorageService iObjectStorageService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MinIoOssProperties minIoOssProperties = new MinIoOssProperties();
         minIoOssProperties.setEndPoint("http://127.0.0.1:9000");
