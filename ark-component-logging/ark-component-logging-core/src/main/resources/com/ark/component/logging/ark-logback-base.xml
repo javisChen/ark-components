@@ -12,9 +12,9 @@
     <!-- 单个文件大小上限 -->
     <property name="LOG_FILE_MAX_SIZE" value="${LOG_FILE_MAX_SIZE:-10MB}"/>
     <!-- 日志保留天数 -->
-    <property name="LOG_FILE_MAX_HISTORY" value="${LOG_FILE_MAX_SIZE:-7}"/>
+    <property name="LOG_FILE_MAX_HISTORY" value="${LOG_FILE_MAX_HISTORY:-7}"/>
     <!-- 日志文件得上限大小,如果到达这个值就会删除旧日志 -->
-    <property name="LOG_FILE_TOTAL_SIZE_CAP" value="${LOG_FILE_MAX_SIZE:-0}"/>
+    <property name="LOG_FILE_TOTAL_SIZE_CAP" value="${LOG_FILE_TOTAL_SIZE_CAP:-0}"/>
     <!-- 日志保存目录 -->
     <property name="LOG_HOME" value="./logs/${SERVICE_NAME}"/>
 
