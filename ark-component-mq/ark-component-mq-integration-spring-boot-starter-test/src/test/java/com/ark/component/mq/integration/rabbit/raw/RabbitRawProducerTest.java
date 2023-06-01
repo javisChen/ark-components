@@ -1,7 +1,7 @@
 package com.ark.component.mq.integration.rabbit.raw;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.mq.integration.MQTestConst;
 import com.ark.component.mq.rabbit.support.Utils;
 import com.rabbitmq.client.*;

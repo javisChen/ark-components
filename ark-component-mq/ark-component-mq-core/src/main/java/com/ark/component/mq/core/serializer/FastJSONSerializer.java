@@ -1,7 +1,7 @@
 package com.ark.component.mq.core.serializer;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.ark.component.mq.exception.MQSerializerException;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,6 +1,7 @@
 package com.ark.component.mq.rocket;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.SendResult;
@@ -96,7 +97,7 @@ public class RocketMQService extends AbstractMQService<Message, org.apache.rocke
 
     @Override
     protected Message buildMessage(String topic, String tag, int delayLevel, MsgBody msgBodyPayLoad) {
-        Message message = new Message(topic, tag, msgBodyPayLoad.getBizKey(), JSONObject.toJSONBytes(msgBodyPayLoad));
+        Message message = new Message(topic, tag, msgBodyPayLoad.getBizKey(), JSON.toJSONBytes(msgBodyPayLoad));
         message.setDelayTimeLevel(delayLevel);
         return message;
     }

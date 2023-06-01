@@ -1,7 +1,7 @@
 package com.ark.component.mq.core.processor;
 
 import cn.hutool.core.util.TypeUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.core.serializer.MessageSerializer;
 import com.ark.component.mq.exception.MQSerializerException;

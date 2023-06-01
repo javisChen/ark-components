@@ -1,6 +1,6 @@
 package com.ark.component.redis.autoconfigure;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import com.alibaba.fastjson2.support.spring6.data.redis.FastJsonRedisSerializer;
 import com.ark.component.cache.redis.RedisCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

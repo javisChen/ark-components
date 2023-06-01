@@ -1,6 +1,6 @@
 package com.ark.component.context.core.resolver;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.cache.redis.RedisCacheService;
 import com.ark.component.context.core.contants.RedisKeyConstants;
 import com.ark.component.security.base.user.LoginUserContext;

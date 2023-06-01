@@ -49,8 +49,7 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object>, Env
 
     @Override
     public void afterPropertiesSet() {
-        String APPLICATION_NAME = "spring.application.name";
-        applicationName = environment.getProperty(APPLICATION_NAME, String.class);
+        applicationName = environment.getProperty("spring.application.name", String.class);
     }
 
 }

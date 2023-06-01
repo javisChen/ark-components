@@ -1,7 +1,7 @@
 package com.ark.component.statemachine.core.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ark.component.exception.BizException;
 import com.ark.component.orm.mybatis.base.BaseEntity;

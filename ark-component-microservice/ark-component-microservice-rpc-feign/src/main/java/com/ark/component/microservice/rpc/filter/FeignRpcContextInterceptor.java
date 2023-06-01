@@ -2,7 +2,7 @@
 package com.ark.component.microservice.rpc.filter;
 
 
-import com.ark.component.microservice.rpc.config.CloudFeignConfig;
+import com.ark.component.microservice.rpc.config.CloudFeignProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.Target;
@@ -22,15 +22,15 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class FeignRpcContextFilter implements RequestInterceptor {
+public class FeignRpcContextInterceptor implements RequestInterceptor {
 
-    private CloudFeignConfig cloudFeignConfig;
+    private CloudFeignProperties cloudFeignProperties;
 
-    public FeignRpcContextFilter(CloudFeignConfig cloudFeignConfig) {
-        this.cloudFeignConfig = cloudFeignConfig;
+    public FeignRpcContextInterceptor(CloudFeignProperties cloudFeignProperties) {
+        this.cloudFeignProperties = cloudFeignProperties;
     }
 
-    public FeignRpcContextFilter() {
+    public FeignRpcContextInterceptor() {
     }
 
     public void apply(RequestTemplate template) {
@@ -77,7 +77,7 @@ public class FeignRpcContextFilter implements RequestInterceptor {
         }
     }
 
-    public CloudFeignConfig getCloudFeignConfig() {
-        return cloudFeignConfig;
+    public CloudFeignProperties getCloudFeignConfig() {
+        return cloudFeignProperties;
     }
 }

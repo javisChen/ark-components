@@ -1,7 +1,7 @@
 package com.ark.component.mq.integration.rabbit;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.mq.SendConfirm;
 import com.ark.component.mq.SendResult;
 import com.ark.component.mq.MQType;

@@ -1,7 +1,7 @@
 package com.ark.component.microservice.rpc.exception;
 
 import cn.hutool.core.io.IoUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.exception.RpcException;
 import feign.Response;

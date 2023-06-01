@@ -1,6 +1,6 @@
 //package com.ark.component.mq.kafka;
 //
-//import com.alibaba.fastjson.JSONObject;
+//import com.alibaba.fastjson2.JSONObject;
 //import com.ark.component.mq.MQType;
 //import com.ark.component.mq.MsgBody;
 //import com.ark.component.mq.SendConfirm;

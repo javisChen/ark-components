@@ -1,7 +1,7 @@
 package com.ark.component.mq.integration;
 
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
 import org.junit.jupiter.api.Test;

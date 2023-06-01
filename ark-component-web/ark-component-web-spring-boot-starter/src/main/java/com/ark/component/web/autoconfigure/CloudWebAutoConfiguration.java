@@ -1,21 +1,21 @@
 package com.ark.component.web.autoconfigure;
 
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.support.config.FastJsonConfig;
+import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.SpecVersion;
 import io.swagger.v3.oas.models.info.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,43 +38,16 @@ public class CloudWebAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OpenAPI docket() {
+    public OpenAPI openApi(Environment environment) {
+        String application = environment.getProperty("spring.application.name");
         Info info = new Info()
-                .title("Your API Title")
-                .description("Your API Description")
-                .version("1.0");
+                .title(application)
+                .description(application)
+                .summary(application)
+                .version("v0.0.1");
         return new OpenAPI()
-                .info(info)
-                ;
+                .info(info);
     }
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .apiInfo(new ApiInfoBuilder()
-//                        .title("接口文档")
-//                        .description("接口文档")
-//                        .contact(new Contact("victor", "", ""))
-//                        .version("1.0")
-//                        .build())
-//                //分组名称
-//                .select()
-//                //这里指定Controller扫描包路径
-//                .apis(RequestHandlerSelectors.basePackage("com.ark"))
-//                .paths(PathSelectors.any())
-//                .build()
-//                .globalOperationParameters(getGlobalOperationParameters());
-//    }
-
-//    private List<Parameter> getGlobalOperationParameters() {
-//        ParameterBuilder parameterBuilder = new ParameterBuilder();
-//        Parameter accessTokenParam = parameterBuilder.name("X-Authorization")
-//                .description("访问令牌")
-//                .modelRef(new ModelRef("string"))
-//                .parameterType("header")
-//                .required(false)
-//                .build();
-//        List<Parameter> parameters = new ArrayList<>(1);
-//        parameters.add(accessTokenParam);
-//        return parameters;
-//    }
 
     /**
      * 使用FastJSON作为应用的HTTP消息转换器
@@ -107,11 +80,7 @@ public class CloudWebAutoConfiguration {
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 
         // 解决Long返回前端精度丢失的问题
-        SerializeConfig serializeConfig = SerializeConfig.globalInstance;
-        serializeConfig.put(BigInteger.class, ToStringSerializer.instance);
-        serializeConfig.put(Long.class, ToStringSerializer.instance);
-        serializeConfig.put(Long.TYPE, ToStringSerializer.instance);
-        fastJsonConfig.setSerializeConfig(serializeConfig);
+        JSON.config(JSONWriter.Feature.WriteLongAsString);
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 
