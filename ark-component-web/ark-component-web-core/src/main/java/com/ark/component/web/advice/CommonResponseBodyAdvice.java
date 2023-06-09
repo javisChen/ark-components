@@ -31,7 +31,12 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object>, Env
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body,
+                                  MethodParameter returnType,
+                                  MediaType selectedContentType,
+                                  Class<? extends HttpMessageConverter<?>> selectedConverterType,
+                                  ServerHttpRequest request,
+                                  ServerHttpResponse response) {
         if (body != null) {
             if (ServerResponse.class.isAssignableFrom(body.getClass())) {
                 ServerResponse serverResponse = (ServerResponse) body;
