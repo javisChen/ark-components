@@ -64,7 +64,7 @@ public class CatchLogAspect {
     private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request) {
         try {
             log.info("========================= REQUEST PROCESSING =========================");
-            log.info("url : " + request.getRequestURL().toString());
+            log.info("url : " + request.getRequestURI() + "?" + request.getQueryString());
             log.info("remote_host : " + request.getRemoteHost());
             log.info("http_method: " + request.getMethod());
             log.info("content_type: " + request.getContentType());
@@ -81,6 +81,7 @@ public class CatchLogAspect {
         String contentType = request.getContentType();
         Object[] args = joinPoint.getArgs();
         if (contentType == null) {
+            log.info("queryString args: " + request.getQueryString());
             return;
         }
         if (isMatchMediaType(contentType, MediaType.APPLICATION_JSON_VALUE)) {
