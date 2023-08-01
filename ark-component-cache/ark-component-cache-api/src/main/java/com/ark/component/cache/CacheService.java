@@ -15,18 +15,18 @@ import java.util.concurrent.TimeUnit;
  */
 public interface CacheService {
 
-    /**
-     * 写入单个key
-     */
     void set(String key, Object value);
 
     boolean set(String key, Object value, Long expires);
 
     boolean set(String key, Object value, Long expires, TimeUnit timeUnit);
 
-    /**
-     * 同时写入多个key
-     */
+    void hashSet(String key, Map<String, Object> value);
+
+    void hashSet(String key, Map<String, Object> value, Long expires);
+
+    void hashSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit);
+
     void multiSet(Map<String, Object> map);
 
     Long increment(String key, Long value);

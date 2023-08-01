@@ -3,6 +3,7 @@ package com.ark.component.cache.redis;
 import com.alibaba.fastjson2.JSON;
 import com.ark.component.cache.CacheService;
 import com.ark.component.cache.exception.CacheException;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -39,6 +40,38 @@ public class RedisCacheService implements CacheService {
         try {
             ValueOperations<String, Object> operations = redisTemplate.opsForValue();
             return Boolean.TRUE.equals(operations.setIfAbsent(key, value, expires, timeUnit));
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void hashSet(String key, Map<String, Object> value) {
+        try {
+            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+            operations.putAll(key, value);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void hashSet(String key, Map<String, Object> value, Long expires) {
+        try {
+            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+            operations.putAll(key, value);
+            redisTemplate.expire(key, expires, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void hashSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
+        try {
+            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+            operations.putAll(key, value);
+            redisTemplate.expire(key, expires, timeUnit);
         } catch (Exception e) {
             throw new CacheException(e);
         }
