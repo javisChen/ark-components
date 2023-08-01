@@ -7,9 +7,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class RedisCacheService implements CacheService {
@@ -115,9 +113,29 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
+    public Object hashGet(String key, String hashKey) {
+        try {
+            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+            return operations.get(key, hashKey);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
     public <T> T get(String key, Class<T> target) {
         Object result = get(key);
         return result == null ? null : JSON.to(target, result);
+    }
+
+    @Override
+    public List<Object> hashMultiGet(String key, Collection<Object> hashKeys) {
+        try {
+            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
+            return operations.multiGet(key, hashKeys);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
     }
 
     @Override

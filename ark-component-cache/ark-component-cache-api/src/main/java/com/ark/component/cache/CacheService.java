@@ -6,6 +6,8 @@
 package com.ark.component.cache;
 
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +38,10 @@ public interface CacheService {
     Object get(String key);
 
     <T> T get(String key, Class<T> target);
+
+    Object hashGet(String key, String hashKey);
+
+    List<Object> hashMultiGet(String key, Collection<Object> hashKeys);
 
     void remove(String... keys);
 }
