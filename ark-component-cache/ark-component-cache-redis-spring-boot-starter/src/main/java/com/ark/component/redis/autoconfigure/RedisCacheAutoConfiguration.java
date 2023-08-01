@@ -35,7 +35,7 @@ public class RedisCacheAutoConfiguration {
         // value序列化方式采用fastjson
         template.setValueSerializer(fastJsonRedisSerializer);
         // hash的value序列化方式采用jackson
-        template.setHashValueSerializer(fastJsonRedisSerializer);
+        template.setHashValueSerializer(stringRedisSerializer);
         template.afterPropertiesSet();
         return template;
     }
