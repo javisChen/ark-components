@@ -1,5 +1,6 @@
 package com.ark.component.cache.redis;
 
+import com.alibaba.fastjson2.JSON;
 import com.ark.component.cache.CacheService;
 import com.ark.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -78,6 +79,12 @@ public class RedisCacheService implements CacheService {
         } catch (Exception e) {
             throw new CacheException(e);
         }
+    }
+
+    @Override
+    public <T> T get(String key, Class<T> target) {
+        Object result = get(key);
+        return result == null ? null : JSON.to(target, result);
     }
 
     @Override

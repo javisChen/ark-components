@@ -35,5 +35,7 @@ public interface CacheService {
 
     Object get(String key);
 
+    <T> T get(String key, Class<T> target);
+
     void remove(String... keys);
 }
