@@ -2,10 +2,12 @@ package com.ark.component.security.core.config;
 
 import com.ark.component.cache.CacheService;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.gen.OctetSequenceKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.JWSKeySelector;
@@ -27,10 +29,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
 
@@ -48,6 +47,21 @@ public class SecurityConfiguration {
         return keyPair;
     }
 
+    /**
+     *
+     * @return
+     */
+    public static void main(String[] args) throws JOSEException {
+        OctetSequenceKey generate = new OctetSequenceKeyGenerator(256)
+                .keyID(UUID.randomUUID().toString()) // give the key some ID (optional)
+                .algorithm(JWSAlgorithm.HS256) // indicate the intended key alg (optional)
+                .issueTime(new Date()) // issued-at timestamp (optional)
+                .generate();
+        OctetSequenceKey jwk = generate;
+        System.out.println(jwk);
+        System.out.println(jwk.toSecretKey().toString());
+    }
+
     @Bean
     @ConditionalOnMissingBean(JWKSource.class)
     public JWKSource<SecurityContext> jwkSource() {
@@ -59,7 +73,7 @@ public class SecurityConfiguration {
                 .keyID(UUID.randomUUID().toString())
                 .build();
         OctetSequenceKey key = new OctetSequenceKey.Builder(JWT_SIGN_SECRET.getBytes(StandardCharsets.UTF_8))
-                .keyID(UUID.randomUUID().toString())
+//                .keyID(UUID.randomUUID().toString())
                 .algorithm(JWSAlgorithm.HS256).build();
         JWKSet jwkSet = new JWKSet(key);
         return new ImmutableJWKSet<>(jwkSet);

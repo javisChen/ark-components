@@ -18,7 +18,7 @@ public interface SecurityConstants {
     /**
      * JWT签名Secret
      */
-    String JWT_SIGN_SECRET = "*$Y4F*$BdC4&tZJh";
+    String JWT_SIGN_SECRET = "QnZyMXl4WGE5MFpLT2pSa1k1Y2FFZ1FDU1dMNUN1b2YySTAzMkx0ajJsVQ";
 
 
 }
