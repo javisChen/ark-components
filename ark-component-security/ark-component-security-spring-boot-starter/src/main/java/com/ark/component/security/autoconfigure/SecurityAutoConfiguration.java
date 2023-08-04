@@ -2,10 +2,12 @@ package com.ark.component.security.autoconfigure;
 
 import com.ark.component.security.base.token.AccessTokenProperties;
 import com.ark.component.security.core.config.SecurityConfiguration;
+import com.ark.component.security.core.config.SecurityProperties;
 import com.ark.component.security.core.token.extractor.DefaultTokenExtractor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Import;
  */
 @Slf4j
 @Import(SecurityConfiguration.class)
+@EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityAutoConfiguration {
 
     public SecurityAutoConfiguration() {

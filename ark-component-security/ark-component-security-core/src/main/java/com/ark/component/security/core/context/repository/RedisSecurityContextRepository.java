@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
@@ -90,7 +92,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             return context;
         }
 
-        Jwt jwt = jwtDecoder.decode(accessToken);
+        Jwt jwt = decodeToken(accessToken);
         Object userCode = jwt.getClaim(LoginUser.JWT_CLAIM_USER_CODE);
         Object username = jwt.getClaim(LoginUser.JWT_CLAIM_USERNAME);
         Object userId = jwt.getClaim(LoginUser.JWT_CLAIM_USER_ID);
@@ -100,9 +102,25 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         loginUser.setUserCode(String.valueOf(userCode));
         loginUser.setIsSuperAdmin((Boolean) isSuperAdmin);
         loginUser.setUsername(String.valueOf(username));
+        // 权限从缓存中取
+        JSONArray authorities = (JSONArray) values.get(5);
+        loginUser.setAuthorities(authorities.stream()
+                .map(item -> new SimpleGrantedAuthority((String) item))
+                .collect(Collectors.toUnmodifiableSet()));
         // LoginUser loginUser = convert(values);
         context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken));
         return context;
+    }
+
+    private Jwt decodeToken(String accessToken) {
+        Jwt jwt = null;
+        try {
+            jwt = jwtDecoder.decode(accessToken);
+        } catch (JwtException e) {
+            log.error("解析JWT失败", e);
+            throw new BadCredentialsException("无效凭证");
+        }
+        return jwt;
     }
 
     private LoginUser convert(List<Object> objects) {

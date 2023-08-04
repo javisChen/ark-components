@@ -26,6 +26,7 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,8 +38,7 @@ public class SecurityConfiguration {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             keyPair = keyPairGenerator.generateKeyPair();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
         return keyPair;
@@ -75,19 +75,28 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain serviceSecurityFilterChain(HttpSecurity httpSecurity,
+                                                          SecurityProperties securityProperties,
                                                           SecurityContextRepository securityContextRepository) throws Exception {
 
         httpSecurity.securityContext(configurer -> configurer.securityContextRepository(securityContextRepository));
 
-        // 暂时禁用SessionManagement
-        httpSecurity.sessionManagement(AbstractHttpConfigurer::disable);
-        // 禁用csrf
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity
+                // 暂时禁用SessionManagement
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                // 禁用csrf
+                .csrf(AbstractHttpConfigurer::disable)
+                // 禁用匿名登录
+                .anonymous(AbstractHttpConfigurer::disable);
 
+        // 白名单
+        List<String> allowList = securityProperties.getAllowList();
         // 资源权限控制
-        httpSecurity.authorizeHttpRequests(requests -> requests
-                .anyRequest()
-                .authenticated()
+        httpSecurity.authorizeHttpRequests(requests ->
+                requests
+                        .requestMatchers(allowList.stream().toList().toArray(new String[0]))
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
         );
         return httpSecurity.build();
     }
