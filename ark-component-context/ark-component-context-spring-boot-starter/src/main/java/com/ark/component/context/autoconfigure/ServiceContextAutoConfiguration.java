@@ -36,8 +36,7 @@ public class ServiceContextAutoConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ServiceContextInterceptor serviceContextInterceptor(AccessTokenExtractor tokenExtractor,
-                                                               UserResolver userResolver) {
-        return new ServiceContextInterceptor(tokenExtractor, userResolver);
+    public ServiceContextInterceptor serviceContextInterceptor() {
+        return new ServiceContextInterceptor();
     }
 }

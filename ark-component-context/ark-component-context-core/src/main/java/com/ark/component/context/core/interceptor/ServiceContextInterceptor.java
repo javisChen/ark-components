@@ -5,10 +5,13 @@ import com.ark.component.common.id.TraceIdUtils;
 import com.ark.component.context.core.ServiceContext;
 import com.ark.component.context.core.resolver.UserResolver;
 import com.ark.component.security.base.token.extractor.AccessTokenExtractor;
+import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.base.user.LoginUserContext;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,10 +29,6 @@ import static com.ark.component.context.core.contants.ContextConstants.*;
  */
 @RequiredArgsConstructor
 public class ServiceContextInterceptor implements HandlerInterceptor {
-
-    private final AccessTokenExtractor accessTokenExtractor;
-
-    private final UserResolver userResolver;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
@@ -49,11 +48,12 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
-        String accessToken = accessTokenExtractor.extract(request);
-        if (StringUtils.isNotEmpty(accessToken)) {
-            LoginUserContext userContext = userResolver.resolve(accessToken);
-            ServiceContext.addContext(LOGIN_USER_CONTEXT_KEY, userContext);
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null || context.getAuthentication() == null) {
+            return;
         }
+        LoginUser loginUser = (LoginUser) context.getAuthentication();
+        ServiceContext.addContext(LOGIN_USER_CONTEXT_KEY, loginUser);
     }
 
     @Override
