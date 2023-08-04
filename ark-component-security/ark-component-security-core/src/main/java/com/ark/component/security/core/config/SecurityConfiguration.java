@@ -4,6 +4,7 @@ import com.ark.component.cache.CacheService;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -29,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
 
 public class SecurityConfiguration {
 
@@ -48,13 +52,16 @@ public class SecurityConfiguration {
     @ConditionalOnMissingBean(JWKSource.class)
     public JWKSource<SecurityContext> jwkSource() {
         KeyPair keyPair = generateRsaKey();
-        java.security.interfaces.RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        java.security.interfaces.RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
                 .build();
-        JWKSet jwkSet = new JWKSet(rsaKey);
+        OctetSequenceKey key = new OctetSequenceKey.Builder(JWT_SIGN_SECRET.getBytes(StandardCharsets.UTF_8))
+                .keyID(UUID.randomUUID().toString())
+                .algorithm(JWSAlgorithm.HS256).build();
+        JWKSet jwkSet = new JWKSet(key);
         return new ImmutableJWKSet<>(jwkSet);
     }
 
