@@ -6,7 +6,6 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.gen.OctetSequenceKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -27,10 +26,9 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
+import static com.ark.component.security.core.config.SecurityConstants.JWT_KEY_ID;
 import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
 
 public class SecurityConfiguration {
@@ -60,20 +58,22 @@ public class SecurityConfiguration {
         OctetSequenceKey jwk = generate;
         System.out.println(jwk);
         System.out.println(jwk.toSecretKey().toString());
+
+        System.out.println(UUID.randomUUID().toString());
     }
 
     @Bean
     @ConditionalOnMissingBean(JWKSource.class)
     public JWKSource<SecurityContext> jwkSource() {
-        KeyPair keyPair = generateRsaKey();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
-                .build();
-        OctetSequenceKey key = new OctetSequenceKey.Builder(JWT_SIGN_SECRET.getBytes(StandardCharsets.UTF_8))
+//        KeyPair keyPair = generateRsaKey();
+//        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+//        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+//        RSAKey rsaKey = new RSAKey.Builder(publicKey)
+//                .privateKey(privateKey)
 //                .keyID(UUID.randomUUID().toString())
+//                .build();
+        OctetSequenceKey key = new OctetSequenceKey.Builder(JWT_SIGN_SECRET.getBytes(StandardCharsets.UTF_8))
+                .keyID(JWT_KEY_ID)
                 .algorithm(JWSAlgorithm.HS256).build();
         JWKSet jwkSet = new JWKSet(key);
         return new ImmutableJWKSet<>(jwkSet);

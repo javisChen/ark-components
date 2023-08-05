@@ -20,5 +20,10 @@ public interface SecurityConstants {
      */
     String JWT_SIGN_SECRET = "QnZyMXl4WGE5MFpLT2pSa1k1Y2FFZ1FDU1dMNUN1b2YySTAzMkx0ajJsVQ";
 
+    /**
+     * JWT KeyID
+     */
+    String JWT_KEY_ID = "8d8bf81d-5032-4aeb-8962-ef473fd21ab1";
+
 
 }
