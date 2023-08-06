@@ -81,7 +81,7 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(SecurityContextRepository.class)
-    private SecurityContextRepository securityContextRepository(CacheService cacheService,
+    public SecurityContextRepository securityContextRepository(CacheService cacheService,
                                                                 JWKSource<SecurityContext> jwkSource) {
         Set<JWSAlgorithm> jwsAlg = new HashSet<>();
         jwsAlg.addAll(JWSAlgorithm.Family.RSA);
@@ -95,9 +95,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain serviceSecurityFilterChain(HttpSecurity httpSecurity,
-                                                          SecurityProperties securityProperties,
-                                                          SecurityContextRepository securityContextRepository) throws Exception {
+    @ConditionalOnMissingBean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   SecurityProperties securityProperties,
+                                                   SecurityContextRepository securityContextRepository) throws Exception {
 
         httpSecurity.securityContext(configurer -> configurer.securityContextRepository(securityContextRepository));
 
@@ -109,15 +110,11 @@ public class SecurityConfiguration {
                 // 禁用匿名登录
                 .anonymous(AbstractHttpConfigurer::disable);
 
-        // 白名单
-        List<String> allowList = securityProperties.getAllowList();
-        // 资源权限控制
+        // 权限拦截全部交给认证中心AccessController接口处理，由网关调用
         httpSecurity.authorizeHttpRequests(requests ->
                 requests
-                        .requestMatchers(allowList.stream().toList().toArray(new String[0]))
-                        .permitAll()
                         .anyRequest()
-                        .authenticated()
+                            .permitAll()
         );
         return httpSecurity.build();
     }

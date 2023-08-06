@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,6 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
     private final BearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
     private final CacheService cacheService;
     private final JwtDecoder jwtDecoder;
-
     private final List<Object> hashKeys = List.of(
             "userId",
             "userCode",
