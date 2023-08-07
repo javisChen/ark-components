@@ -1,6 +1,7 @@
 package com.ark.component.security.core.config;
 
 import com.ark.component.cache.CacheService;
+import com.ark.component.security.core.authentication.filter.AccessCheckFilter;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -21,6 +22,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -100,7 +104,10 @@ public class SecurityConfiguration {
                                                    SecurityProperties securityProperties,
                                                    SecurityContextRepository securityContextRepository) throws Exception {
 
-        httpSecurity.securityContext(configurer -> configurer.securityContextRepository(securityContextRepository));
+        httpSecurity
+                .addFilterBefore(new AccessCheckFilter(), SecurityContextHolderFilter.class)
+                .securityContext(configurer -> configurer.securityContextRepository(securityContextRepository));
+
 
         httpSecurity
                 // 暂时禁用SessionManagement
