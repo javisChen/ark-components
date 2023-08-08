@@ -2,7 +2,9 @@ package com.ark.component.microservice.rpc.autoconfigure;
 
 import com.ark.component.microservice.rpc.config.CloudFeignProperties;
 import com.ark.component.microservice.rpc.exception.FeignCommonErrorDecoder;
+import com.ark.component.microservice.rpc.filter.FeignRpcContextInterceptor;
 import feign.Logger;
+import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +34,9 @@ public class CloudFeignAutoConfiguration {
         return new FeignCommonErrorDecoder();
     }
 
-
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return new FeignRpcContextInterceptor();
+    }
 
 }

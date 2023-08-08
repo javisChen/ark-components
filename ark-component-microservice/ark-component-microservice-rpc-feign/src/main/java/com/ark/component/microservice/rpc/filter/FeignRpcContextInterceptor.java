@@ -7,22 +7,27 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.Target;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * feign调用把当前请求的header透传到目标服务
+ *
  * @author victor
  */
 @Slf4j
-@Component
 public class FeignRpcContextInterceptor implements RequestInterceptor {
+
+    String HEADER_FROM = "X-From";
+    String HEADER_FROM_SERVICE = "srv";
 
     private CloudFeignProperties cloudFeignProperties;
 
@@ -33,15 +38,17 @@ public class FeignRpcContextInterceptor implements RequestInterceptor {
     public FeignRpcContextInterceptor() {
     }
 
+    @Override
     public void apply(RequestTemplate template) {
-        logRequest(template);
-        for (Map.Entry<String, String> entry : getHeaders().entrySet()) {
-            String key = entry.getKey();
-            String headerValue = entry.getValue();
-            if (getCloudFeignConfig().getTransmitHeaders().contains(key)) {
+        Map<String, String> headers = getHeaders();
+        if (MapUtils.isNotEmpty(headers)) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                String key = entry.getKey();
+                String headerValue = entry.getValue();
                 setHeader(template, key, headerValue);
             }
         }
+        template.header(HEADER_FROM, HEADER_FROM_SERVICE);
     }
 
     protected Map<String, String> getHeaders() {
@@ -61,17 +68,7 @@ public class FeignRpcContextInterceptor implements RequestInterceptor {
         return headerMap;
     }
 
-
-    protected void logRequest(RequestTemplate template) {
-        Target<?> target = template.feignTarget();
-        log.info("FEIGN REQUEST -> TARGET:[{}]", target.url());
-        log.info("FEIGN REQUEST -> CONFIG KEY:[{}]", template.methodMetadata().configKey());
-        log.info("FEIGN REQUEST -> HTTP_METHOD:[{}]", template.method());
-        log.info("FEIGN REQUEST -> QUERIES:[{}]", template.queryLine());
-        log.info("FEIGN REQUEST -> BODY:[{}]", new String(template.body()));
-    }
-
-    protected  <T> void setHeader(RequestTemplate template, String header, T value) {
+    protected <T> void setHeader(RequestTemplate template, String header, T value) {
         if (value != null) {
             template.header(header, value.toString());
         }

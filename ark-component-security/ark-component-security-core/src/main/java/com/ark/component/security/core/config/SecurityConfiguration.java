@@ -22,9 +22,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -50,7 +48,6 @@ public class SecurityConfiguration {
     }
 
     /**
-     *
      * @return
      */
     public static void main(String[] args) throws JOSEException {
@@ -86,7 +83,7 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean(SecurityContextRepository.class)
     public SecurityContextRepository securityContextRepository(CacheService cacheService,
-                                                                JWKSource<SecurityContext> jwkSource) {
+                                                               JWKSource<SecurityContext> jwkSource) {
         Set<JWSAlgorithm> jwsAlg = new HashSet<>();
         jwsAlg.addAll(JWSAlgorithm.Family.RSA);
         jwsAlg.addAll(JWSAlgorithm.Family.EC);
@@ -100,29 +97,26 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
-                                                   SecurityProperties securityProperties,
-                                                   SecurityContextRepository securityContextRepository) throws Exception {
+    public SecurityFilterChain serviceSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        applyDefaultSecurity(httpSecurity);
+        return httpSecurity.build();
+    }
 
-        httpSecurity
-                .addFilterBefore(new AccessCheckFilter(), SecurityContextHolderFilter.class)
-                .securityContext(configurer -> configurer.securityContextRepository(securityContextRepository));
-
-
+    public static void applyDefaultSecurity(HttpSecurity httpSecurity) throws Exception {
+        AuthConfigurer authConfigurer = new AuthConfigurer();
         httpSecurity
                 // 暂时禁用SessionManagement
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 // 禁用csrf
                 .csrf(AbstractHttpConfigurer::disable)
                 // 禁用匿名登录
-                .anonymous(AbstractHttpConfigurer::disable);
-
-        // 权限拦截全部交给认证中心AccessController接口处理，由网关调用
-        httpSecurity.authorizeHttpRequests(requests ->
-                requests
-                        .anyRequest()
-                            .permitAll()
-        );
-        return httpSecurity.build();
+                .anonymous(AbstractHttpConfigurer::disable)
+                // 权限拦截全部交给认证中心AccessController接口处理，由网关调用
+                .authorizeHttpRequests(requests ->
+                        requests
+                                .anyRequest()
+                                .permitAll()
+                )
+                .apply(authConfigurer);
     }
 }
