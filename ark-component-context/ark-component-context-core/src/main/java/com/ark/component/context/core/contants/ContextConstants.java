@@ -2,11 +2,11 @@ package com.ark.component.context.core.contants;
 
 public interface ContextConstants {
 
-    String X_TRACE_ID = "X-Trace-Id";
+    String HEADER_TRACE_ID = "X-Trace-Id";
 
-    String LOGIN_USER_CONTEXT_KEY = "LOGIN_USER_CONTEXT";
+    String CONTEXT_KEY_LOGIN_USER = "CTX_LOGIN_USER";
 
-    String TRACE_ID_KEY = "TRACE_ID";
+    String CONTEXT_KEY_TRACE_ID = "CTX_TRACE_ID";
 
     /**
      * JWT签名Secret

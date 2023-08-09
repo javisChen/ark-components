@@ -3,10 +3,6 @@ package com.ark.component.context.core.interceptor;
 
 import com.ark.component.common.id.TraceIdUtils;
 import com.ark.component.context.core.ServiceContext;
-import com.ark.component.context.core.resolver.UserResolver;
-import com.ark.component.security.base.token.extractor.AccessTokenExtractor;
-import com.ark.component.security.base.user.LoginUser;
-import com.ark.component.security.base.user.LoginUserContext;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import static com.ark.component.context.core.contants.ContextConstants.*;
 
 /**
@@ -40,12 +35,12 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
     }
 
     private void setTraceContext(HttpServletRequest request) {
-        String traceId = request.getHeader(X_TRACE_ID);
+        String traceId = request.getHeader(HEADER_TRACE_ID);
         if (StringUtils.isEmpty(traceId)) {
             traceId = TraceIdUtils.getId();
         }
-        ServiceContext.addContext(TRACE_ID_KEY, traceId);
-        MDC.put(X_TRACE_ID, traceId);
+        ServiceContext.addContext(CONTEXT_KEY_TRACE_ID, traceId);
+        MDC.put(HEADER_TRACE_ID, traceId);
     }
 
     private void setLoginUserContext(HttpServletRequest request) {
@@ -54,12 +49,12 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
             return;
         }
         LoginAuthenticationToken authentication = (LoginAuthenticationToken) context.getAuthentication();
-        ServiceContext.addContext(LOGIN_USER_CONTEXT_KEY, authentication.getLoginUser());
+        ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getLoginUser());
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         ServiceContext.clearContext();
-        MDC.remove(X_TRACE_ID);
+        MDC.remove(HEADER_TRACE_ID);
     }
 }

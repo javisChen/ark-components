@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -56,19 +57,21 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
 
-        LoginAuthenticationToken authentication = (LoginAuthenticationToken) context.getAuthentication();
+        Authentication authentication  = context.getAuthentication();
 
         // logout的时候authentication就会为空
         if (authentication == null) {
             return;
         }
 
-        LoginUser loginUser = authentication.getLoginUser();
+        LoginAuthenticationToken loginAuthenticationToken = (LoginAuthenticationToken)authentication;
 
-        String accessToken = authentication.getAccessToken();
+        LoginUser loginUser = loginAuthenticationToken.getLoginUser();
+
+        String accessToken = loginAuthenticationToken.getAccessToken();
 
         Map<String, Object> map = BeanUtil.beanToMap(loginUser, false, true);
-        map.put("authorities", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        map.put("authorities", loginAuthenticationToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
         cacheService.hashSet(RedisKeyUtils.createAccessTokenKey(accessToken), map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 

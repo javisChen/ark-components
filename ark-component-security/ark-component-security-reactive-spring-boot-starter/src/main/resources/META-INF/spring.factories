@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ark.component.security.reactive.autoconfigure.ReactiveSecurityAutoConfiguration

@@ -1,7 +1,10 @@
 package com.ark.component.security.core.config;
 
+import com.ark.component.cache.CacheService;
 import com.ark.component.security.core.authentication.AuthenticationErrorHandler;
 import com.ark.component.security.core.authentication.filter.AccessCheckFilter;
+import com.ark.component.security.core.authentication.filter.TraceFilter;
+import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
@@ -27,14 +30,16 @@ import java.util.Set;
 import static com.ark.component.security.core.config.SecurityConstants.JWT_KEY_ID;
 import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
 
-public final class AuthConfigurer
-        extends AbstractHttpConfigurer<AuthConfigurer, HttpSecurity> {
+public final class SecurityGenericConfigurer
+        extends AbstractHttpConfigurer<SecurityGenericConfigurer, HttpSecurity> {
 
     private ApplicationContext context;
 
     @Override
     public void init(HttpSecurity http) throws Exception {
         context = http.getSharedObject(ApplicationContext.class);
+        CacheService cacheService = context.getBean(CacheService.class);
+        http.setSharedObject(SecurityContextRepository.class, new RedisSecurityContextRepository(cacheService, getJwtDecoder()));
     }
 
     @Override
@@ -45,8 +50,9 @@ public final class AuthConfigurer
         }
 
         AuthenticationErrorHandler errorHandler = new AuthenticationErrorHandler();
+        http.setSharedObject(AuthenticationErrorHandler.class, errorHandler);
 
-        // addFilters(http, errorHandler);
+        addFilters(http, errorHandler);
 
         registerErrorHandler(http, errorHandler);
 
@@ -55,6 +61,9 @@ public final class AuthConfigurer
     private void addFilters(HttpSecurity http, AuthenticationErrorHandler errorHandler) {
         AccessCheckFilter accessCheckFilter = new AccessCheckFilter(errorHandler);
         http.addFilterBefore(accessCheckFilter, SecurityContextHolderFilter.class);
+
+        TraceFilter traceFilter = new TraceFilter();
+        http.addFilterBefore(traceFilter, AccessCheckFilter.class);
     }
 
     private void registerDefaultSecurityContextRepository(HttpSecurity http) throws Exception {

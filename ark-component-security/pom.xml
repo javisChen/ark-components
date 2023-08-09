@@ -12,9 +12,7 @@
     <modules>
         <module>ark-component-security-base</module>
         <module>ark-component-security-core</module>
-        <module>ark-component-security-reactive-core</module>
         <module>ark-component-security-spring-boot-starter</module>
-        <module>ark-component-security-reactive-spring-boot-starter</module>
     </modules>
 
     <properties>

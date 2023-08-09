@@ -2,7 +2,6 @@ package com.ark.component.context.core;
 
 import com.ark.component.context.core.contants.ContextConstants;
 import com.ark.component.security.base.user.LoginUser;
-import com.ark.component.security.base.user.LoginUserContext;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
@@ -44,13 +43,13 @@ public class ServiceContext {
     public static LoginUser getCurrentUser() {
         Map<String, Object> context = getContext();
         return MapUtils.isNotEmpty(context)
-                ? (LoginUser) context.get(ContextConstants.LOGIN_USER_CONTEXT_KEY) : null;
+                ? (LoginUser) context.get(ContextConstants.CONTEXT_KEY_LOGIN_USER) : null;
     }
 
     public static String getTraceId() {
         Map<String, Object> context = getContext();
         return MapUtils.isNotEmpty(context)
-                ? (String) context.get(ContextConstants.TRACE_ID_KEY) : null;
+                ? (String) context.get(ContextConstants.CONTEXT_KEY_TRACE_ID) : null;
     }
 
     public static Map<String, Object> getContext() {

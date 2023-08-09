@@ -22,7 +22,9 @@ public class AccessCheckFilter extends OncePerRequestFilter {
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         if (!accessFromGateway(request) && !accessFromInnerService(request)) {
             log.warn("服务从非法渠道被访问，请注意。{}", request);
             authenticationEntryPoint.commence(request, response, new IllegalRequestException("请通过合法渠道访问服务器！"));

@@ -10,9 +10,9 @@ import java.nio.charset.StandardCharsets;
 
 public class ResponseUtils {
 
-    public static void write(ServerResponse serverResponse, HttpServletResponse response, int status) throws IOException {
+    public static void write(ServerResponse serverResponse, HttpServletResponse response, int httpStatusCode) throws IOException {
         byte[] body = JSON.toJSONBytes(serverResponse);
-        response.setStatus(status);
+        response.setStatus(httpStatusCode);
         response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
         response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
         response.setContentLength(body.length);
