@@ -59,7 +59,7 @@ public final class SecurityGenericConfigurer
     }
 
     private void addFilters(HttpSecurity http, AuthenticationErrorHandler errorHandler) {
-        AccessCheckFilter accessCheckFilter = new AccessCheckFilter(errorHandler);
+        AccessCheckFilter accessCheckFilter = new AccessCheckFilter(context, errorHandler);
         http.addFilterBefore(accessCheckFilter, SecurityContextHolderFilter.class);
 
         TraceFilter traceFilter = new TraceFilter();
