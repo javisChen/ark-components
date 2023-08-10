@@ -7,6 +7,7 @@ import com.ark.component.dto.ServerResponse;
 import com.ark.component.dto.SingleResponse;
 import com.ark.component.security.core.authentication.exception.AuthException;
 import com.ark.component.security.core.common.ResponseUtils;
+import com.ark.component.security.core.exception.IllegalRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class AuthenticationErrorHandler implements AuthenticationEntryPoint, Acc
 
 		if (authenticationException instanceof AuthException authException) {
 			httpStatusCode = authException.getHttpStatusCode();
+		} else if (authenticationException instanceof IllegalRequestException) {
+			httpStatusCode = HttpStatus.BAD_REQUEST.value();
 		}
 
 		responseBody.setMsg(authenticationException.getMessage());
