@@ -28,6 +28,23 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
+    public void addToSet(String key, Object... values) {
+        try {
+            redisTemplate.opsForSet().add(key, values);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+    @Override
+    public Set<Object> getMembers(String key, Object... values) {
+        try {
+            return redisTemplate.opsForSet().members(key);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
     public boolean set(String key, Object value, Long expires) {
         return set(key, value, expires, TimeUnit.SECONDS);
     }
