@@ -14,6 +14,7 @@
 
     <modules>
         <module>ark-component-cache-api</module>
+        <module>ark-component-cache-core</module>
         <module>ark-component-cache-redis</module>
         <module>ark-component-cache-redis-spring-boot-starter</module>
     </modules>
