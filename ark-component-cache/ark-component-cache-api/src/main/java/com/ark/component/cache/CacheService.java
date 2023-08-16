@@ -21,7 +21,7 @@ public interface CacheService {
 
     void setAdd(String key, Object... values);
 
-    Set<Object> setMembers(String key, Object... values);
+    Set<Object> setMembers(String key);
 
     void set(String key, Object value);
 

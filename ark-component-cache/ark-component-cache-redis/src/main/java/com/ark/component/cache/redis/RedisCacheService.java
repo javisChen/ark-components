@@ -37,7 +37,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public Set<Object> setMembers(String key, Object... values) {
+    public Set<Object> setMembers(String key) {
         try {
             return redisTemplate.opsForSet().members(key);
         } catch (Exception e) {
