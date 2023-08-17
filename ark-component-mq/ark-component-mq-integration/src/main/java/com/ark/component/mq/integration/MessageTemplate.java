@@ -6,7 +6,9 @@ import com.ark.component.mq.exception.MQException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.util.CollectionUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -202,6 +204,7 @@ public class MessageTemplate implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, MQService> mqServices = applicationContext.getBeansOfType(MQService.class);
         if (CollectionUtils.isEmpty(mqServices)) {
+            throw new ApplicationContextException("使用 ark-component-mq-integration 必须引入至少一种MQ的实现依赖包");
             return;
         }
         mqServiceHolder = new HashMap<>(mqServices.size());
