@@ -205,7 +205,6 @@ public class MessageTemplate implements ApplicationContextAware {
         Map<String, MQService> mqServices = applicationContext.getBeansOfType(MQService.class);
         if (CollectionUtils.isEmpty(mqServices)) {
             throw new ApplicationContextException("使用 ark-component-mq-integration 必须引入至少一种MQ的实现依赖包");
-            return;
         }
         mqServiceHolder = new HashMap<>(mqServices.size());
         for (Map.Entry<String, MQService> serviceEntry : mqServices.entrySet()) {
