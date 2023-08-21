@@ -23,6 +23,6 @@ public class MQConfiguration {
     /**
      * 是否启用
      */
-    private Boolean enabled;
+    private Boolean enabled = true;
 
 }
