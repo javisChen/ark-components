@@ -45,7 +45,7 @@ public class RabbitMQListener implements MQListener<Envelope> {
             channel = connection.createChannel();
             // 声明交换机
             channel.exchangeDeclare(exchange, exchangeType, true, false, false, null);
-            // 如果交换机是Fanout类型，队列无须持久话，消费者下线后自动删除
+            // 如果交换机是Fanout类型，队列无须持久话，消费者下线后自ad删除
             if (exchangeType.equals(BuiltinExchangeType.FANOUT)) {
                 channel.queueDeclare(queue, false, true, true, null);
             } else {
