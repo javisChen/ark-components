@@ -72,12 +72,13 @@ public class RocketMQListener implements MQListener<MessageExt> {
     private MessageListenerConcurrently registryMessageListener(MessageHandler<MessageExt> processor) {
         return (msgList, context) -> {
             String msgIds = msgList.stream().map(MessageExt::getMsgId).collect(Collectors.joining(","));
-            log.info("[RocketMQ]:Receive message -> msgId=[{}]", msgIds);
+            if (log.isDebugEnabled()) {
+                log.debug("[RocketMQ]:Receive message -> msgId=[{}]", msgIds);
+            }
             try {
                 for (MessageExt messageExt : msgList) {
                     processor.handle(messageExt.getBody(), messageExt.getMsgId(), messageExt);
                 }
-                log.info("[RocketMQ]:Consume successfully -> msgId=[{}]", msgIds);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (MessageRequeueException e) {
                 log.error("[RocketMQ]:Consume Failed, message back to the queue -> msgId=[{}], err={}",

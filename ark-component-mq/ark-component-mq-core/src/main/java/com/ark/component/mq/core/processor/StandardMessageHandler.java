@@ -32,7 +32,7 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
         T msgBody;
         try {
             message = messageSerializer.deserialize(body, MsgBody.class);
-            log.info("[MQ] Consume Message MsgId = {}, Decode = {}", msgId, JSON.toJSONString(message));
+            log.info("[MQ] Consume Message MsgId = {}, Decoded = {}", msgId, JSON.toJSONString(message));
             msgBody = convertMsgBody(message);
         } catch (MQSerializerException e) {
             log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);

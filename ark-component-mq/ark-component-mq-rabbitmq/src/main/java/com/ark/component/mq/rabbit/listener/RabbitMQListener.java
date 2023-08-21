@@ -80,12 +80,13 @@ public class RabbitMQListener implements MQListener<Envelope> {
                                        byte[] body) throws IOException {
                 long deliveryTag = envelope.getDeliveryTag();
                 String messageId = properties.getMessageId();
-                log.info("[RabbitMQ]:Receive message -> msgId=[{}], deliveryTag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
+                if (log.isDebugEnabled()) {
+                    log.debug("[RabbitMQ]:Receive message -> msgId=[{}], deliveryTag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
+                }
                 Channel channel = getChannel();
                 try {
                     processor.handle(body, messageId, envelope);
                     channel.basicAck(deliveryTag, false);
-                    log.info("[RabbitMQ]:Consume successfully -> msgId=[{}], deliveryTag=[{}], envelope=[{}]", messageId, deliveryTag, envelope);
                 } catch (MessageRequeueException e) {
                     channel.basicReject(deliveryTag, true);
                     log.info("[RabbitMQ]:Consume Failed, message back to the queue -> msgId=[{}], deliveryTag=[{}], envelope=[{}], err={}", messageId, deliveryTag, envelope, ExceptionUtil.stacktraceToString(e));
