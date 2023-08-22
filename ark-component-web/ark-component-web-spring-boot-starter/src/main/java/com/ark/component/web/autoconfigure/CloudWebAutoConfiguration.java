@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.support.config.FastJsonConfig;
 import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.SpecVersion;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +41,19 @@ public class CloudWebAutoConfiguration {
     @ConditionalOnMissingBean
     public OpenAPI openApi(Environment environment) {
         String application = environment.getProperty("spring.application.name");
+
+        Contact contact = new Contact();
+        contact.setEmail("javischen9548@foxmail.com");
+        contact.setName("Jc");
+        contact.setUrl("https://github.com/javisChen");
+
         Info info = new Info()
                 .title(application)
+                .contact(contact)
+                .termsOfService("/" + application)
                 .description(application)
                 .summary(application)
-                .version("v0.0.1");
+                .version("v1.0.0");
         return new OpenAPI()
                 .info(info);
     }
