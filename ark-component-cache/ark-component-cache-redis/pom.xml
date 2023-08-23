@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>com.ark.cache</groupId>
-            <artifactId>ark-component-cache-api</artifactId>
+            <artifactId>ark-component-cache-core</artifactId>
         </dependency>
 
         <dependency>

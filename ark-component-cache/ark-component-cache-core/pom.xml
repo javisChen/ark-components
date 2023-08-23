@@ -16,10 +16,22 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ark.cache</groupId>
+            <artifactId>ark-component-cache-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ark.common</groupId>
+            <artifactId>ark-component-common-core</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

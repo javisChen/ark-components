@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
  * @author victor
  */
 public interface CacheService {
-
-
     void setAdd(String key, Object... values);
 
     Set<Object> setMembers(String key);
