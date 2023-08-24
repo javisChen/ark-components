@@ -20,7 +20,6 @@ public interface CacheService {
     void setAdd(String key, Object... values);
 
     Set<Object> setMembers(String key);
-
     void set(String key, Object value);
 
     boolean set(String key, Object value, Long expires);
