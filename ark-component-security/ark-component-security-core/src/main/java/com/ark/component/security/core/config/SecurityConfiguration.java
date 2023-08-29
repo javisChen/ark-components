@@ -2,11 +2,9 @@ package com.ark.component.security.core.config;
 
 import com.ark.component.cache.CacheService;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import com.nimbusds.jose.jwk.gen.OctetSequenceKeyGenerator;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.JWSKeySelector;
@@ -26,7 +24,8 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.ark.component.security.core.config.SecurityConstants.JWT_KEY_ID;
 import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
@@ -43,22 +42,6 @@ public class SecurityConfiguration {
             throw new IllegalStateException(ex);
         }
         return keyPair;
-    }
-
-    /**
-     * @return
-     */
-    public static void main(String[] args) throws JOSEException {
-        OctetSequenceKey generate = new OctetSequenceKeyGenerator(256)
-                .keyID(UUID.randomUUID().toString()) // give the key some ID (optional)
-                .algorithm(JWSAlgorithm.HS256) // indicate the intended key alg (optional)
-                .issueTime(new Date()) // issued-at timestamp (optional)
-                .generate();
-        OctetSequenceKey jwk = generate;
-        System.out.println(jwk);
-        System.out.println(jwk.toSecretKey().toString());
-
-        System.out.println(UUID.randomUUID().toString());
     }
 
     @Bean
@@ -113,7 +96,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(requests ->
                         requests
                                 .anyRequest()
-                                .permitAll()
+                                    .permitAll()
                 )
                 .apply(securityGenericConfigurer);
     }
