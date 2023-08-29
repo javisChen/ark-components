@@ -5,10 +5,13 @@ import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.support.config.FastJsonConfig;
 import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -26,9 +29,9 @@ import java.util.List;
  */
 @AutoConfigureBefore(RequestMappingHandlerAdapter.class)
 @Slf4j
-public class CloudWebAutoConfiguration {
+public class WebAutoConfiguration {
 
-    public CloudWebAutoConfiguration() {
+    public WebAutoConfiguration() {
         log.info("enable [ark-component-web-spring-boot-starter]");
     }
 
@@ -92,5 +95,11 @@ public class CloudWebAutoConfiguration {
         JSON.config(JSONWriter.Feature.WriteLongAsString, JSONWriter.Feature.LargeObject);
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
+
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> configurer(@Value("${spring.application.name}") String applicationName) {
+        return (registry) -> registry.config().commonTags("application", applicationName);
+    }
+
 
 }

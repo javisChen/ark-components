@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ark.component.web.autoconfigure.CloudWebAutoConfiguration
+  com.ark.component.web.autoconfigure.WebAutoConfiguration
