@@ -2,14 +2,11 @@ package com.ark.component.statemachine.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
@@ -35,7 +32,9 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         states
                 .withStates()
                 .initial(States.WAIT_PAY)
-                .states(EnumSet.allOf(States.class));
+                .states(EnumSet.allOf(States.class))
+                .and()
+        ;
     }
 
     @Override
