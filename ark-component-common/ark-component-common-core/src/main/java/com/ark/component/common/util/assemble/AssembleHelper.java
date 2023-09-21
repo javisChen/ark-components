@@ -18,7 +18,7 @@ public class AssembleHelper<RECORD, TARGET> {
 
     private Function<? super RECORD, Long> idFunc;
 
-    private List<Item<RECORD, TARGET>> items;
+    private List<FieldAssembleConfigBuilder<RECORD, TARGET>> fieldAssembleConfigBuilders;
 
     public static void main(String[] args) {
     }
@@ -28,10 +28,10 @@ public class AssembleHelper<RECORD, TARGET> {
         if (CollectionUtils.isEmpty(groupIds)) {
             return;
         }
-        for (Item<RECORD, TARGET> item : items) {
-            Function<? super TARGET, Long> targetIdFunc = item.getTargetIdFunc();
-            Function<List<Long>, List<TARGET>> targetQueryFunc = item.getTargetQueryFunc();
-            BiConsumer<RECORD, List<TARGET>> sourceConsumer = item.getSourceConsumer();
+        for (FieldAssembleConfigBuilder<RECORD, TARGET> fieldAssembleConfigBuilder : fieldAssembleConfigBuilders) {
+            Function<? super TARGET, Long> targetIdFunc = fieldAssembleConfigBuilder.getBindKeyFunc();
+            Function<List<Long>, List<TARGET>> targetQueryFunc = fieldAssembleConfigBuilder.getDatasourceFunc();
+            BiConsumer<RECORD, List<TARGET>> sourceConsumer = fieldAssembleConfigBuilder.getSetFunc();
             List<TARGET> targets = targetQueryFunc.apply(groupIds);
             if (CollectionUtils.isEmpty(targets)) {
                 return;

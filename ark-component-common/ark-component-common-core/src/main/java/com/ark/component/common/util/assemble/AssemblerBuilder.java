@@ -17,7 +17,7 @@ public class AssemblerBuilder<RECORD, TARGET> {
     private Function<? super RECORD, Long> idFunc;
 
 
-    private List<Item<RECORD, TARGET>> items;
+    private List<FieldAssembleConfigBuilder<RECORD, TARGET>> fieldAssembleConfigBuilders;
 
 
 
@@ -31,9 +31,9 @@ public class AssemblerBuilder<RECORD, TARGET> {
         return this;
     }
 
-    public AssemblerBuilder<RECORD, TARGET> items(Function<Item.ItemBuilder<RECORD, TARGET>, List<Item<RECORD, TARGET>>> builderConsumer) {
-        Item.ItemBuilder<RECORD, TARGET> itemBuilder = new Item.ItemBuilder<>();
-        this.items = builderConsumer.apply(itemBuilder);
+    public AssemblerBuilder<RECORD, TARGET> items(Function<FieldAssembleConfigBuilder<RECORD, TARGET>, List<FieldAssembleConfigBuilder<RECORD, TARGET>>> builderConsumer) {
+        FieldAssembleConfigBuilder<RECORD, TARGET> itemBuilder = new FieldAssembleConfigBuilder<>();
+        this.fieldAssembleConfigBuilders = builderConsumer.apply(itemBuilder);
         return this;
     }
 
@@ -41,7 +41,7 @@ public class AssemblerBuilder<RECORD, TARGET> {
         AssembleHelper<RECORD, TARGET> assembleHelper = new AssembleHelper<>();
         assembleHelper.setRecords(this.records);
         assembleHelper.setIdFunc(this.idFunc);
-        assembleHelper.setItems(this.items);
+        assembleHelper.setFieldAssembleConfigBuilders(this.fieldAssembleConfigBuilders);
         return assembleHelper;
     }
 

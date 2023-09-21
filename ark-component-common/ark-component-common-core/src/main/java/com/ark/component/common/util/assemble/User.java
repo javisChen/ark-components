@@ -19,8 +19,9 @@ public class User {
                 .newBuilder(Lists.newArrayList(user))
                 .idFunc(User::getId)
                 .items(item -> {
-                    item.targetQueryFunc(RoleQuery::byUserIds)
-                    item.targetQueryFunc()
+                    item
+                            .item(RoleQuery::byUserIds)
+                            .bindKeyFunc()
                             .build();
                 })
                 .build();
