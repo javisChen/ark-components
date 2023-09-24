@@ -22,4 +22,5 @@ public class FieldAssembleConfig<RECORD, SOURCE> {
     public FieldAssembleConfig(Function<List<Long>, List<SOURCE>> datasourceFunc) {
         this.datasourceFunc = datasourceFunc;
     }
+
 }
