@@ -1,0 +1,68 @@
+package com.ark.component.common.util.assemble;
+
+import cn.hutool.core.collection.CollUtil;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class FieldsAssembler {
+
+    /**
+     * 装配字段
+     *
+     * @param records    需要装配的数据集合
+     * @param recordId   数据行id
+     * @param field      需要装配的字段
+     * @param datasource 数据源
+     * @param bindingKey 与records关联的字段
+     */
+    public static <RECORD, SOURCE> void execute(List<RECORD> records,
+                                                Function<? super RECORD, Long> recordId,
+                                                BiConsumer<RECORD, List<SOURCE>> field,
+                                                Function<List<Long>, List<SOURCE>> datasource,
+                                                Function<? super SOURCE, Long> bindingKey) {
+        execute(true, records, recordId, field, datasource, bindingKey);
+    }
+
+    /**
+     * 装配字段
+     *
+     * @param condition  判断是否需要进行装配
+     * @param records    需要装配的数据集合
+     * @param recordId   数据行id
+     * @param field      需要装配的字段
+     * @param datasource 数据源
+     * @param bindingKey 与records关联的字段
+     * @param <RECORD>   需要被装配的数据
+     * @param <SOURCE>   待装配的数据源
+     */
+    public static <RECORD, SOURCE> void execute(boolean condition,
+                                                List<RECORD> records,
+                                                Function<? super RECORD, Long> recordId,
+                                                BiConsumer<RECORD, List<SOURCE>> field,
+                                                Function<List<Long>, List<SOURCE>> datasource,
+                                                Function<? super SOURCE, Long> bindingKey) {
+        if (!condition) {
+            return;
+        }
+        List<Long> groupIds = CollUtil.map(records, recordId, true);
+        if (CollectionUtils.isEmpty(groupIds)) {
+            return;
+        }
+        List<SOURCE> targets = datasource.apply(groupIds);
+        if (CollectionUtils.isEmpty(targets)) {
+            return;
+        }
+        Map<Long, List<SOURCE>> map = targets.stream().collect(Collectors.groupingBy(bindingKey));
+        if (MapUtils.isEmpty(map)) {
+            return;
+        }
+        records.forEach(record -> field.accept(record, map.get(recordId.apply(record))));
+    }
+}
+

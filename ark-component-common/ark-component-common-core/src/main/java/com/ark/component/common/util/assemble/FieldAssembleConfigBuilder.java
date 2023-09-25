@@ -12,29 +12,23 @@ public class FieldAssembleConfigBuilder<RECORD, SOURCE> {
 
     private BiConsumer<RECORD, List<SOURCE>> setFunc;
 
-    private AssemblerBuilder<RECORD, SOURCE> parent;
-
-    public FieldAssembleConfigBuilder(AssemblerBuilder<RECORD, SOURCE> assemblerBuilder) {
-        this.parent = assemblerBuilder;
-    }
-
-    public AssemblerBuilder<RECORD, SOURCE> and() {
-        return this.parent;
-    }
-
-
-    public FieldAssembleConfigBuilder<RECORD, SOURCE> datasourceFunc(Function<List<Long>, List<SOURCE>> datasourceFunc) {
+    public FieldAssembleConfigBuilder(Function<List<Long>, List<SOURCE>> datasourceFunc,
+                                      Function<? super SOURCE, Long> bindKeyFunc,
+                                      BiConsumer<RECORD, List<SOURCE>> setFunc) {
         this.datasourceFunc = datasourceFunc;
-        return this;
-    }
-
-    public FieldAssembleConfigBuilder<RECORD, SOURCE> bindKeyFunc(Function<? super SOURCE, Long> bindKeyFunc) {
         this.bindKeyFunc = bindKeyFunc;
-        return this;
+        this.setFunc = setFunc;
     }
 
-    public FieldAssembleConfigBuilder<RECORD, SOURCE> setFunc(BiConsumer<RECORD, List<SOURCE>> setFunc) {
-        this.setFunc = setFunc;
-        return this;
+    public Function<List<Long>, List<SOURCE>> getDatasourceFunc() {
+        return datasourceFunc;
+    }
+
+    public Function<? super SOURCE, Long> getBindKeyFunc() {
+        return bindKeyFunc;
+    }
+
+    public BiConsumer<RECORD, List<SOURCE>> getSetFunc() {
+        return setFunc;
     }
 }

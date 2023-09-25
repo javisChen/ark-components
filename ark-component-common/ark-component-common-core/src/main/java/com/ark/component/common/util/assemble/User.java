@@ -15,18 +15,17 @@ public class User {
     public static void main(String[] args) {
         User user = new User();
         user.setId(1L);
-        AssembleHelper<User, Object> build = AssembleHelper
-                .newBuilder(null)
-                .records(Lists.newArrayList(user))
-                .id(User::getId)
-                .build();
+        FieldsAssembler.execute(Lists.newArrayList(user), User::getId, User::setRoleList, RoleQuery::byUserIds, Role::getUserId);
+        ;
     }
+
     @Data
     private static class RoleQuery {
 
         public static List<Role> byUserIds(List<Long> userIds) {
             return Lists.newArrayList();
-        };
+        }
+
     }
 
     @Data
