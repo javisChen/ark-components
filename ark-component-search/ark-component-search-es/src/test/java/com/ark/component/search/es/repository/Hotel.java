@@ -13,4 +13,5 @@ public class Hotel {
     private String title;
     private String city;
     private String price;
+
 }

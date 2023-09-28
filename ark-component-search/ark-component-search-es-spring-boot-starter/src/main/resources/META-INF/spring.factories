@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ark.component.search.es.autoconfigure.RedisCacheAutoConfiguration
