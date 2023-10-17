@@ -4,7 +4,7 @@ package com.ark.component.statemachine.core.action;
 import com.ark.component.statemachine.core.StateMachineContext;
 
 /**
- * 状态机
+ * 执行接口
  */
 public interface Action {
 

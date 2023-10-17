@@ -30,7 +30,6 @@ public class StateMachineExecutor {
 
     private final String initEvent = "INIT";
     private final String rollbackEvent = "ROLLBACK";
-
     private final StateMachineService stateMachineService;
     private final GuardExecutor guardExecutor;
     private final ActionExecutor actionExecutor;

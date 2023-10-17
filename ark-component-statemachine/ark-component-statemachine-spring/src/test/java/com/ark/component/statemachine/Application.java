@@ -1,12 +1,13 @@
 package com.ark.component.statemachine;
 
 import com.ark.component.statemachine.config.Events;
-import com.ark.component.statemachine.config.States;
+import com.ark.component.statemachine.config.OrderStates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.service.StateMachineService;
 
 /**
  * Application
@@ -22,11 +23,16 @@ public class Application implements CommandLineRunner {
     }
 
     @Autowired
-    private StateMachine<States, Events> stateMachine;
+    private StateMachineService<OrderStates, Events> stateMachineService;
 
     @Override
     public void run(String... args) {
-        boolean b = stateMachine.sendEvent(Events.PAY);
+        String machineId = "order001";
+        StateMachine<OrderStates, Events> acquireStateMachine = stateMachineService.acquireStateMachine(machineId, true);
+        boolean b = acquireStateMachine.sendEvent(Events.PAY);
+
+        stateMachineService.releaseStateMachine(machineId);
+        b = acquireStateMachine.sendEvent(Events.PAY);
         System.out.println(b);
     }
 }
