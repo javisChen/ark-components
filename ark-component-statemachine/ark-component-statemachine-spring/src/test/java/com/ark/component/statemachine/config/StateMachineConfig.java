@@ -1,57 +1,53 @@
 package com.ark.component.statemachine.config;
 
+import com.ark.component.statemachine.Order;
+import com.ark.component.statemachine.OrderStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
-import org.springframework.statemachine.StateMachineContext;
-import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.listener.StateMachineListener;
-import org.springframework.statemachine.listener.StateMachineListenerAdapter;
+import org.springframework.statemachine.data.redis.RedisPersistingStateMachineInterceptor;
+import org.springframework.statemachine.data.redis.RedisRepositoryStateMachinePersist;
+import org.springframework.statemachine.persist.StateMachineRuntimePersister;
 import org.springframework.statemachine.service.DefaultStateMachineService;
 import org.springframework.statemachine.service.StateMachineService;
-import org.springframework.statemachine.state.State;
 
 import java.util.EnumSet;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @EnableStateMachineFactory
 public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderStates, Events> {
 
+    @Autowired
+    private OrderStateMachineListener orderStateMachineListener;
+
 
     @Bean
     public StateMachineService<OrderStates, Events> activityStateMachineService(StateMachineFactory<OrderStates, Events> stateMachineFactory) {
+        return new DefaultStateMachineService<>(stateMachineFactory);
+    }
 
-        return new DefaultStateMachineService<>(stateMachineFactory, new StateMachinePersist<>() {
-
-            private Map<String, StateMachineContext<OrderStates, Events>> orderMap = new ConcurrentHashMap<>();
-
-            @Override
-            public void write(StateMachineContext<OrderStates, Events> context, String contextObj) throws Exception {
-                orderMap.put(contextObj, context);
-            }
-
-            @Override
-            public StateMachineContext<OrderStates, Events> read(String contextObj) throws Exception {
-                return orderMap.get(contextObj);
-            }
-        });
+    @Bean
+    public StateMachineRuntimePersister<OrderStates, Events, Order> stateMachineRuntimePersister() {
+        RedisRepositoryStateMachinePersist<OrderStates, Events> persist = new RedisRepositoryStateMachinePersist<OrderStates, Events>();
+        return new RedisPersistingStateMachineInterceptor<>(persist);
     }
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<OrderStates, Events> config)
             throws Exception {
         config
+                .withPersistence()
+                    .runtimePersister(new RedisPersistingStateMachineInterceptor<>())
+                .and()
                 .withConfiguration()
-                .autoStartup(true)
-                .listener(listener());
+                    .autoStartup(true)
+                    .listener(orderStateMachineListener);
     }
 
     @Override
@@ -79,17 +75,4 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
         // @formatter:off
     }
 
-    @Bean
-    public StateMachineListener<OrderStates, Events> listener() {
-        return new StateMachineListenerAdapter<OrderStates, Events>() {
-            @Override
-            public void stateChanged(State<OrderStates, Events> from, State<OrderStates, Events> to) {
-                System.out.println("from = " + from);
-                System.out.println(" State change to " + to.getId());
-            }
-
-            @Override public void eventNotAccepted(Message<Events> event) {
-                super.eventNotAccepted(event);
-    }};
-    }
 }
