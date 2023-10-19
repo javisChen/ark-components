@@ -1,6 +1,5 @@
 package com.ark.component.statemachine.config;
 
-import com.ark.component.statemachine.Order;
 import com.ark.component.statemachine.OrderStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +10,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.data.redis.RedisPersistingStateMachineInterceptor;
-import org.springframework.statemachine.data.redis.RedisRepositoryStateMachinePersist;
-import org.springframework.statemachine.persist.StateMachineRuntimePersister;
 import org.springframework.statemachine.service.DefaultStateMachineService;
 import org.springframework.statemachine.service.StateMachineService;
 
@@ -32,19 +28,19 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
         return new DefaultStateMachineService<>(stateMachineFactory);
     }
 
-    @Bean
-    public StateMachineRuntimePersister<OrderStates, Events, Order> stateMachineRuntimePersister() {
-        RedisRepositoryStateMachinePersist<OrderStates, Events> persist = new RedisRepositoryStateMachinePersist<OrderStates, Events>();
-        return new RedisPersistingStateMachineInterceptor<>(persist);
-    }
+//    @Bean
+//    public StateMachineRuntimePersister<OrderStates, Events, Order> stateMachineRuntimePersister() {
+//        RedisRepositoryStateMachinePersist<OrderStates, Events> persist = new RedisRepositoryStateMachinePersist<OrderStates, Events>();
+//        return new RedisPersistingStateMachineInterceptor<>(persist);
+//    }
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<OrderStates, Events> config)
             throws Exception {
         config
-                .withPersistence()
-                    .runtimePersister(new RedisPersistingStateMachineInterceptor<>())
-                .and()
+//                .withPersistence()
+//                    .runtimePersister(new RedisPersistingStateMachineInterceptor<>())
+//                .and()
                 .withConfiguration()
                     .autoStartup(true)
                     .listener(orderStateMachineListener);

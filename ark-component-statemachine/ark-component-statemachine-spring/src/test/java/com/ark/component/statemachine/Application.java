@@ -27,12 +27,11 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        String machineId = "order001";
+        String machineId = "orderStateMachine";
         StateMachine<OrderStates, Events> acquireStateMachine = stateMachineService.acquireStateMachine(machineId, true);
+        System.out.println(acquireStateMachine.getState());
+        System.out.println("init state -> " + acquireStateMachine.getState());
         boolean b = acquireStateMachine.sendEvent(Events.PAY);
-
-        stateMachineService.releaseStateMachine(machineId);
-        b = acquireStateMachine.sendEvent(Events.PAY);
         System.out.println(b);
     }
 }

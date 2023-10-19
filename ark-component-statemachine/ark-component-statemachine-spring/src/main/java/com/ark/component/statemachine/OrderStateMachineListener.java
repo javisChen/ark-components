@@ -71,6 +71,6 @@ public class OrderStateMachineListener implements StateMachineListener<OrderStat
 
     @Override
     public void stateContext(StateContext<OrderStates, Events> stateContext) {
-
+        System.out.println("current stateContext: " + stateContext);
     }
 }
