@@ -22,7 +22,6 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
     @Autowired
     private OrderStateMachineListener orderStateMachineListener;
 
-
     @Bean
     public StateMachineService<OrderStates, Events> activityStateMachineService(StateMachineFactory<OrderStates, Events> stateMachineFactory) {
         return new DefaultStateMachineService<>(stateMachineFactory);

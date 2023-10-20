@@ -93,16 +93,16 @@ public class StateMachineExecutor {
     public <P> StateMachineResult init(String bizCode, P params) throws StateMachineException {
 
         // 根据bizCode查出状态机定义规则
-        StateMachineDefinition stateMachineDefinition = stateMachineService.getDefinition(bizCode);
+        StateMachine stateMachine = stateMachineService.getDefinition(bizCode);
 
         // 检查事件是否存在
-        checkEventIsLegal(initEvent, stateMachineDefinition);
+        checkEventIsLegal(initEvent, stateMachine);
 
         // 组装上下文
         StateMachineContext context = assembleContext(bizCode, initEvent, params);
 
         // 执行状态转换
-        return executeTransition(null, stateMachineDefinition, context);
+        return executeTransition(null, stateMachine, context);
     }
 
 
@@ -119,10 +119,10 @@ public class StateMachineExecutor {
             throws AlreadyFinishedException, TransitionNotFoundException {
 
         // 根据bizCode查出状态机定义规则
-        StateMachineDefinition stateMachineDefinition = stateMachineService.getDefinition(bizCode);
+        StateMachine stateMachine = stateMachineService.getDefinition(bizCode);
 
         // 检查事件是否存在
-        checkEventIsLegal(event, stateMachineDefinition);
+        checkEventIsLegal(event, stateMachine);
 
         // 组装上下文
         StateMachineContext context = assembleContext(bizId, bizCode, event, params);
@@ -131,14 +131,14 @@ public class StateMachineExecutor {
         StateMachineRuntimeDO runtime = getRuntime(context);
 
         // 执行状态转换
-        return executeTransition(runtime, stateMachineDefinition, context);
+        return executeTransition(runtime, stateMachine, context);
     }
 
     private StateMachineResult executeTransition(StateMachineRuntimeDO runtime,
-                                                 StateMachineDefinition definition,
+                                                 StateMachine definition,
                                                  StateMachineContext context)
             throws AlreadyFinishedException, TransitionNotFoundException {
-        List<StateMachineDefinition.Transitions> transitions = definition.getTransitions();
+        List<Transition> transitions = definition.getTransitions();
         String event = context.getEvent();
         // 状态机必须先进行初始化
         if (Objects.isNull(runtime)) {
@@ -161,7 +161,7 @@ public class StateMachineExecutor {
 
         // 从第二个transition对象开始遍历
         for (int i = 1, transitionsSize = transitions.size(); i < transitionsSize; i++) {
-            StateMachineDefinition.Transitions transition = transitions.get(i);
+            Transition transition = transitions.get(i);
             // 根据source和event确定需要执行的transition
             if (transition.getEvent().equals(event) && transition.getSource().contains(runtime.getState())) {
                 return doExecuteTransition(context, transition, definition, runtime);
@@ -174,13 +174,13 @@ public class StateMachineExecutor {
     /**
      * 是否有配置最终状态
      */
-    private boolean hasFinalState(StateMachineDefinition definition) {
+    private boolean hasFinalState(StateMachine definition) {
         return ArrayUtil.isNotEmpty(definition.getFinalState());
     }
 
     private StateMachineResult doExecuteTransition(StateMachineContext context,
-                                                   StateMachineDefinition.Transitions transition,
-                                                   StateMachineDefinition definition,
+                                                   Transition transition,
+                                                   StateMachine definition,
                                                    StateMachineRuntimeDO runtimeDO) {
 
         guardExecutor.execute(transition.getGuards(), context);
@@ -208,8 +208,8 @@ public class StateMachineExecutor {
     }
 
     private void saveStateMachineInfo(StateMachineContext context,
-                                      StateMachineDefinition.Transitions transition,
-                                      StateMachineDefinition definition,
+                                      Transition transition,
+                                      StateMachine definition,
                                       StateMachineRuntimeDO runtimeDO,
                                       String state) {
         String bizCode = context.getBizCode();
@@ -227,7 +227,7 @@ public class StateMachineExecutor {
         stateMachineService.saveHistory(stateMachineHistoryDO);
     }
 
-    private boolean isFinalEvent(StateMachineDefinition.Transitions transition, StateMachineDefinition definition) {
+    private boolean isFinalEvent(Transition transition, StateMachine definition) {
         return definition.getFinalState().contains(transition.getTarget());
     }
 
@@ -243,8 +243,8 @@ public class StateMachineExecutor {
         return stateMachineService.getRuntime(context.getBizCode(), context.getBizId());
     }
 
-    private void checkEventIsLegal(String event, StateMachineDefinition stateMachineDefinition) {
-        if (!stateMachineDefinition.getEvents().contains(event)) {
+    private void checkEventIsLegal(String event, StateMachine stateMachine) {
+        if (!stateMachine.getEvents().contains(event)) {
             throw new StateMachineException("event is illegal, please check the definition");
         }
     }

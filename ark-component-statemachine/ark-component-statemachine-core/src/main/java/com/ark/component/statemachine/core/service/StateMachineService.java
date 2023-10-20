@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ark.component.exception.BizException;
 import com.ark.component.orm.mybatis.base.BaseEntity;
-import com.ark.component.statemachine.core.StateMachineDefinition;
+import com.ark.component.statemachine.core.StateMachine;
 import com.ark.component.statemachine.core.exception.StateMachineException;
 import com.ark.component.statemachine.dao.entity.StateMachineDefinitionDO;
 import com.ark.component.statemachine.dao.entity.StateMachineHistoryDO;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class StateMachineService {
 
-    private ConcurrentHashMap<String, StateMachineDefinition> cache = new ConcurrentHashMap<>(16);
+    private ConcurrentHashMap<String, StateMachine> cache = new ConcurrentHashMap<>(16);
     private final StateMachineHistoryService stateMachineHistoryService;
     private final StateMachineRuntimeService stateMachineRuntimeService;
     private final StateMachineDefinitionService stateMachineDefinitionService;
@@ -35,8 +35,8 @@ public class StateMachineService {
         this.stateMachineDefinitionService = stateMachineDefinitionService;
     }
 
-    public StateMachineDefinition getDefinition(String bizCode) {
-        StateMachineDefinition definition = cache.get(bizCode);
+    public StateMachine getDefinition(String bizCode) {
+        StateMachine definition = cache.get(bizCode);
         if (Objects.nonNull(definition)) {
             if (log.isDebugEnabled()) {
                 log.debug("从缓存读取 [{}] 的状态机配置 = {}", bizCode, definition);
@@ -51,7 +51,7 @@ public class StateMachineService {
             throw new StateMachineException("bizCode -> [" + bizCode + "] is not define");
         }
         String config = definitionDO.getConfig();
-        definition = JSONObject.parseObject(config, StateMachineDefinition.class);
+        definition = JSONObject.parseObject(config, StateMachine.class);
         if (definition == null) {
             throw new StateMachineException("definition config is empty");
         }

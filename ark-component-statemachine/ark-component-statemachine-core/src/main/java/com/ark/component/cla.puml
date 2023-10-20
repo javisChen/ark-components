@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class State<E> {
+    - id : String
+
+    + String getId()
+}
+
+class Event<E> {
+
+    - id : String
+
+    String getId()
+}
+
+class StateMachine {
+
+    - states : List<State>
+    - events : List<Event>
+
+    + List<State> getStates()
+    + List<Event> getEvents()
+}
+
+class StateMachine {
+
+    - states : List<State>
+    - events : List<Event>
+
+    + List<State> getStates()
+    + List<Event> getEvents()
+
+}
+
+StateMachine *-- State
+StateMachine *-- Event
+
+
+
+@enduml
