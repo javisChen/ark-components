@@ -4,31 +4,17 @@ import lombok.Data;
 
 import java.util.Map;
 
-/**
- * 状态机
- * @author jc
- */
 @Data
-public class StateMachineContext {
+public class StateMachineContext<S, E, T> {
 
-   private String bizCode;
-   private Long bizId;
-   private String event;
-   private Object params;
-   private Map<String, Object> extParams;
+    private String machineId;
 
-   public StateMachineContext(String bizCode, String event, Object params, Map<String, Object> extParams) {
-      this.bizCode = bizCode;
-      this.event = event;
-      this.params = params;
-      this.extParams = extParams;
-   }
+    private String id;
 
-   public StateMachineContext(String bizCode, Long bizId, String event, Object params, Map<String, Object> extParams) {
-      this.bizCode = bizCode;
-      this.bizId = bizId;
-      this.event = event;
-      this.params = params;
-      this.extParams = extParams;
-   }
+    private S state;
+    private Map<S, S> historyStates;
+    private E event;
+    private T data;
+    private Map<Object, Object> variables;
+
 }
