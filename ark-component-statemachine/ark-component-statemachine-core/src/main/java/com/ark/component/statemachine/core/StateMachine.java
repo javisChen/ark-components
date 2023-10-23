@@ -29,30 +29,28 @@ public class StateMachine<S, E, T> {
             throw new StateMachineException("State object has not been initialized");
         }
 
-        S currentState = machineContext.getState();
+        State<S> currentState = machineContext.getState();
 
         Transition<S, E, T> transition = findTransition(event, currentState);
         if (transition == null) {
             throw new StateMachineException(String.format("Cannot find transition, Event = %s, State = %s", event, currentState));
         }
 
-        if (!transition.transit(machineContext)) {
+        if (!transition.executeGuards(machineContext)) {
             return;
         }
 
-        try {
-            transition.executeTransitionActions(machineContext);
-        } catch (Exception e) {
-            // aborting, executor should stop possible loop checking possible transitions
-            // causing infinite execution
-            log.warn("Aborting as transition " + transition, e);
-            throw new StateMachineException("Aborting as transition " + transition + " caused error ", e);
-        }
+        transition.executeActions(machineContext);
 
+        State<S> target = transition.getTarget();
+        machineContext.setState(target);
+
+        // write
+        stateMachinePersist.write(machineContext);
 
     }
 
-    private Transition<S, E, T> findTransition(E event, S currentState) {
+    private Transition<S, E, T> findTransition(E event, State<S> currentState) {
         if (transitions == null || transitions.size() == 0) {
             return null;
         }

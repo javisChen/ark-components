@@ -25,14 +25,14 @@ public interface Transition<S, E, T> {
 	 * @param context the state context
 	 * @return true, if transition happened, false otherwise
 	 */
-	boolean transit(StateMachineContext<S, E, T> context);
+	boolean executeGuards(StateMachineContext<S, E, T> context);
 
 	/**
 	 * Execute transition actions.
 	 *
 	 * @param context the state context
 	 */
-	void executeTransitionActions(StateMachineContext<S, E, T> context);
+	void executeActions(StateMachineContext<S, E, T> context);
 
 	/**
 	 * Gets the source state of this transition.

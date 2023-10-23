@@ -10,7 +10,6 @@ public class InMemoryStateMachinePersist<S, E, T> implements StateMachinePersist
 
     private final Map<String, StateMachineContext<S, E, T>> repository = new HashMap<>(16);
 
-
     @Override
     public void write(StateMachineContext<S, E, T> context) {
         repository.put(context.getId(), context);

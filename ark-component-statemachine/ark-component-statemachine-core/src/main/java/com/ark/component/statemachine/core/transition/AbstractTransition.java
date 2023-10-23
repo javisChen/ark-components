@@ -64,7 +64,7 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public boolean transit(StateMachineContext<S, E, T> context) {
+    public boolean executeGuards(StateMachineContext<S, E, T> context) {
         if (guard != null) {
             try {
                 if (!guard.evaluate(context)) {
@@ -104,13 +104,17 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public final void executeTransitionActions(StateMachineContext<S, E, T> context) {
+    public final void executeActions(StateMachineContext<S, E, T> context) {
         if (actions == null) {
             return;
         }
-
-        for (Action<S, E, T> action : actions) {
-            action.execute(context);
+        try {
+            for (Action<S, E, T> action : actions) {
+                action.execute(context);
+            }
+        } catch (Exception e) {
+            log.warn("Aborting as transition " + this, e);
+            throw new StateMachineException("Aborting as transition " + this + " caused error " + e.getMessage());
         }
     }
 
