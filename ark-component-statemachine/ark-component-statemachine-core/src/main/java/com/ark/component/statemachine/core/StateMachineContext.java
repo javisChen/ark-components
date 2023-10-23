@@ -8,11 +8,8 @@ import java.util.Map;
 public class StateMachineContext<S, E, T> {
 
     private String machineId;
-
     private String id;
-
     private S state;
-    private Map<S, S> historyStates;
     private E event;
     private T data;
     private Map<Object, Object> variables;

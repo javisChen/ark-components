@@ -12,12 +12,12 @@ public class InMemoryStateMachinePersist<S, E, T> implements StateMachinePersist
 
 
     @Override
-    public void write(StateMachineContext<S, E, T> context) throws Exception {
+    public void write(StateMachineContext<S, E, T> context) {
         repository.put(context.getId(), context);
     }
 
     @Override
-    public StateMachineContext<S, E, T> read(String id) throws Exception {
+    public StateMachineContext<S, E, T> read(String id) {
         return repository.get(id);
     }
 }

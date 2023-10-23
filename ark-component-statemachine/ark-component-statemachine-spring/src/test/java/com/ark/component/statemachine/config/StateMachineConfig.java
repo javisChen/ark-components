@@ -63,8 +63,14 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
                 .withExternal()
                 .name("test1")
                 .source(OrderStates.WAIT_PAY)
+                .event(Events.CLOSE_ORDER)
                 .target(OrderStates.PAID)
+                .and()
+                .withExternal()
+                .name("test2")
+                .source(OrderStates.PAID)
                 .event(Events.PAY)
+                .target(OrderStates.PAID)
                 .and()
         ;
         // @formatter:off

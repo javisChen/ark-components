@@ -29,9 +29,7 @@ public class Application implements CommandLineRunner {
     public void run(String... args) {
         String machineId = "orderStateMachine";
         StateMachine<OrderStates, Events> acquireStateMachine = stateMachineService.acquireStateMachine(machineId, true);
-        System.out.println(acquireStateMachine.getState());
-        System.out.println("init state -> " + acquireStateMachine.getState());
-        boolean b = acquireStateMachine.sendEvent(Events.PAY);
+        boolean b = acquireStateMachine.sendEvent(Events.CLOSE_ORDER);
         System.out.println(b);
     }
 }
