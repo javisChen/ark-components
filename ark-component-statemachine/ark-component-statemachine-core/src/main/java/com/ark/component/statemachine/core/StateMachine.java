@@ -50,6 +50,7 @@ public class StateMachine<S, E, T> {
         }
 
 
+        transition.ex
     }
 
     private Transition<S, E, T> findTransition(E event, S currentState) {
