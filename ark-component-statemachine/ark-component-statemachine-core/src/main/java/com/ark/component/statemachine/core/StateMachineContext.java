@@ -9,7 +9,7 @@ public class StateMachineContext<S, E, T> {
 
     private String machineId;
     private String id;
-    private S state;
+    private State<S> state;
     private E event;
     private T data;
     private Map<Object, Object> variables;
