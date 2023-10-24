@@ -16,7 +16,7 @@
 package com.ark.component.statemachine.core.transition;
 
 import com.ark.component.statemachine.core.State;
-import com.ark.component.statemachine.core.StateMachineContext;
+import com.ark.component.statemachine.core.StateContext;
 import com.ark.component.statemachine.core.StateMachineException;
 import com.ark.component.statemachine.core.action.Action;
 import com.ark.component.statemachine.core.guard.Guard;
@@ -24,30 +24,31 @@ import com.ark.component.statemachine.core.trigger.Trigger;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T> {
 
     protected final State<S> target;
-    protected final Collection<Action<S, E, T>> actions;
+    protected final Collection<Action<E>> actions;
     private final State<S> source;
     private final TransitionKind kind;
-    private final Guard<S, E, T> guard;
+    private final List<Guard<E>> guards;
     private final Trigger<S, E> trigger;
     private final String name;
 
-    protected AbstractTransition(State<S> target,
-                                 Collection<Action<S, E, T>> actions,
-                                 State<S> source,
+    protected AbstractTransition(State<S> source,
+                                 State<S> target,
                                  TransitionKind kind,
-                                 Guard<S, E, T> guard,
+                                 List<Guard<E>> guards,
+                                 Collection<Action<E>> actions,
                                  Trigger<S, E> trigger,
                                  String name) {
         this.target = target;
         this.actions = actions;
         this.source = source;
         this.kind = kind;
-        this.guard = guard;
+        this.guards = guards;
         this.trigger = trigger;
         this.name = name;
     }
@@ -64,28 +65,23 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public boolean executeGuards(StateMachineContext<S, E, T> context) {
-        if (guard != null) {
-            try {
+    public <P> boolean executeGuards(StateContext<E, P> context) {
+        if (guards == null) {
+            return true;
+        }
+
+        try {
+            for (Guard<E> guard : guards) {
                 if (!guard.evaluate(context)) {
+                    log.warn("Guard [{}] returned false", guard);
                     return false;
                 }
-            } catch (Throwable t) {
-                log.error("Deny guard due to throw as GUARD should not error", t);
-                return false;
             }
+        } catch (Throwable t) {
+            log.error("Deny guard due to throw as GUARD should not error", t);
+            return false;
         }
         return true;
-    }
-
-    @Override
-    public Guard<S, E, T> getGuard() {
-        return guard;
-    }
-
-    @Override
-    public TransitionKind getKind() {
-        return kind;
     }
 
     @Override
@@ -99,17 +95,12 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public Collection<Action<S, E, T>> getActions() {
-        return actions;
-    }
-
-    @Override
-    public final void executeActions(StateMachineContext<S, E, T> context) {
+    public <P> void executeActions(StateContext<E, P> context) {
         if (actions == null) {
             return;
         }
         try {
-            for (Action<S, E, T> action : actions) {
+            for (Action<E> action : actions) {
                 action.execute(context);
             }
         } catch (Exception e) {
@@ -120,6 +111,6 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
 
     @Override
     public String toString() {
-        return "AbstractTransition [source=" + source + ", target=" + target + ", kind=" + kind + ", guard=" + guard + "]";
+        return "AbstractTransition [source=" + source + ", target=" + target + ", kind=" + kind + ", guard=" + guards + "]";
     }
 }

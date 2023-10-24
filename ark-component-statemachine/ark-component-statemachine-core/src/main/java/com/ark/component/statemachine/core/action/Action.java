@@ -1,9 +1,9 @@
 package com.ark.component.statemachine.core.action;
 
 
-import com.ark.component.statemachine.core.StateMachineContext;
+import com.ark.component.statemachine.core.StateContext;
 
-public interface Action<S, E, T> {
+public interface Action<E> {
 
-	void execute(StateMachineContext<S, E, T> context);
+	<P> void execute(StateContext<E, P> context);
 }

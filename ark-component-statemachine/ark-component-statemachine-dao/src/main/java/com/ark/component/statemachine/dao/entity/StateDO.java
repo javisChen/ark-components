@@ -8,28 +8,39 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 订单表
+ * 状态机运行时表
  * </p>
  *
  * @author EOP
- * @since 2022-04-06
+ * @since 2022-04-04
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("od_order")
-public class OrderDO extends BaseEntity {
-
+@TableName("stm_state")
+public class StateDO extends BaseEntity {
 
     /**
      * 业务编码
      */
-    @TableField("price")
-    private Integer price;
+    @TableField("biz_code")
+    private String bizCode;
+
+    /**
+     * 业务ID
+     */
+    @TableField("biz_id")
+    private Long bizId;
 
     /**
      * 状态
      */
-    @TableField("`status`")
-    private Integer status;
+    @TableField("state")
+    private String state;
+
+    /**
+     * 完结状态 0-否 1-是
+     */
+    @TableField("ended")
+    private Boolean ended;
 
 }

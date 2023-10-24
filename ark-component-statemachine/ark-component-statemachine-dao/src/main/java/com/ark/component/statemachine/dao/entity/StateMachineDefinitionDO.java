@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("stm_statemachine_definition")
+@TableName("stm_definition")
 public class StateMachineDefinitionDO extends BaseEntity {
 
 

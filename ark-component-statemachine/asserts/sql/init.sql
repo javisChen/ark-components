@@ -1,4 +1,4 @@
-create table if not exists `order`.stm_statemachine_definition
+create table if not exists `trade`.stm_statemachine_definition
 (
     id           bigint unsigned auto_increment
     primary key,
@@ -15,7 +15,7 @@ create table if not exists `order`.stm_statemachine_definition
     )
     comment '状态机规则定义表' auto_increment = 2;
 
-create table if not exists `order`.stm_statemachine_history
+create table if not exists `trade`.stm_history
 (
     id            bigint unsigned auto_increment
     primary key,
@@ -33,9 +33,9 @@ create table if not exists `order`.stm_statemachine_history
     comment '状态机历史表' auto_increment = 1513128736577089539;
 
 create index idx_biz_code_biz_id
-    on `order`.stm_statemachine_history (biz_code, biz_id);
+    on `trade`.stm_history (biz_code, biz_id);
 
-create table if not exists `order`.stm_statemachine_runtime
+create table if not exists `trade`.stm_state
 (
     id           bigint unsigned auto_increment
     primary key,
@@ -52,5 +52,5 @@ create table if not exists `order`.stm_statemachine_runtime
     comment '状态机运行时表' auto_increment = 1513128736400928770;
 
 create index idx_biz_code_biz_id
-    on `order`.stm_statemachine_runtime (biz_code, biz_id);
+    on `trade`.stm_state (biz_code, biz_id);
 

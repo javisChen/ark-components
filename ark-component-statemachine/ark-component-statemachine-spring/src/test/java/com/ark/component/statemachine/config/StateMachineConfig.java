@@ -49,7 +49,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
     public void configure(StateMachineStateConfigurer<OrderStates, Events> states)
             throws Exception {
         states.withStates()
-                .initial(OrderStates.WAIT_PAY)
+                .initial(OrderStates.WAIT_PAY, null)
                 .state(OrderStates.PAID)
                 .end(OrderStates.PAID)
                 .states(EnumSet.allOf(OrderStates.class))

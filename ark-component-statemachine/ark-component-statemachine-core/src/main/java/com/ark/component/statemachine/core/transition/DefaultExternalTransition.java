@@ -7,10 +7,11 @@ import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.trigger.Trigger;
 
 import java.util.Collection;
+import java.util.List;
 
 public class DefaultExternalTransition<S, E, T> extends AbstractExternalTransition<S, E, T> {
 
-	protected DefaultExternalTransition(State<S> target, Collection<Action<S, E, T>> actions, State<S> source, TransitionKind kind, Guard<S, E, T> guard, Trigger<S, E> trigger, String name) {
-		super(target, actions, source, kind, guard, trigger, name);
-	}
+    public DefaultExternalTransition(State<S> source, State<S> target, TransitionKind kind, List<Guard<E>> guards, Collection<Action<E>> actions, Trigger<S, E> trigger, String name) {
+        super(source, target, kind, guards, actions, trigger, name);
+    }
 }

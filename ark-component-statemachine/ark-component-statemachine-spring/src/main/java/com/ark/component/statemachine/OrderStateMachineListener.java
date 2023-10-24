@@ -15,7 +15,8 @@ public class OrderStateMachineListener implements StateMachineListener<OrderStat
 
     @Override
     public void stateChanged(State<OrderStates, Events> from, State<OrderStates, Events> to) {
-
+        System.out.println("from = " + from);
+        System.out.println("to = " + to);
     }
 
     @Override
@@ -35,13 +36,10 @@ public class OrderStateMachineListener implements StateMachineListener<OrderStat
 
     @Override
     public void transition(Transition<OrderStates, Events> transition) {
-        State<OrderStates, Events> target = transition.getTarget();
-        System.out.println("to -> " + transition.getTarget().getId());
     }
 
     @Override
     public void transitionStarted(Transition<OrderStates, Events> transition) {
-        System.out.println("on transitionStarted" + transition);
     }
 
     @Override
@@ -71,6 +69,5 @@ public class OrderStateMachineListener implements StateMachineListener<OrderStat
 
     @Override
     public void stateContext(StateContext<OrderStates, Events> stateContext) {
-        System.out.println("current stateContext: " + stateContext);
     }
 }

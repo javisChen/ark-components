@@ -1,6 +1,6 @@
 package com.ark.component.statemachine.dao.mapper;
 
-import com.ark.component.statemachine.dao.entity.StateMachineRuntimeDO;
+import com.ark.component.statemachine.dao.entity.StateDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author EOP
  * @since 2022-04-04
  */
-public interface StateMachineRuntimeMapper extends BaseMapper<StateMachineRuntimeDO> {
+public interface StateMachineRuntimeMapper extends BaseMapper<StateDO> {
 
 }

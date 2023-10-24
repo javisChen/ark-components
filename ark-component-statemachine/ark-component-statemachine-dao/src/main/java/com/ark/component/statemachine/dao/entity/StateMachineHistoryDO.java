@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("stm_statemachine_history")
+@TableName("stm_history")
 public class StateMachineHistoryDO extends BaseEntity {
 
 

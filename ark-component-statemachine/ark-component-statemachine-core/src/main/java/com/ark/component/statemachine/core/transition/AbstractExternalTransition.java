@@ -6,11 +6,11 @@ import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.trigger.Trigger;
 
 import java.util.Collection;
+import java.util.List;
 
-public abstract class AbstractExternalTransition<S, E, T> extends AbstractTransition<S, E, T> implements Transition<S, E, T> {
+public abstract class AbstractExternalTransition<S, E, T> extends AbstractTransition<S, E, T> {
 
-    protected AbstractExternalTransition(State<S> target, Collection<Action<S, E, T>> actions, State<S> source,
-                                         TransitionKind kind, Guard<S, E, T> guard, Trigger<S, E> trigger, String name) {
-        super(target, actions, source, kind, guard, trigger, name);
+    protected AbstractExternalTransition(State<S> source, State<S> target, TransitionKind kind, List<Guard<E>> guards, Collection<Action<E>> actions, Trigger<S, E> trigger, String name) {
+        super(source, target, kind, guards, actions, trigger, name);
     }
 }
