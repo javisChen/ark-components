@@ -6,9 +6,9 @@ import com.ark.component.statemachine.core.trigger.Trigger;
 
 public interface Transition<S, E, T> {
 
-	<P>boolean executeGuards(StateContext<E, P> stateContext);
+	<P>boolean executeGuards(StateContext<E> stateContext);
 
-	<P> void executeActions(StateContext<E, P> stateContext);
+	<P> void executeActions(StateContext<E> stateContext);
 
 	State<S> getSource();
 

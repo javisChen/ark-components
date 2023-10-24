@@ -1,38 +1,18 @@
-package com.ark.component.statemachine.core;
+package com.ark.component.statemachine;
 
+import com.ark.component.statemachine.core.*;
 import com.ark.component.statemachine.core.lock.DefaultStateMachineLock;
 import com.ark.component.statemachine.core.persist.InMemoryStateMachinePersist;
-import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.DefaultExternalTransition;
 import com.ark.component.statemachine.core.transition.Transition;
 import com.ark.component.statemachine.core.trigger.EventTrigger;
+import com.ark.component.statemachine.guard.OrderCreateGuard;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Slf4j
-public class StateMachineFactory<S, E, T> {
-
-    public Map<String, StateMachine<S, E, T>> machines = new HashMap<>(16);
-
-    private final StateMachinePersist<S, E, T> stateMachinePersist = new InMemoryStateMachinePersist<>();
-
-    public StateMachine<S, E, T> acquireStateMachine(String machineId) {
-        log.info("Acquiring machine with id " + machineId);
-        StateMachine<S, E, T> stateMachine;
-        // naive sync to handle concurrency with release
-        stateMachine = machines.get(machineId);
-        if (stateMachine == null) {
-            log.info("Getting new machine from factory with id " + machineId);
-            stateMachine = machines.get(machineId);
-            machines.put(machineId, stateMachine);
-        }
-        return stateMachine;
-    }
+public class StateMachineTest {
 
     public static void main(String[] args) {
 
@@ -42,7 +22,7 @@ public class StateMachineFactory<S, E, T> {
         DefaultExternalTransition<OrderState, OrderEvent, Object> initialTransition = new DefaultExternalTransition<>(null,
                 new State<>(OrderState.WAIT_PAY),
                 null,
-                Lists.newArrayList(),
+                Lists.newArrayList(new OrderCreateGuard()),
                 null,
                 new EventTrigger<>(new Event<>(OrderEvent.CREATE)),
                 "下单");
@@ -68,10 +48,8 @@ public class StateMachineFactory<S, E, T> {
 
         machine.setStateMachineLock(new DefaultStateMachineLock<>());
 
-
         machine.init("order001", OrderEvent.CREATE, null);
 
-        machine.sendEvent("order001", OrderEvent.PAY, null);
+        machine.sendEvent("order001", OrderEvent.PAY, null);}
 
-    }
 }

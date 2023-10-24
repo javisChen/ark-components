@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 @Slf4j
-public class StateContext<E, P> {
+public class StateContext<E> {
 
     private String bizCode;
 
@@ -15,7 +15,7 @@ public class StateContext<E, P> {
 
     private E event;
 
-    private P params;
+    private Object params;
 
     private Map<String, Object> extras;
 

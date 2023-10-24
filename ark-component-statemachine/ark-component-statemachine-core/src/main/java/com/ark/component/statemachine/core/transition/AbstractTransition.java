@@ -65,11 +65,10 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public <P> boolean executeGuards(StateContext<E, P> context) {
+    public <P> boolean executeGuards(StateContext<E> context) {
         if (guards == null) {
             return true;
         }
-
         try {
             for (Guard<E> guard : guards) {
                 if (!guard.evaluate(context)) {
@@ -95,7 +94,7 @@ public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T>
     }
 
     @Override
-    public <P> void executeActions(StateContext<E, P> context) {
+    public <P> void executeActions(StateContext<E> context) {
         if (actions == null) {
             return;
         }

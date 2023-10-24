@@ -59,7 +59,7 @@ public class StateMachine<S, E, T> {
                 throw new StateMachineException(String.format("Cannot find transition, Event = %s, State = %s", event, currentState));
             }
 
-            StateContext<E, P> stateContext = buildContext(stateData, params, event);
+            StateContext<E> stateContext = buildContext(stateData, params, event);
 
             if (!transition.executeGuards(stateContext)) {
                 return;
@@ -74,12 +74,16 @@ public class StateMachine<S, E, T> {
             stateMachinePersist.write(stateData);
 
         } finally {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    stateMachineLock.unlock(stateData);
-                }
-            });
+            if (TransactionSynchronizationManager.isSynchronizationActive()) {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        stateMachineLock.unlock(stateData);
+                    }
+                });
+            } else {
+                stateMachineLock.unlock(stateData);
+            }
         }
 
     }
@@ -98,7 +102,7 @@ public class StateMachine<S, E, T> {
         stateData.setId(id);
         stateData.setState(initial);
         stateData.setVariables(Maps.newHashMap());
-        StateContext<E, P> ctx = buildContext(stateData, params, event);
+        StateContext<E> ctx = buildContext(stateData, params, event);
 
         if (!initialTransition.executeGuards(ctx)) {
             return;
@@ -110,8 +114,8 @@ public class StateMachine<S, E, T> {
 
     }
 
-    private <P> StateContext<E, P> buildContext(StateData<S> stateData, P params, E event) {
-        StateContext<E, P> stateContext = new StateContext<>();
+    private <P> StateContext<E> buildContext(StateData<S> stateData, P params, E event) {
+        StateContext<E> stateContext = new StateContext<>();
         stateContext.setBizCode(stateData.getMachineId());
         stateContext.setBizId(stateData.getId());
         stateContext.setEvent(event);

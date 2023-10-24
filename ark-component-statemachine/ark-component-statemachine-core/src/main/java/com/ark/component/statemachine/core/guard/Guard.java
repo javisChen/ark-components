@@ -11,6 +11,6 @@ public interface Guard<E> {
 	 * @param context the state context
 	 * @return true, if guard evaluation is successful, false otherwise.
 	 */
-	<P> boolean evaluate(StateContext<E, P> context);
+	boolean evaluate(StateContext<E> context);
 
 }
