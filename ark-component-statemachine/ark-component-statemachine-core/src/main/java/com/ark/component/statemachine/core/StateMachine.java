@@ -1,37 +1,81 @@
 package com.ark.component.statemachine.core;
 
+import com.alibaba.fastjson2.JSON;
+import com.ark.component.statemachine.core.lock.DefaultStateMachineLock;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
+import com.ark.component.statemachine.core.persist.InMemoryStateMachinePersist;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.Transition;
 import com.google.common.collect.Maps;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.Assert;
 
-import java.util.List;
+import java.util.Collection;
 
-@Data
 @Slf4j
-public class StateMachine<S, E, T> {
+public class StateMachine<S, E> {
 
-    private String id;
+    private final String id;
 
-    private List<State<S>> states;
+    private final Collection<State<S>> states;
 
-    private State<S> initial;
+    private final State<S> initial;
 
-    private State<S> end;
+    private final State<S> end;
 
-    private List<Event<E>> events;
+    private final Collection<Event<E>> events;
 
-    private Transition<S, E, T> initialTransition;
+    private final Transition<S, E> initialTransition;
 
-    private List<Transition<S, E, T>> transitions;
+    private final Collection<Transition<S, E>> transitions;
 
-    private StateMachinePersist<S, E, T> stateMachinePersist;
+    private StateMachinePersist<S> stateMachinePersist = new InMemoryStateMachinePersist<>();
 
-    private StateMachineLock<S> stateMachineLock;
+    private StateMachineLock<S> stateMachineLock = new DefaultStateMachineLock<>();
+
+    public StateMachine(String id,
+                        Collection<State<S>> states,
+                        State<S> initial,
+                        State<S> end,
+                        Collection<Event<E>> events,
+                        Transition<S, E> initialTransition,
+                        Collection<Transition<S, E>> transitions,
+                        StateMachinePersist<S> stateMachinePersist,
+                        StateMachineLock<S> stateMachineLock) {
+        Assert.hasText(id, "id must not be blank");
+        Assert.notNull(initial, "initial must not be null");
+        Assert.notNull(end, "end must not be null");
+        Assert.notEmpty(states, "state must not be empty");
+        Assert.notEmpty(events, "events must not be empty");
+        Assert.notEmpty(transitions, "transitions must not be empty");
+        this.id = id;
+        this.states = states;
+        this.initial = initial;
+        this.end = end;
+        this.events = events;
+        this.initialTransition = initialTransition;
+        this.transitions = transitions;
+        if (stateMachinePersist != null) {
+            this.stateMachinePersist = stateMachinePersist;
+        }
+        if (stateMachineLock != null) {
+            this.stateMachineLock = stateMachineLock;
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Collection<Event<E>> getEvents() {
+        return events;
+    }
+
+    public Collection<State<S>> getStates() {
+        return states;
+    }
 
     public <P> void sendEvent(String id, E event, P params) {
 
@@ -54,7 +98,7 @@ public class StateMachine<S, E, T> {
         try {
             State<S> currentState = stateData.getState();
 
-            Transition<S, E, T> transition = findTransition(new Event<>(event), currentState);
+            Transition<S, E> transition = findTransition(new Event<>(event), currentState);
             if (transition == null) {
                 throw new StateMachineException(String.format("Cannot find transition, Event = %s, State = %s", event, currentState));
             }
@@ -69,6 +113,7 @@ public class StateMachine<S, E, T> {
 
             State<S> target = transition.getTarget();
             stateData.setState(target);
+            stateData.setEnded(target.equals(end));
 
             // write
             stateMachinePersist.write(stateData);
@@ -99,9 +144,9 @@ public class StateMachine<S, E, T> {
 
         stateData = new StateData<>();
         stateData.setMachineId(this.id);
-        stateData.setId(id);
+        stateData.setBizId(id);
         stateData.setState(initial);
-        stateData.setVariables(Maps.newHashMap());
+        stateData.setExtras(Maps.newHashMap());
         StateContext<E> ctx = buildContext(stateData, params, event);
 
         if (!initialTransition.executeGuards(ctx)) {
@@ -117,23 +162,28 @@ public class StateMachine<S, E, T> {
     private <P> StateContext<E> buildContext(StateData<S> stateData, P params, E event) {
         StateContext<E> stateContext = new StateContext<>();
         stateContext.setBizCode(stateData.getMachineId());
-        stateContext.setBizId(stateData.getId());
-        stateContext.setEvent(event);
+        stateContext.setBizId(stateData.getBizId());
+        stateContext.setEvent(new Event<>(event));
         stateContext.setParams(params);
         stateContext.setExtras(Maps.newHashMap());
         return stateContext;
     }
 
-    private Transition<S, E, T>  findTransition(Event<E> event, State<S> currentState) {
+    private Transition<S, E>  findTransition(Event<E> event, State<S> currentState) {
         if (transitions == null || transitions.size() == 0) {
             return null;
         }
-        for (Transition<S, E, T> transition : transitions) {
+        for (Transition<S, E> transition : transitions) {
             if (currentState.getId().equals(transition.getSource().getId())
                     && transition.getTrigger().getEvent().getId().equals(event.getId())) {
                 return transition;
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

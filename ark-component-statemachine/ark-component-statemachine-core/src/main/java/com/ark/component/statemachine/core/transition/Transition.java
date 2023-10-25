@@ -4,7 +4,7 @@ import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateContext;
 import com.ark.component.statemachine.core.trigger.Trigger;
 
-public interface Transition<S, E, T> {
+public interface Transition<S, E> {
 
 	<P>boolean executeGuards(StateContext<E> stateContext);
 

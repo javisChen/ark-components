@@ -22,35 +22,41 @@ import com.ark.component.statemachine.core.action.Action;
 import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.trigger.Trigger;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.List;
 
 @Slf4j
-public abstract class AbstractTransition<S, E, T> implements Transition<S, E, T> {
+public abstract class AbstractTransition<S, E> implements Transition<S, E> {
 
     protected final State<S> target;
     protected final Collection<Action<E>> actions;
     private final State<S> source;
     private final TransitionKind kind;
-    private final List<Guard<E>> guards;
+    private final Collection<Guard<E>> guards;
     private final Trigger<S, E> trigger;
     private final String name;
 
     protected AbstractTransition(State<S> source,
                                  State<S> target,
                                  TransitionKind kind,
-                                 List<Guard<E>> guards,
+                                 Collection<Guard<E>> guards,
                                  Collection<Action<E>> actions,
                                  Trigger<S, E> trigger,
                                  String name) {
+        if (kind != TransitionKind.INITIAL) {
+            Assert.notNull(source, "source must not be null");
+            Assert.notNull(trigger, "trigger must not be null");
+        }
+        Assert.notNull(target, "target must not be null");
         this.target = target;
         this.actions = actions;
         this.source = source;
         this.kind = kind;
         this.guards = guards;
         this.trigger = trigger;
-        this.name = name;
+        this.name = StringUtils.hasText(name) ? name : "";
     }
 
 

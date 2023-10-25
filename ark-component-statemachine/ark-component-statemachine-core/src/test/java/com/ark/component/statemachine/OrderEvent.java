@@ -1,4 +1,4 @@
-package com.ark.component.statemachine.core;
+package com.ark.component.statemachine;
 
 public enum OrderEvent {
 

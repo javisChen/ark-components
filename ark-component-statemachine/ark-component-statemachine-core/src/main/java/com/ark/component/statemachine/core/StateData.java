@@ -7,12 +7,17 @@ import java.util.Map;
 @Data
 public class StateData<S> {
 
+    private Long id;
+
     private String machineId;
 
-    private String id;
+    private String bizId;
 
     private State<S> state;
 
-    private Map<Object, Object> variables;
+    private boolean ended;
+
+    private Map<Object, Object> extras;
+
 
 }

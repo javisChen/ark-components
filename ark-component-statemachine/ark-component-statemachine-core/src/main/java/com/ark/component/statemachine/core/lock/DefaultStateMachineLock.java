@@ -23,7 +23,7 @@ public class DefaultStateMachineLock<S> implements StateMachineLock<S> {
     }
 
     private MultiKey<String> createKey(StateData<S> context) {
-        return new MultiKey<>(context.getMachineId(), context.getId());
+        return new MultiKey<>(context.getMachineId(), context.getBizId());
     }
 
 }

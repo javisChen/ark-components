@@ -13,7 +13,7 @@ public class StateContext<E> {
 
     private String bizId;
 
-    private E event;
+    private Event<E> event;
 
     private Object params;
 

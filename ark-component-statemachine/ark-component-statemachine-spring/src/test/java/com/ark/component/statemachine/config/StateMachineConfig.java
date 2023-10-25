@@ -52,6 +52,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<OrderS
                 .initial(OrderStates.WAIT_PAY, null)
                 .state(OrderStates.PAID)
                 .end(OrderStates.PAID)
+                .exit(OrderStates.CLOSED)
                 .states(EnumSet.allOf(OrderStates.class))
         ;
     }
