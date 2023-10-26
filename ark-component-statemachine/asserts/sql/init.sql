@@ -29,8 +29,7 @@ create table if not exists `trade`.stm_state
     gmt_modified datetime        default CURRENT_TIMESTAMP not null,
     gmt_create   datetime        default CURRENT_TIMESTAMP not null,
     creator      bigint unsigned default 0                 not null comment '创建人',
-    modifier     bigint unsigned default 0                 not null comment '更新人',
-    is_deleted   bigint unsigned default 0                 not null comment '删除标识 0-表示未删除 大于0-已删除'
+    modifier     bigint unsigned default 0                 not null comment '更新人'
 )
     comment '状态机数据记录表';
 

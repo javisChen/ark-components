@@ -29,7 +29,6 @@
         <module>ark-component-validator</module>
         <module>ark-component-web</module>
         <module>ark-component-microservice</module>
-        <module>ark-component-wechat</module>
         <module>ark-component-spring-boot-starters</module>
     </modules>
 

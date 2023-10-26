@@ -1,5 +1,6 @@
 package com.ark.component.statemachine.core.builder;
 
+import cn.hutool.core.util.TypeUtil;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateMachine;
@@ -9,18 +10,23 @@ import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
 import com.ark.component.statemachine.core.transition.Transition;
+import com.google.common.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class StateMachineBuilder<S, E> {
+public class StateMachineBuilder<S, E> implements Builder<S, E> {
 
     private StateMachineBuilder() {
+        Type typeArgument = TypeUtil.getTypeArgument(new TypeToken<StateMachineBuilder<S, E>>() {
+        }.getType());
 
+        System.out.println(typeArgument);
     }
 
     public static <S, E> StateMachineBuilder<S, E> builder() {
-        return new StateMachineBuilder<>();
+        return new StateMachineBuilder<S, E>(){};
     }
 
     private String id;
@@ -41,7 +47,7 @@ public class StateMachineBuilder<S, E> {
 
     private StateMachineLock<S> lock;
 
-    private Collection<TransitionBuilder<S, E>> transitionBuilders = new ArrayList<>(10);
+    private final Collection<TransitionBuilder<S, E>> transitionBuilders = new ArrayList<>(10);
 
     public StateMachineBuilder<S, E> id(String id) {
         this.id = id;

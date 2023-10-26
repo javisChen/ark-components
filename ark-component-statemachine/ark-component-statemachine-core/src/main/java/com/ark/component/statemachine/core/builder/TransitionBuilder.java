@@ -12,7 +12,7 @@ import com.ark.component.statemachine.core.trigger.Trigger;
 
 import java.util.Collection;
 
-public class TransitionBuilder<S, E> {
+public class TransitionBuilder<S, E> implements Builder<S, E> {
 
     private State<S> target;
     private Collection<Action<E>> actions;

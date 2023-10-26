@@ -7,6 +7,6 @@ public interface StateMachinePersist<S> {
 
 	void write(StateData<S> context);
 
-	StateData<S> read(String id);
+	StateData<S> read(String machineId, String bizId);
 
 }

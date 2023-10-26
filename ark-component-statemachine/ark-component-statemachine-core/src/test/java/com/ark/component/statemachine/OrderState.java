@@ -11,14 +11,12 @@ public enum OrderState {
     WAIT_EVALUATE("待评价"),
 
     COMPLETED("已完成");
-
     private final String name;
-
     OrderState(String name) {
         this.name = name;
     }
-
     public String getName() {
         return name;
     }
+
 }

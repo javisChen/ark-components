@@ -7,15 +7,13 @@ public class StateDO {
     private Long id;
 
     private String machineId;
-
     private String bizId;
 
+    private String state;
     private Integer ended;
-
     private LocalDateTime gmtCreate;
 
     private Long creator;
-
     public Long getId() {
         return id;
     }
@@ -62,5 +60,13 @@ public class StateDO {
 
     public void setCreator(Long creator) {
         this.creator = creator;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

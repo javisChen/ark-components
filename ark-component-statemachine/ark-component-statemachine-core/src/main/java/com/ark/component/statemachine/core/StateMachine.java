@@ -17,7 +17,7 @@ import java.util.Collection;
 @Slf4j
 public class StateMachine<S, E> {
 
-    private final String id;
+    private final String machineId;
 
     private final Collection<State<S>> states;
 
@@ -35,7 +35,7 @@ public class StateMachine<S, E> {
 
     private StateMachineLock<S> stateMachineLock = new DefaultStateMachineLock<>();
 
-    public StateMachine(String id,
+    public StateMachine(String machineId,
                         Collection<State<S>> states,
                         State<S> initial,
                         State<S> end,
@@ -44,13 +44,13 @@ public class StateMachine<S, E> {
                         Collection<Transition<S, E>> transitions,
                         StateMachinePersist<S> stateMachinePersist,
                         StateMachineLock<S> stateMachineLock) {
-        Assert.hasText(id, "id must not be blank");
+        Assert.hasText(machineId, "id must not be blank");
         Assert.notNull(initial, "initial must not be null");
         Assert.notNull(end, "end must not be null");
         Assert.notEmpty(states, "state must not be empty");
         Assert.notEmpty(events, "events must not be empty");
         Assert.notEmpty(transitions, "transitions must not be empty");
-        this.id = id;
+        this.machineId = machineId;
         this.states = states;
         this.initial = initial;
         this.end = end;
@@ -65,8 +65,8 @@ public class StateMachine<S, E> {
         }
     }
 
-    public String getId() {
-        return id;
+    public String getMachineId() {
+        return machineId;
     }
 
     public Collection<Event<E>> getEvents() {
@@ -80,7 +80,7 @@ public class StateMachine<S, E> {
     public <P> void sendEvent(String id, E event, P params) {
 
         // 取出业务数据
-        StateData<S> stateData = stateMachinePersist.read(id);
+        StateData<S> stateData = stateMachinePersist.read(this.machineId, id);
 
         if (stateData == null) {
             throw new StateMachineException("State object has not been initialized");
@@ -136,14 +136,14 @@ public class StateMachine<S, E> {
     public <P> void init(String id, E event, P params) {
 
         // 取出业务数据
-        StateData<S> stateData = stateMachinePersist.read(id);
+        StateData<S> stateData = stateMachinePersist.read(this.machineId, id);
 
         if (stateData != null) {
             throw new StateMachineException("State object has been initialized");
         }
 
         stateData = new StateData<>();
-        stateData.setMachineId(this.id);
+        stateData.setMachineId(this.machineId);
         stateData.setBizId(id);
         stateData.setState(initial);
         stateData.setExtras(Maps.newHashMap());
