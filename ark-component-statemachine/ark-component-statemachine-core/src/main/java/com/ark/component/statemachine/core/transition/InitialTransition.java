@@ -10,8 +10,8 @@ import java.util.Collection;
 public class InitialTransition<S, E> extends AbstractTransition<S, E> {
 
     public InitialTransition(State<S> target,
-                             Collection<Guard<E>> guards,
-                             Collection<Action<E>> actions,
+                             Collection<Guard<S, E>> guards,
+                             Collection<Action<S, E>> actions,
                              String name) {
         super(null, target, TransitionKind.INITIAL, guards, actions, null, name);
     }

@@ -12,9 +12,9 @@ public class ExternalTransition<S, E> extends AbstractTransition<S, E> {
 
     public ExternalTransition(State<S> source,
                               State<S> target,
-                              Collection<Guard<E>> guards,
-                              Collection<Action<E>> actions,
-                              Trigger<S, E> trigger,
+                              Collection<Guard<S, E>> guards,
+                              Collection<Action<S, E>> actions,
+                              Trigger<E> trigger,
                               String name) {
         super(source, target, TransitionKind.EXTERNAL, guards, actions, trigger, name);
     }

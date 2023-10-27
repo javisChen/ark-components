@@ -3,7 +3,7 @@ package com.ark.component.statemachine.core.guard;
 
 import com.ark.component.statemachine.core.StateContext;
 
-public interface Guard<E> {
+public interface Guard<S, E> {
 
 	/**
 	 * Evaluate a guard condition.
@@ -11,6 +11,6 @@ public interface Guard<E> {
 	 * @param context the state context
 	 * @return true, if guard evaluation is successful, false otherwise.
 	 */
-	boolean evaluate(StateContext<E> context);
+	boolean evaluate(StateContext<S, E> context);
 
 }

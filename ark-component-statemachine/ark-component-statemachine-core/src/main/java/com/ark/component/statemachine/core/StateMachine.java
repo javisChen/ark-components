@@ -6,6 +6,8 @@ import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.InMemoryStateMachinePersist;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.Transition;
+import com.ark.component.statemachine.core.trigger.EventTrigger;
+import com.ark.component.statemachine.core.trigger.Trigger;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -31,7 +33,7 @@ public class StateMachine<S, E> {
 
     private final Collection<Transition<S, E>> transitions;
 
-    private StateMachinePersist<S> stateMachinePersist = new InMemoryStateMachinePersist<>();
+    private StateMachinePersist stateMachinePersist = new InMemoryStateMachinePersist<>();
 
     private StateMachineLock<S> stateMachineLock = new DefaultStateMachineLock<>();
 
@@ -42,7 +44,7 @@ public class StateMachine<S, E> {
                         Collection<Event<E>> events,
                         Transition<S, E> initialTransition,
                         Collection<Transition<S, E>> transitions,
-                        StateMachinePersist<S> stateMachinePersist,
+                        StateMachinePersist stateMachinePersist,
                         StateMachineLock<S> stateMachineLock) {
         Assert.hasText(machineId, "id must not be blank");
         Assert.notNull(initial, "initial must not be null");
@@ -80,13 +82,13 @@ public class StateMachine<S, E> {
     public <P> void sendEvent(String id, E event, P params) {
 
         // 取出业务数据
-        StateData<S> stateData = stateMachinePersist.read(this.machineId, id);
+        StateData stateData = stateMachinePersist.read(this.machineId, id);
 
         if (stateData == null) {
             throw new StateMachineException("State object has not been initialized");
         }
 
-        if (stateData.getState().equals(end)) {
+        if (stateData.getState().equals(end.toString())) {
             throw new StateMachineException("State object has been ended");
         }
 
@@ -96,14 +98,15 @@ public class StateMachine<S, E> {
         }
 
         try {
-            State<S> currentState = stateData.getState();
+            String currentState = stateData.getState();
 
-            Transition<S, E> transition = findTransition(new Event<>(event), currentState);
+            EventTrigger<E> trigger = new EventTrigger<>(new Event<>(event));
+            Transition<S, E> transition = findTransition(trigger, currentState);
             if (transition == null) {
-                throw new StateMachineException(String.format("Cannot find transition, Event = %s, State = %s", event, currentState));
+                throw new StateMachineException("Not found transition: source=[%s], trigger=[%s]".formatted(currentState, trigger));
             }
 
-            StateContext<E> stateContext = buildContext(stateData, params, event);
+            StateContext<S, E> stateContext = buildContext(stateData.getBizId(), params, transition);
 
             if (!transition.executeGuards(stateContext)) {
                 return;
@@ -111,43 +114,50 @@ public class StateMachine<S, E> {
 
             transition.executeActions(stateContext);
 
-            State<S> target = transition.getTarget();
-            stateData.setState(target);
-            stateData.setEnded(target.equals(end));
-
-            // write
-            stateMachinePersist.write(stateData);
+            // do persist
+            stateMachinePersist.write(buildStateData(stateData.getId(), stateContext));
 
         } finally {
-            if (TransactionSynchronizationManager.isSynchronizationActive()) {
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        stateMachineLock.unlock(stateData);
-                    }
-                });
-            } else {
-                stateMachineLock.unlock(stateData);
-            }
+            unlock(stateData);
         }
 
     }
 
-    public <P> void init(String id, E event, P params) {
+    private void unlock(StateData stateData) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    stateMachineLock.unlock(stateData);
+                }
+            });
+        } else {
+            stateMachineLock.unlock(stateData);
+        }
+    }
+
+    private StateData buildStateData(Long stateDataId, StateContext<S, E> stateContext) {
+        boolean ended = stateContext.getTransition().getTarget().toString().equals(end.toString());
+        StateData data = new StateData();
+        data.setId(stateDataId);
+        data.setMachineId(stateContext.getMachineId());
+        data.setBizId(stateContext.getBizId());
+        data.setState(stateContext.getTransition().getTarget().toString());
+        data.setEnded(ended);
+        data.setExtras(Maps.newHashMap());
+        return data;
+    }
+
+    public <P> void init(String bizId, P params) {
 
         // 取出业务数据
-        StateData<S> stateData = stateMachinePersist.read(this.machineId, id);
+        StateData stateData = stateMachinePersist.read(this.machineId, bizId);
 
         if (stateData != null) {
             throw new StateMachineException("State object has been initialized");
         }
 
-        stateData = new StateData<>();
-        stateData.setMachineId(this.machineId);
-        stateData.setBizId(id);
-        stateData.setState(initial);
-        stateData.setExtras(Maps.newHashMap());
-        StateContext<E> ctx = buildContext(stateData, params, event);
+        StateContext<S, E> ctx = buildContext(bizId, params, this.initialTransition);
 
         if (!initialTransition.executeGuards(ctx)) {
             return;
@@ -155,27 +165,29 @@ public class StateMachine<S, E> {
 
         initialTransition.executeActions(ctx);
 
-        stateMachinePersist.write(stateData);
+        stateMachinePersist.write(buildStateData(null, ctx));
 
     }
 
-    private <P> StateContext<E> buildContext(StateData<S> stateData, P params, E event) {
-        StateContext<E> stateContext = new StateContext<>();
-        stateContext.setBizCode(stateData.getMachineId());
-        stateContext.setBizId(stateData.getBizId());
-        stateContext.setEvent(new Event<>(event));
+    private <P> StateContext<S, E> buildContext(String bizId, P params, Transition<S, E> transition) {
+        StateContext<S, E> stateContext = new StateContext<>();
+        stateContext.setTransition(transition);
+        stateContext.setMachineId(this.machineId);
+        stateContext.setBizId(bizId);
         stateContext.setParams(params);
         stateContext.setExtras(Maps.newHashMap());
         return stateContext;
     }
 
-    private Transition<S, E>  findTransition(Event<E> event, State<S> currentState) {
+    private Transition<S, E> findTransition(Trigger<E> trigger, String currentState) throws StateMachineException {
         if (transitions == null || transitions.size() == 0) {
             return null;
         }
         for (Transition<S, E> transition : transitions) {
-            if (currentState.getId().equals(transition.getSource().getId())
-                    && transition.getTrigger().getEvent().getId().equals(event.getId())) {
+            if (currentState.equals(transition.getSource().toString())
+                    && transition.getTrigger().getEvent().getValue().equals(trigger.getEvent().getValue())) {
+                log.info("Found transition: source=[{}] -> trigger=[{}] -> target=[{}]",
+                        transition.getSource(), transition.getTrigger(), transition.getTarget());
                 return transition;
             }
         }

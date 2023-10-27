@@ -31,19 +31,19 @@ import java.util.Collection;
 public abstract class AbstractTransition<S, E> implements Transition<S, E> {
 
     protected final State<S> target;
-    protected final Collection<Action<E>> actions;
+    protected final Collection<Action<S, E>> actions;
     private final State<S> source;
     private final TransitionKind kind;
-    private final Collection<Guard<E>> guards;
-    private final Trigger<S, E> trigger;
+    private final Collection<Guard<S, E>> guards;
+    private final Trigger<E> trigger;
     private final String name;
 
     protected AbstractTransition(State<S> source,
                                  State<S> target,
                                  TransitionKind kind,
-                                 Collection<Guard<E>> guards,
-                                 Collection<Action<E>> actions,
-                                 Trigger<S, E> trigger,
+                                 Collection<Guard<S, E>> guards,
+                                 Collection<Action<S, E>> actions,
+                                 Trigger<E> trigger,
                                  String name) {
         if (kind != TransitionKind.INITIAL) {
             Assert.notNull(source, "source must not be null");
@@ -66,17 +66,17 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public Trigger<S, E> getTrigger() {
+    public Trigger<E> getTrigger() {
         return trigger;
     }
 
     @Override
-    public <P> boolean executeGuards(StateContext<E> context) {
+    public <P> boolean executeGuards(StateContext<S, E> context) {
         if (guards == null) {
             return true;
         }
         try {
-            for (Guard<E> guard : guards) {
+            for (Guard<S, E> guard : guards) {
                 if (!guard.evaluate(context)) {
                     log.warn("Guard [{}] returned false", guard);
                     return false;
@@ -100,12 +100,12 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public <P> void executeActions(StateContext<E> context) {
+    public <P> void executeActions(StateContext<S, E> context) {
         if (actions == null) {
             return;
         }
         try {
-            for (Action<E> action : actions) {
+            for (Action<S, E> action : actions) {
                 action.execute(context);
             }
         } catch (Exception e) {
@@ -114,8 +114,4 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
         }
     }
 
-    @Override
-    public String toString() {
-        return "AbstractTransition [source=" + source + ", target=" + target + ", kind=" + kind + ", guard=" + guards + "]";
-    }
 }

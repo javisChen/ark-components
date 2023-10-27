@@ -2,7 +2,7 @@ package com.ark.component.statemachine.core.trigger;
 
 import com.ark.component.statemachine.core.Event;
 
-public class EventTrigger<S, E> implements Trigger<S, E> {
+public class EventTrigger<E> implements Trigger<E> {
 
     private final Event<E> event;
 
@@ -15,4 +15,8 @@ public class EventTrigger<S, E> implements Trigger<S, E> {
         return this.event;
     }
 
+    @Override
+    public String toString() {
+        return event.toString();
+    }
 }

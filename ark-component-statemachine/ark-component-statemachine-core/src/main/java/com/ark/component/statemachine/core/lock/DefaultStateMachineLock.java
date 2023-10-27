@@ -11,18 +11,18 @@ public class DefaultStateMachineLock<S> implements StateMachineLock<S> {
     private final Map<MultiKey<String>, Object> lockedContext = new ConcurrentHashMap<>();
 
     @Override
-    public boolean lock(StateData<S> context) {
+    public boolean lock(StateData context) {
         Object o = new Object();
         MultiKey<String> multiKey = createKey(context);
         return lockedContext.putIfAbsent(multiKey, o) == null;
     }
 
     @Override
-    public void unlock(StateData<S> context) {
+    public void unlock(StateData context) {
         lockedContext.remove(createKey(context));
     }
 
-    private MultiKey<String> createKey(StateData<S> context) {
+    private MultiKey<String> createKey(StateData context) {
         return new MultiKey<>(context.getMachineId(), context.getBizId());
     }
 

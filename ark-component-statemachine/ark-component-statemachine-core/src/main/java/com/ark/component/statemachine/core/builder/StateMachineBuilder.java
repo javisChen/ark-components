@@ -1,6 +1,5 @@
 package com.ark.component.statemachine.core.builder;
 
-import cn.hutool.core.util.TypeUtil;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateMachine;
@@ -10,24 +9,11 @@ import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
 import com.ark.component.statemachine.core.transition.Transition;
-import com.google.common.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class StateMachineBuilder<S, E> implements Builder<S, E> {
-
-    private StateMachineBuilder() {
-        Type typeArgument = TypeUtil.getTypeArgument(new TypeToken<StateMachineBuilder<S, E>>() {
-        }.getType());
-
-        System.out.println(typeArgument);
-    }
-
-    public static <S, E> StateMachineBuilder<S, E> builder() {
-        return new StateMachineBuilder<S, E>(){};
-    }
 
     private String id;
 
@@ -43,11 +29,15 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
 
     private Collection<Transition<S, E>> transitions;
 
-    private StateMachinePersist<S> persist;
+    private StateMachinePersist persist;
 
     private StateMachineLock<S> lock;
 
     private final Collection<TransitionBuilder<S, E>> transitionBuilders = new ArrayList<>(10);
+
+    public static <S, E> StateMachineBuilder<S, E> newBuilder() {
+        return new StateMachineBuilder<S, E>();
+    }
 
     public StateMachineBuilder<S, E> id(String id) {
         this.id = id;
@@ -60,7 +50,7 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
         return this;
     }
 
-    public StateMachineBuilder<S, E> initial(S initial, Collection<Action<E>> actions, Collection<Guard<E>> guards) {
+    public StateMachineBuilder<S, E> initial(S initial, Collection<Action<S, E>> actions, Collection<Guard<S, E>> guards) {
         this.initial = new State<>(initial);
         this.initialTransition = new InitialTransition<>(this.initial, guards, actions, "");
         return this;
@@ -77,7 +67,7 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
     }
 
 
-    public StateMachineBuilder<S, E> persist(StateMachinePersist<S> persist) {
+    public StateMachineBuilder<S, E> persist(StateMachinePersist persist) {
         this.persist = persist;
         return this;
     }

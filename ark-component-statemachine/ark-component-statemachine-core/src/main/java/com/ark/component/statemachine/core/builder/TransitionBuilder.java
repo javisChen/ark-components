@@ -15,11 +15,11 @@ import java.util.Collection;
 public class TransitionBuilder<S, E> implements Builder<S, E> {
 
     private State<S> target;
-    private Collection<Action<E>> actions;
+    private Collection<Action<S, E>> actions;
     private State<S> source;
     private TransitionKind kind;
-    private Collection<Guard<E>> guards;
-    private Trigger<S, E> trigger;
+    private Collection<Guard<S, E>> guards;
+    private Trigger<E> trigger;
     private String name;
 
     private final StateMachineBuilder<S, E> parent;
@@ -46,12 +46,12 @@ public class TransitionBuilder<S, E> implements Builder<S, E> {
         return this;
     }
 
-    public TransitionBuilder<S, E> guards(Collection<Guard<E>> guards) {
+    public TransitionBuilder<S, E> guards(Collection<Guard<S, E>> guards) {
         this.guards = guards;
         return this;
     }
 
-    public TransitionBuilder<S, E> actions(Collection<Action<E>> actions) {
+    public TransitionBuilder<S, E> actions(Collection<Action<S, E>> actions) {
         this.actions = actions;
         return this;
     }

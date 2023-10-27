@@ -6,19 +6,19 @@ import com.ark.component.statemachine.core.trigger.Trigger;
 
 public interface Transition<S, E> {
 
-	<P>boolean executeGuards(StateContext<E> stateContext);
+	<P>boolean executeGuards(StateContext<S, E> stateContext);
 
-	<P> void executeActions(StateContext<E> stateContext);
+	<P> void executeActions(StateContext<S, E> stateContext);
 
 	State<S> getSource();
 
 	State<S> getTarget();
 
-	// Collection<Guard<E>> getGuards();
+	// Collection<Guard<S, E>> getGuards();
 	//
-	// Collection<Action<E>> getActions();
+	// Collection<Action<S, E>> getActions();
 
-	Trigger<S, E> getTrigger();
+	Trigger<E> getTrigger();
 
 	// TransitionKind getKind();
 

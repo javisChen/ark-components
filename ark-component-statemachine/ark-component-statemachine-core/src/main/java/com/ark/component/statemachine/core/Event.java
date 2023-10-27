@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Event<E> {
 
-    private E id;
+    private E value;
 
-    public Event(E id) {
-        this.id = id;
+    public Event(E value) {
+        this.value = value;
     }
 
 }

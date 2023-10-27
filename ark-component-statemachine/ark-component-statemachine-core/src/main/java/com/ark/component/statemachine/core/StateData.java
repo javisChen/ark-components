@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class StateData<S> {
+public class StateData {
 
     private Long id;
 
@@ -13,7 +13,7 @@ public class StateData<S> {
 
     private String bizId;
 
-    private State<S> state;
+    private String state;
 
     private boolean ended;
 
