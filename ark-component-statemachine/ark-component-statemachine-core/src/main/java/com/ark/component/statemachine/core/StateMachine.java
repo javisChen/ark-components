@@ -33,7 +33,7 @@ public class StateMachine<S, E> {
 
     private final Collection<Transition<S, E>> transitions;
 
-    private StateMachinePersist stateMachinePersist = new InMemoryStateMachinePersist<>();
+    private StateMachinePersist<S, E> stateMachinePersist = new InMemoryStateMachinePersist<>();
 
     private StateMachineLock<S> stateMachineLock = new DefaultStateMachineLock<>();
 
@@ -44,7 +44,7 @@ public class StateMachine<S, E> {
                         Collection<Event<E>> events,
                         Transition<S, E> initialTransition,
                         Collection<Transition<S, E>> transitions,
-                        StateMachinePersist stateMachinePersist,
+                        StateMachinePersist<S, E> stateMachinePersist,
                         StateMachineLock<S> stateMachineLock) {
         Assert.hasText(machineId, "id must not be blank");
         Assert.notNull(initial, "initial must not be null");
@@ -79,10 +79,16 @@ public class StateMachine<S, E> {
         return states;
     }
 
-    public <P> void sendEvent(String id, E event, P params) {
+    public State<S> getInitial() {
+        return initial;
+    }
+
+    public <P> void sendEvent(String bizId, E event, P params) {
+        Assert.hasText(bizId, "bizId must not be null");
+        Assert.notNull(event, "event must not be null");
 
         // 取出业务数据
-        StateData stateData = stateMachinePersist.read(this.machineId, id);
+        StateData stateData = stateMachinePersist.read(this.machineId, bizId);
 
         if (stateData == null) {
             throw new StateMachineException("State object has not been initialized");
@@ -115,12 +121,39 @@ public class StateMachine<S, E> {
             transition.executeActions(stateContext);
 
             // do persist
-            stateMachinePersist.write(buildStateData(stateData.getId(), stateContext));
+            stateMachinePersist.write(buildStateData(stateData.getId(), stateContext), stateContext);
 
         } finally {
             unlock(stateData);
         }
 
+    }
+
+    public <P> S sendEvent(S source, E event, P params) {
+        Assert.notNull(source, "source must not be null");
+        Assert.notNull(source, "event must not be null");
+
+        if (new State<>(source).getValue().toString().equals(end.toString())) {
+            log.warn("State object has been ended");
+            return source;
+        }
+
+        EventTrigger<E> trigger = new EventTrigger<>(new Event<>(event));
+        String currentState = source.toString();
+        Transition<S, E> transition = findTransition(trigger, currentState);
+        if (transition == null) {
+            log.warn("Not found transition, stay source");
+            return source;
+        }
+
+        StateContext<S, E> stateContext = buildContext(null, params, transition);
+
+        if (!transition.executeGuards(stateContext)) {
+            return source;
+        }
+
+        transition.executeActions(stateContext);
+        return source;
     }
 
     private void unlock(StateData stateData) {
@@ -148,7 +181,7 @@ public class StateMachine<S, E> {
         return data;
     }
 
-    public <P> void init(String bizId, P params) {
+    public <P> void init(String bizId, E event, P params) {
 
         // 取出业务数据
         StateData stateData = stateMachinePersist.read(this.machineId, bizId);
@@ -165,7 +198,7 @@ public class StateMachine<S, E> {
 
         initialTransition.executeActions(ctx);
 
-        stateMachinePersist.write(buildStateData(null, ctx));
+        stateMachinePersist.write(buildStateData(null, ctx), ctx);
 
     }
 

@@ -10,8 +10,7 @@ create table if not exists `trade`.stm_history
     extras        varchar(2048)                             null comment '状态流转的参数',
     remark        varchar(2048)   default ''                not null comment '保留信息',
     gmt_create    datetime        default CURRENT_TIMESTAMP not null,
-    creator       bigint unsigned default 0                 not null comment '创建人',
-    modifier      bigint unsigned default 0                 not null comment '更新人'
+    creator       bigint unsigned default 0                 not null comment '创建人'
 )
     comment '状态机历史表' auto_increment = 1513128736577089539;
 

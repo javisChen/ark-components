@@ -3,91 +3,53 @@ package com.ark.component.statemachine.core.builder;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateMachine;
-import com.ark.component.statemachine.core.action.Action;
-import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
 import com.ark.component.statemachine.core.transition.Transition;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class StateMachineBuilder<S, E> implements Builder<S, E> {
 
-    private String id;
-
-    private Collection<State<S>> states;
-
-    private State<S> initial;
-
-    private State<S> end;
-
-    protected Collection<Event<E>> events = new ArrayList<>();
-
-    private InitialTransition<S, E> initialTransition;
-
-    private Collection<Transition<S, E>> transitions;
-
-    private StateMachinePersist persist;
-
-    private StateMachineLock<S> lock;
-
-    private final Collection<TransitionBuilder<S, E>> transitionBuilders = new ArrayList<>(10);
-
+    private final StateMachineTransitionBuilder<S, E> transitionBuilder = new StateMachineTransitionBuilder<>();
+    private final StateMachineConfigurationBuilder<S, E> configurationBuilder = new StateMachineConfigurationBuilder<>();
+    private final StateMachineStateBuilder<S, E> stateBuilder = new StateMachineStateBuilder<>();
     public static <S, E> StateMachineBuilder<S, E> newBuilder() {
         return new StateMachineBuilder<S, E>();
     }
 
-    public StateMachineBuilder<S, E> id(String id) {
-        this.id = id;
+    public StateMachineBuilder<S, E> withConfiguration(Consumer<StateMachineConfigurationBuilder<S, E>> consumer) {
+        consumer.accept(configurationBuilder);
         return this;
     }
 
-    public StateMachineBuilder<S, E> initial(S initial) {
-        this.initial = new State<>(initial);
-        this.initialTransition = new InitialTransition<>(this.initial, null, null, "");
+    public StateMachineBuilder<S, E> withStates(Consumer<StateMachineStateBuilder<S, E>> consumer) {
+        consumer.accept(stateBuilder);
         return this;
     }
-
-    public StateMachineBuilder<S, E> initial(S initial, Collection<Action<S, E>> actions, Collection<Guard<S, E>> guards) {
-        this.initial = new State<>(initial);
-        this.initialTransition = new InitialTransition<>(this.initial, guards, actions, "");
+    public StateMachineBuilder<S, E> withTransition(Consumer<StateMachineTransitionBuilder<S, E>> consumer) {
+        consumer.accept(transitionBuilder);
         return this;
-    }
-
-    public StateMachineBuilder<S, E> end(S end) {
-        this.end = new State<>(end);
-        return this;
-    }
-
-    public StateMachineBuilder<S, E> states(Collection<S> states) {
-        this.states = states.stream().map(State::new).toList();
-        return this;
-    }
-
-
-    public StateMachineBuilder<S, E> persist(StateMachinePersist persist) {
-        this.persist = persist;
-        return this;
-    }
-
-    public StateMachineBuilder<S, E> lock(StateMachineLock<S> lock) {
-        this.lock = lock;
-        return this;
-    }
-
-    public TransitionBuilder<S, E> withTransition() {
-        TransitionBuilder<S, E> transitionBuilder = new TransitionBuilder<>(this);
-        transitionBuilders.add(transitionBuilder);
-        return transitionBuilder;
     }
 
     public StateMachine<S, E> build() {
 
-        transitions = transitionBuilders.stream().map(TransitionBuilder::build).toList();
+        String machineId = configurationBuilder.getMachineId();
+        StateMachineLock<S> lock = configurationBuilder.getLock();
+        StateMachinePersist<S, E> persist = configurationBuilder.getPersist();
 
-        return new StateMachine<>(id,
+        Collection<State<S>> states = stateBuilder.getStates();
+        State<S> initial = stateBuilder.getInitial();
+        InitialTransition<S, E> initialTransition = stateBuilder.getInitialTransition();
+        State<S> end = stateBuilder.getEnd();
+
+        List<Transition<S, E>> transitions = transitionBuilder.build();
+        List<Event<E>> events = transitions.stream().map(e -> e.getTrigger().getEvent()).toList();
+
+        return new StateMachine<>(machineId,
                 states,
                 initial,
                 end,

@@ -15,6 +15,7 @@
  */
 package com.ark.component.statemachine.core.transition;
 
+import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateContext;
 import com.ark.component.statemachine.core.StateMachineException;
@@ -71,7 +72,7 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public <P> boolean executeGuards(StateContext<S, E> context) {
+    public boolean executeGuards(StateContext<S, E> context) {
         if (guards == null) {
             return true;
         }
@@ -100,7 +101,17 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public <P> void executeActions(StateContext<S, E> context) {
+    public Event<E> getEvents() {
+        return trigger.getEvent();
+    }
+
+    @Override
+    public TransitionKind getKind() {
+        return this.kind;
+    }
+
+    @Override
+    public void executeActions(StateContext<S, E> context) {
         if (actions == null) {
             return;
         }
