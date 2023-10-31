@@ -2,6 +2,7 @@ package com.ark.component.statemachine;
 
 import com.ark.component.statemachine.action.OrderCreateAction;
 import com.ark.component.statemachine.core.StateMachine;
+import com.ark.component.statemachine.core.StateMachineFactory;
 import com.ark.component.statemachine.core.builder.StateMachineBuilder;
 import com.ark.component.statemachine.core.lock.DefaultStateMachineLock;
 import com.ark.component.statemachine.core.persist.JdbcStateMachinePersist;
@@ -24,11 +25,12 @@ public class StateMachineTest {
 
     @Test
     public void test_build() {
+        String machineId = "trade_order";
         StateMachineBuilder<OrderState, OrderEvent> builder = StateMachineBuilder.newBuilder();
-        StateMachine<OrderState, OrderEvent> tradeOrderStm = builder
+        builder
                 // 状态机基本配置
                 .withConfiguration(configurationBuilder -> configurationBuilder
-                                .machineId("trade_order")
+                                .machineId(machineId)
                                 .persist(new JdbcStateMachinePersist<>(new JdbcTemplate(dataSource)))
                                 .lock(new DefaultStateMachineLock<>())
                 )
@@ -65,7 +67,8 @@ public class StateMachineTest {
                                 .actions(Lists.newArrayList(new OrderCreateAction()))
                 ).build();
         //
-        String orderId = "order001";
+        String orderId = "order002";
+        StateMachine<OrderState, OrderEvent> tradeOrderStm = StateMachineFactory.get(machineId);
         tradeOrderStm.init(orderId, OrderEvent.CREATE, null);
         tradeOrderStm.sendEvent(orderId, OrderEvent.PAY, new OrderCreateReq());
         tradeOrderStm.sendEvent(orderId, OrderEvent.DELIVER, new OrderCreateReq());

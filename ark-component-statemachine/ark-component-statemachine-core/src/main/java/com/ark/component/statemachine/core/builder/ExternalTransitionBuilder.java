@@ -6,8 +6,6 @@ import com.ark.component.statemachine.core.action.Action;
 import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.transition.ExternalTransition;
 import com.ark.component.statemachine.core.transition.Transition;
-import com.ark.component.statemachine.core.trigger.EventTrigger;
-import com.ark.component.statemachine.core.trigger.Trigger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,12 +13,14 @@ import java.util.Collection;
 public class ExternalTransitionBuilder<S, E> {
 
     private State<S> target;
-    private Collection<Event<E>> events = new ArrayList<>();
+
+    private Event<E> event;
+
+    private final Collection<Event<E>> events = new ArrayList<>();
 
     private Collection<Action<S, E>> actions;
     private State<S> source;
     private Collection<Guard<S, E>> guards;
-    private Trigger<E> trigger;
     private String name;
 
     private final StateMachineTransitionBuilder<S, E> builder;
@@ -46,11 +46,10 @@ public class ExternalTransitionBuilder<S, E> {
 
     public ExternalTransitionBuilder<S, E> event(E event) {
         Event<E> e = new Event<>(event);
-        this.trigger = new EventTrigger<>(e);
+        this.event = e;
         if (!this.events.contains(e)) {
             this.events.add(e);
         }
-        this.events.add(new Event<>(event));
         return this;
     }
 
@@ -69,7 +68,7 @@ public class ExternalTransitionBuilder<S, E> {
                 this.target,
                 this.guards,
                 this.actions,
-                this.trigger,
+                this.event,
                 this.name);
     }
 

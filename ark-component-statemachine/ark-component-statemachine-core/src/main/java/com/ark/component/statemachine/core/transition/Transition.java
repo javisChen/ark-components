@@ -3,7 +3,6 @@ package com.ark.component.statemachine.core.transition;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateContext;
-import com.ark.component.statemachine.core.trigger.Trigger;
 
 public interface Transition<S, E> {
 
@@ -15,12 +14,11 @@ public interface Transition<S, E> {
 
 	State<S> getTarget();
 
-	Trigger<E> getTrigger();
-
 	String getName();
 
-	Event<E> getEvents();
+	Event<E> getEvent();
 
 	TransitionKind getKind();
+
 
 }

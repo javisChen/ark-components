@@ -21,7 +21,6 @@ import com.ark.component.statemachine.core.StateContext;
 import com.ark.component.statemachine.core.StateMachineException;
 import com.ark.component.statemachine.core.action.Action;
 import com.ark.component.statemachine.core.guard.Guard;
-import com.ark.component.statemachine.core.trigger.Trigger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -36,7 +35,7 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     private final State<S> source;
     private final TransitionKind kind;
     private final Collection<Guard<S, E>> guards;
-    private final Trigger<E> trigger;
+    private final Event<E> event;
     private final String name;
 
     protected AbstractTransition(State<S> source,
@@ -44,11 +43,11 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
                                  TransitionKind kind,
                                  Collection<Guard<S, E>> guards,
                                  Collection<Action<S, E>> actions,
-                                 Trigger<E> trigger,
+                                 Event<E> event,
                                  String name) {
         if (kind != TransitionKind.INITIAL) {
             Assert.notNull(source, "source must not be null");
-            Assert.notNull(trigger, "trigger must not be null");
+            Assert.notNull(event, "trigger must not be null");
         }
         Assert.notNull(target, "target must not be null");
         this.target = target;
@@ -56,7 +55,7 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
         this.source = source;
         this.kind = kind;
         this.guards = guards;
-        this.trigger = trigger;
+        this.event = event;
         this.name = StringUtils.hasText(name) ? name : "";
     }
 
@@ -64,11 +63,6 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     @Override
     public State<S> getSource() {
         return source;
-    }
-
-    @Override
-    public Trigger<E> getTrigger() {
-        return trigger;
     }
 
     @Override
@@ -85,7 +79,7 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
             }
         } catch (Throwable t) {
             log.error("Deny guard due to throw as GUARD should not error", t);
-            return false;
+            throw new StateMachineException(t.getMessage());
         }
         return true;
     }
@@ -101,8 +95,8 @@ public abstract class AbstractTransition<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public Event<E> getEvents() {
-        return trigger.getEvent();
+    public Event<E> getEvent() {
+        return this.event;
     }
 
     @Override

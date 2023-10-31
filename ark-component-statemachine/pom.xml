@@ -14,7 +14,6 @@
         <module>ark-component-statemachine-dao</module>
         <module>ark-component-statemachine-core</module>
         <module>ark-component-statemachine-spring-boot-starter</module>
-        <module>ark-component-statemachine-spring</module>
     </modules>
 
     <properties>

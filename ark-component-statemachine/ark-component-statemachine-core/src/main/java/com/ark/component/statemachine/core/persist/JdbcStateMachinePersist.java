@@ -19,15 +19,11 @@ public class JdbcStateMachinePersist<S extends Enum<S>, E> implements StateMachi
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final static String INSERT_STATE_HISTORY_SQL = "insert into stm_history (id, machine_id, biz_id, event, pre_state, current_state, extras, remark, gmt_create, creator)" +
-            "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final static String INSERT_STATE_HISTORY_SQL = "insert into stm_history (id, machine_id, biz_id, event, pre_state, current_state, extras, remark, gmt_create, creator) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final static String INSERT_STATE_SQL = "insert into stm_state (id, machine_id, biz_id, state, ended, creator, modifier)" +
-            "values (?, ?, ?, ?, ?, ?, ?)";
+    private final static String INSERT_STATE_SQL = "insert into stm_state (id, machine_id, biz_id, state, ended, creator, modifier) values (?, ?, ?, ?, ?, ?, ?)";
 
     private final static String UPDATE_STATE_SQL = "update stm_state set state = ?, ended = ?, gmt_modified = ?, modifier = ? where id= ?";
-
-    private final static String SELECT_STATE_SQL = "select * from stm_state where machine_id = ? and biz_id = ?";
 
     private final static String SELECT_LAST_STATE_SQL = "select * from stm_state where machine_id = ? and biz_id = ? order by gmt_create desc limit 1";
 
@@ -79,7 +75,7 @@ public class JdbcStateMachinePersist<S extends Enum<S>, E> implements StateMachi
 
         String event = "INIT";
         if (!transition.getKind().equals(TransitionKind.INITIAL)) {
-            event = transition.getTrigger().getEvent().getValue().toString();
+            event = transition.getEvent().getValue().toString();
         }
         saveHistory(lastState, event, state, operator, machineId, bizId, now);
     }

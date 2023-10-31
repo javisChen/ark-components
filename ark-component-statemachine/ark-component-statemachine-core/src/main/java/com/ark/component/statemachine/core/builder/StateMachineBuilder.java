@@ -3,6 +3,7 @@ package com.ark.component.statemachine.core.builder;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateMachine;
+import com.ark.component.statemachine.core.StateMachineFactory;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
@@ -47,9 +48,9 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
         State<S> end = stateBuilder.getEnd();
 
         List<Transition<S, E>> transitions = transitionBuilder.build();
-        List<Event<E>> events = transitions.stream().map(e -> e.getTrigger().getEvent()).toList();
+        List<Event<E>> events = transitions.stream().map(Transition::getEvent).toList();
 
-        return new StateMachine<>(machineId,
+        StateMachine<S, E> stateMachine = new StateMachine<>(machineId,
                 states,
                 initial,
                 end,
@@ -58,6 +59,9 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
                 transitions,
                 persist,
                 lock);
+
+        StateMachineFactory.register(machineId, stateMachine);
+        return stateMachine;
     }
 
 }

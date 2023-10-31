@@ -1,26 +1,42 @@
 package com.ark.component.statemachine.core;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class StateMachineFactory<S, E> {
+public class StateMachineFactory implements InitializingBean, ApplicationContextAware {
 
-    public Map<String, StateMachine<S, E>> machines = new HashMap<>(16);
+    private ApplicationContext applicationContext;
 
-    public StateMachine<S, E> acquireStateMachine(String machineId) {
-        log.info("Acquiring machine with id " + machineId);
-        StateMachine<S, E> stateMachine;
-        // naive sync to handle concurrency with release
-        stateMachine = machines.get(machineId);
-        if (stateMachine == null) {
-            log.info("Getting new machine from factory with id " + machineId);
-            stateMachine = machines.get(machineId);
-            machines.put(machineId, stateMachine);
-        }
-        return stateMachine;
+    @SuppressWarnings("rawtypes")
+    private static final Map<String, StateMachine> machines = new HashMap<>(16);
+
+    @SuppressWarnings("unchecked")
+    public static <S, E> StateMachine<S, E> get(String machineId) {
+        return machines.get(machineId);
     }
 
+    public static <S, E> void register(String machineId, StateMachine<S, E> stateMachine) {
+        if (machines.containsKey(machineId)) {
+            throw new StateMachineException("{} machineId has been registered");
+        }
+        machines.put(machineId, stateMachine);
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        Map<String, StateMachine> beans = applicationContext.getBeansOfType(StateMachine.class);
+        beans.forEach((beanName, machine) -> machines.put(machine.getMachineId(), machine));
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

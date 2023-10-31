@@ -6,8 +6,6 @@ import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.InMemoryStateMachinePersist;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.Transition;
-import com.ark.component.statemachine.core.trigger.EventTrigger;
-import com.ark.component.statemachine.core.trigger.Trigger;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -106,10 +104,9 @@ public class StateMachine<S, E> {
         try {
             String currentState = stateData.getState();
 
-            EventTrigger<E> trigger = new EventTrigger<>(new Event<>(event));
-            Transition<S, E> transition = findTransition(trigger, currentState);
+            Transition<S, E> transition = findTransition(new Event<>(event), currentState);
             if (transition == null) {
-                throw new StateMachineException("Not found transition: source=[%s], trigger=[%s]".formatted(currentState, trigger));
+                throw new StateMachineException("Not found transition: source=[%s], event=[%s]".formatted(currentState, event));
             }
 
             StateContext<S, E> stateContext = buildContext(stateData.getBizId(), params, transition);
@@ -138,9 +135,8 @@ public class StateMachine<S, E> {
             return source;
         }
 
-        EventTrigger<E> trigger = new EventTrigger<>(new Event<>(event));
         String currentState = source.toString();
-        Transition<S, E> transition = findTransition(trigger, currentState);
+        Transition<S, E> transition = findTransition(new Event<>(event), currentState);
         if (transition == null) {
             log.warn("Not found transition, stay source");
             return source;
@@ -186,9 +182,7 @@ public class StateMachine<S, E> {
         // 取出业务数据
         StateData stateData = stateMachinePersist.read(this.machineId, bizId);
 
-        if (stateData != null) {
-            throw new StateMachineException("State object has been initialized");
-        }
+        Assert.isNull(stateData, "State object has been initialized");
 
         StateContext<S, E> ctx = buildContext(bizId, params, this.initialTransition);
 
@@ -212,15 +206,15 @@ public class StateMachine<S, E> {
         return stateContext;
     }
 
-    private Transition<S, E> findTransition(Trigger<E> trigger, String currentState) throws StateMachineException {
+    private Transition<S, E> findTransition(Event<E> currentEvent, String currentState) throws StateMachineException {
         if (transitions == null || transitions.size() == 0) {
             return null;
         }
         for (Transition<S, E> transition : transitions) {
             if (currentState.equals(transition.getSource().toString())
-                    && transition.getTrigger().getEvent().getValue().equals(trigger.getEvent().getValue())) {
-                log.info("Found transition: source=[{}] -> trigger=[{}] -> target=[{}]",
-                        transition.getSource(), transition.getTrigger(), transition.getTarget());
+                    && transition.getEvent().getValue().equals(currentEvent.getValue())) {
+                log.info("Found transition: source=[{}] -> event=[{}] -> target=[{}]",
+                        transition.getSource(), transition.getEvent(), transition.getTarget());
                 return transition;
             }
         }
