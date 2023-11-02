@@ -3,7 +3,6 @@ package com.ark.component.statemachine.core.builder;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.StateMachine;
-import com.ark.component.statemachine.core.StateMachineFactory;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
@@ -60,7 +59,6 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
                 persist,
                 lock);
 
-        StateMachineFactory.register(machineId, stateMachine);
         return stateMachine;
     }
 

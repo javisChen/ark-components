@@ -18,11 +18,11 @@ public class StateMachineFactory implements InitializingBean, ApplicationContext
     private static final Map<String, StateMachine> machines = new HashMap<>(16);
 
     @SuppressWarnings("unchecked")
-    public static <S, E> StateMachine<S, E> get(String machineId) {
+    public <S, E> StateMachine<S, E> get(String machineId) {
         return machines.get(machineId);
     }
 
-    public static <S, E> void register(String machineId, StateMachine<S, E> stateMachine) {
+    public <S, E> void register(String machineId, StateMachine<S, E> stateMachine) {
         if (machines.containsKey(machineId)) {
             throw new StateMachineException("{} machineId has been registered");
         }
@@ -32,7 +32,7 @@ public class StateMachineFactory implements InitializingBean, ApplicationContext
     @Override
     public void afterPropertiesSet() {
         Map<String, StateMachine> beans = applicationContext.getBeansOfType(StateMachine.class);
-        beans.forEach((beanName, machine) -> machines.put(machine.getMachineId(), machine));
+        beans.forEach((beanName, machine) -> this.register(machine.getMachineId(), machine));
     }
 
     @Override
