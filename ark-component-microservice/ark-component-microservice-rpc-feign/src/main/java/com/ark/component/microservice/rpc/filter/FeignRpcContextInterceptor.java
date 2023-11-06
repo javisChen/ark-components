@@ -5,14 +5,11 @@ package com.ark.component.microservice.rpc.filter;
 import com.ark.component.microservice.rpc.config.CloudFeignProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.Target;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,6 +42,10 @@ public class FeignRpcContextInterceptor implements RequestInterceptor {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 String key = entry.getKey();
                 String headerValue = entry.getValue();
+                // 跳过 content-length，解决too many bites written的问题
+                if (key.equalsIgnoreCase("content-length")){
+                    continue;
+                }
                 setHeader(template, key, headerValue);
             }
         }
