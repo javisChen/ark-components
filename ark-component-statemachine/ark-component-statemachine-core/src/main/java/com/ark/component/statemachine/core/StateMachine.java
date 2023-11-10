@@ -149,7 +149,7 @@ public class StateMachine<S, E> {
         }
 
         transition.executeActions(stateContext);
-        return source;
+        return transition.getTarget().getValue();
     }
 
     private void unlock(StateData stateData) {
