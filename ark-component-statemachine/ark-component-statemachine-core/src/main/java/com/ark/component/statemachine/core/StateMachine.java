@@ -126,7 +126,7 @@ public class StateMachine<S, E> {
 
     }
 
-    public <P> S sendEvent(S source, E event, P params) {
+    public <P> S nextState(S source, E event, P params) {
         Assert.notNull(source, "source must not be null");
         Assert.notNull(source, "event must not be null");
 
