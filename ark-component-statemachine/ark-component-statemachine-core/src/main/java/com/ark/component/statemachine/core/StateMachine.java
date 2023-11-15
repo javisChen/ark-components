@@ -131,21 +131,19 @@ public class StateMachine<S, E> {
         Assert.notNull(source, "event must not be null");
 
         if (new State<>(source).getValue().toString().equals(end.toString())) {
-            log.warn("State object has been ended");
-            return source;
+            throw new StateMachineException("State object has been ended");
         }
 
         String currentState = source.toString();
         Transition<S, E> transition = findTransition(new Event<>(event), currentState);
         if (transition == null) {
-            log.warn("Not found transition, stay source");
-            return source;
+            throw new StateMachineException("Not found transition: source=[%s], event=[%s]".formatted(currentState, event));
         }
 
         StateContext<S, E> stateContext = buildContext(null, params, transition);
 
         if (!transition.executeGuards(stateContext)) {
-            return source;
+            throw new StateMachineException("Execute guards not passed");
         }
 
         transition.executeActions(stateContext);
