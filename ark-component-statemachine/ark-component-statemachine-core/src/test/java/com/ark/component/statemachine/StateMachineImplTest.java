@@ -1,7 +1,7 @@
 package com.ark.component.statemachine;
 
 import com.ark.component.statemachine.action.OrderCreateAction;
-import com.ark.component.statemachine.core.StateMachine;
+import com.ark.component.statemachine.core.StateMachineImpl;
 import com.ark.component.statemachine.core.builder.StateMachineBuilder;
 import com.ark.component.statemachine.core.lock.DefaultStateMachineLock;
 import com.ark.component.statemachine.core.persist.JdbcStateMachinePersist;
@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.EnumSet;
 
-public class StateMachineTest {
+public class StateMachineImplTest {
 
     private final DataSource dataSource = DataSourceBuilder.create()
             .url("jdbc:mysql://localhost:3306/trade")
@@ -26,7 +26,7 @@ public class StateMachineTest {
     public void test_build() {
         String machineId = "trade_order";
         StateMachineBuilder<OrderState, OrderEvent> builder = StateMachineBuilder.newBuilder();
-        StateMachine<OrderState, OrderEvent> tradeOrderStm = builder
+        StateMachineImpl<OrderState, OrderEvent> tradeOrderStm = builder
                 // 状态机基本配置
                 .withConfiguration(configurationBuilder -> configurationBuilder
                         .machineId(machineId)
