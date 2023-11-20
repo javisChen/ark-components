@@ -15,23 +15,23 @@ public class StateMachineFactory implements InitializingBean, ApplicationContext
     private ApplicationContext applicationContext;
 
     @SuppressWarnings("rawtypes")
-    private static final Map<String, StateMachineImpl> machines = new HashMap<>(16);
+    private static final Map<String, SimpleStateMachine> machines = new HashMap<>(16);
 
     @SuppressWarnings("unchecked")
-    public <S, E> StateMachineImpl<S, E> get(String machineId) {
+    public <S, E> SimpleStateMachine<S, E> get(String machineId) {
         return machines.get(machineId);
     }
 
-    public <S, E> void register(String machineId, StateMachineImpl<S, E> stateMachineImpl) {
+    public <S, E> void register(String machineId, SimpleStateMachine<S, E> simpleStateMachine) {
         if (machines.containsKey(machineId)) {
             throw new StateMachineException("{} machineId has been registered");
         }
-        machines.put(machineId, stateMachineImpl);
+        machines.put(machineId, simpleStateMachine);
     }
 
     @Override
     public void afterPropertiesSet() {
-        Map<String, StateMachineImpl> beans = applicationContext.getBeansOfType(StateMachineImpl.class);
+        Map<String, SimpleStateMachine> beans = applicationContext.getBeansOfType(SimpleStateMachine.class);
         beans.forEach((beanName, machine) -> this.register(machine.getMachineId(), machine));
     }
 

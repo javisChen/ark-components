@@ -3,10 +3,9 @@ package com.ark.component.statemachine.core.builder;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 
-public class StateMachineConfigurationBuilder<S, E> implements Builder<S, E> {
+public class StateMachineConfigurationBuilder<S, E> {
 
     private StateMachinePersist<S, E> persist;
-
     private StateMachineLock<S> lock;
     private String machineId;
 

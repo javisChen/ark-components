@@ -11,7 +11,6 @@
     <description>状态机组件</description>
 
     <modules>
-        <module>ark-component-statemachine-dao</module>
         <module>ark-component-statemachine-core</module>
         <module>ark-component-statemachine-spring-boot-starter</module>
     </modules>

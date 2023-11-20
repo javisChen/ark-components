@@ -6,10 +6,11 @@ import com.ark.component.statemachine.core.guard.Guard;
 import com.ark.component.statemachine.core.transition.InitialTransition;
 
 import java.util.Collection;
+import java.util.List;
 
-public class StateMachineStateBuilder<S, E> implements Builder<S, E> {
+public class StateMachineStateBuilder<S, E> {
 
-    private Collection<State<S>> states;
+    private List<State<S>> states;
 
     private State<S> initial;
 
@@ -17,7 +18,7 @@ public class StateMachineStateBuilder<S, E> implements Builder<S, E> {
 
     private InitialTransition<S, E> initialTransition;
 
-    public Collection<State<S>> getStates() {
+    public List<State<S>> getStates() {
         return states;
     }
 

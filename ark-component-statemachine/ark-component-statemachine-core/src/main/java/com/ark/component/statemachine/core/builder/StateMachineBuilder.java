@@ -2,23 +2,22 @@ package com.ark.component.statemachine.core.builder;
 
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
-import com.ark.component.statemachine.core.StateMachineImpl;
+import com.ark.component.statemachine.core.SimpleStateMachine;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
 import com.ark.component.statemachine.core.transition.Transition;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class StateMachineBuilder<S, E> implements Builder<S, E> {
+public class StateMachineBuilder<S, E> {
 
     private final StateMachineTransitionBuilder<S, E> transitionBuilder = new StateMachineTransitionBuilder<>();
     private final StateMachineConfigurationBuilder<S, E> configurationBuilder = new StateMachineConfigurationBuilder<>();
     private final StateMachineStateBuilder<S, E> stateBuilder = new StateMachineStateBuilder<>();
     public static <S, E> StateMachineBuilder<S, E> newBuilder() {
-        return new StateMachineBuilder<S, E>();
+        return new StateMachineBuilder<>();
     }
 
     public StateMachineBuilder<S, E> withConfiguration(Consumer<StateMachineConfigurationBuilder<S, E>> consumer) {
@@ -35,13 +34,13 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
         return this;
     }
 
-    public StateMachineImpl<S, E> build() {
+    public SimpleStateMachine<S, E> build() {
 
         String machineId = configurationBuilder.getMachineId();
         StateMachineLock<S> lock = configurationBuilder.getLock();
         StateMachinePersist<S, E> persist = configurationBuilder.getPersist();
 
-        Collection<State<S>> states = stateBuilder.getStates();
+        List<State<S>> states = stateBuilder.getStates();
         State<S> initial = stateBuilder.getInitial();
         InitialTransition<S, E> initialTransition = stateBuilder.getInitialTransition();
         State<S> end = stateBuilder.getEnd();
@@ -49,7 +48,7 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
         List<Transition<S, E>> transitions = transitionBuilder.build();
         List<Event<E>> events = transitions.stream().map(Transition::getEvent).toList();
 
-        StateMachineImpl<S, E> stateMachineImpl = new StateMachineImpl<>(machineId,
+        return new SimpleStateMachine<>(machineId,
                 states,
                 initial,
                 end,
@@ -58,8 +57,6 @@ public class StateMachineBuilder<S, E> implements Builder<S, E> {
                 transitions,
                 persist,
                 lock);
-
-        return stateMachineImpl;
     }
 
 }
