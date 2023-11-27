@@ -1,7 +1,7 @@
 package com.ark.component.statemachine;
 
 import com.ark.component.statemachine.action.OrderCreateAction;
-import com.ark.component.statemachine.core.SimpleStateMachine;
+import com.ark.component.statemachine.core.StateMachine;
 import com.ark.component.statemachine.core.builder.StateMachineBuilder;
 import com.ark.component.statemachine.guard.OrderCreateGuard;
 import com.google.common.collect.Lists;
@@ -22,7 +22,7 @@ public class SimpleStateMachineTest {
     @Test
     public void test_build() {
         String machineId = "trade_order";
-        SimpleStateMachine<OrderState, OrderEvent> tradeOrderStm = StateMachineBuilder
+        StateMachine<OrderState, OrderEvent> tradeOrderStm = StateMachineBuilder
                 .<OrderState, OrderEvent>newBuilder()
                 // 状态机基本配置
                 .withConfiguration(configurationBuilder -> configurationBuilder

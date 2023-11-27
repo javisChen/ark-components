@@ -3,6 +3,7 @@ package com.ark.component.statemachine.core.builder;
 import com.ark.component.statemachine.core.Event;
 import com.ark.component.statemachine.core.State;
 import com.ark.component.statemachine.core.SimpleStateMachine;
+import com.ark.component.statemachine.core.StateMachine;
 import com.ark.component.statemachine.core.lock.StateMachineLock;
 import com.ark.component.statemachine.core.persist.StateMachinePersist;
 import com.ark.component.statemachine.core.transition.InitialTransition;
@@ -34,7 +35,7 @@ public class StateMachineBuilder<S, E> {
         return this;
     }
 
-    public SimpleStateMachine<S, E> build() {
+    public StateMachine<S, E> build() {
 
         String machineId = configurationBuilder.getMachineId();
         StateMachineLock<S> lock = configurationBuilder.getLock();
