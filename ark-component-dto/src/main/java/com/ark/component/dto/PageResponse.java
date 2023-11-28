@@ -1,9 +1,9 @@
 package com.ark.component.dto;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -22,9 +22,9 @@ public class PageResponse<T> {
     @ApiModelProperty(value = "每页显示数量", required = false, notes = "")
     private Integer current = 1;
     @ApiModelProperty(value = "数据", required = false, notes = "")
-    private Collection<T> records;
+    private List<T> records;
 
-    public PageResponse(int current, int size, int total, Collection<T> records) {
+    public PageResponse(int current, int size, int total, List<T> records) {
         this.total = total;
         this.size = size;
         this.current = current;
@@ -34,7 +34,7 @@ public class PageResponse<T> {
     public PageResponse() {
     }
 
-    public static <T> PageResponse<T> of(long current, long size, long total, Collection<T> records) {
+    public static <T> PageResponse<T> of(long current, long size, long total, List<T> records) {
         return new PageResponse<>((int)current, (int)size, (int)total, records);
     }
 
@@ -46,7 +46,7 @@ public class PageResponse<T> {
     }
 
     public <R> PageResponse<R> convert(Function<? super T, ? extends R> mapper) {
-        Collection<R> collect = this.getRecords().stream().map(mapper).collect(Collectors.toList());
+        List<R> collect = this.getRecords().stream().map(mapper).collect(Collectors.toList());
         ((PageResponse<R>)this).setRecords(collect);
         return (PageResponse<R>) this;
     }

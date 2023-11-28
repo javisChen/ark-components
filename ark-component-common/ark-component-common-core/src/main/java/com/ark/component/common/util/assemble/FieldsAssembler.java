@@ -69,36 +69,6 @@ public class FieldsAssembler {
     /**
      * 装配字段
      *
-     * @param condition  判断是否需要进行装配
-     * @param record     需要装配的数据
-     * @param recordId   数据行id
-     * @param field      需要装配的字段
-     * @param datasource 数据源
-     * @param <RECORD>   需要被装配的数据
-     * @param <SOURCE>   待装配的数据源
-     */
-//    public static <RECORD, SOURCE> void execute(boolean condition,
-//                                                RECORD record,
-//                                                Function<? super RECORD, Long> recordId,
-//                                                BiConsumer<RECORD, List<SOURCE>> field,
-//                                                Function<Long, List<SOURCE>> datasource) {
-//        if (!condition) {
-//            return;
-//        }
-//        Long id = recordId.apply(record);
-//
-//        List<SOURCE> targets = datasource.apply(id);
-//        if (CollectionUtils.isEmpty(targets)) {
-//            return;
-//        }
-//
-//        field.accept(record, targets);
-//    }
-
-    /**
-     * 装配字段
-     *
-     * @param condition  判断是否需要进行装配
      * @param record     需要装配的数据
      * @param recordId   数据行id
      * @param field      需要装配的字段
@@ -107,6 +77,24 @@ public class FieldsAssembler {
      * @param <SOURCE>   待装配的数据源
      */
     public static <RECORD, SOURCE> void execute(RECORD record,
+                                                Function<? super RECORD, Long> recordId,
+                                                BiConsumer<RECORD, SOURCE> field,
+                                                Function<Long, SOURCE> datasource) {
+        execute(true, record, recordId, field, datasource);
+    }
+
+    /**
+     * 装配字段
+     * @param condition  判断是否需要进行装配
+     * @param record     需要装配的数据
+     * @param recordId   数据行id
+     * @param field      需要装配的字段
+     * @param datasource 数据源
+     * @param <RECORD>   需要被装配的数据
+     * @param <SOURCE>   待装配的数据源
+     */
+    public static <RECORD, SOURCE> void execute(boolean condition,
+                                                RECORD record,
                                                 Function<? super RECORD, Long> recordId,
                                                 BiConsumer<RECORD, SOURCE> field,
                                                 Function<Long, SOURCE> datasource) {
