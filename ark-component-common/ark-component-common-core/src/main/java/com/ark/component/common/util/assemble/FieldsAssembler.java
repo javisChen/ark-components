@@ -24,10 +24,10 @@ public class FieldsAssembler {
      */
     public static <RECORD, SOURCE> void execute(List<RECORD> records,
                                                 Function<? super RECORD, Long> recordId,
-                                                BiConsumer<RECORD, List<SOURCE>> field,
                                                 Function<List<Long>, List<SOURCE>> datasource,
+                                                BiConsumer<RECORD, List<SOURCE>> field,
                                                 Function<? super SOURCE, Long> bindingKey) {
-        execute(true, records, recordId, field, datasource, bindingKey);
+        execute(true, records, recordId, datasource, field, bindingKey);
     }
 
     /**
@@ -45,8 +45,8 @@ public class FieldsAssembler {
     public static <RECORD, SOURCE> void execute(boolean condition,
                                                 List<RECORD> records,
                                                 Function<? super RECORD, Long> recordId,
-                                                BiConsumer<RECORD, List<SOURCE>> field,
                                                 Function<List<Long>, List<SOURCE>> datasource,
+                                                BiConsumer<RECORD, List<SOURCE>> field,
                                                 Function<? super SOURCE, Long> bindingKey) {
         if (!condition) {
             return;

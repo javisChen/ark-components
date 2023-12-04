@@ -15,7 +15,11 @@ public class User {
     public static void main(String[] args) {
         User user = new User();
         user.setId(1L);
-        FieldsAssembler.execute(Lists.newArrayList(user), User::getId, User::setRoleList, RoleQuery::byUserIds, Role::getUserId);
+        FieldsAssembler.execute(Lists.newArrayList(user),
+                User::getId,
+                RoleQuery::byUserIds,
+                User::setRoleList,
+                Role::getUserId);
         ;
     }
 
