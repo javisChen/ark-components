@@ -10,6 +10,11 @@ public class AbstractObjectStorageService implements IObjectStorageService {
     }
 
     @Override
+    public String put(boolean createBucketIfNotExist, String bucketName, String objectName, InputStream inputstream) {
+        return null;
+    }
+
+    @Override
     public void delete(String bucketName, String objectName) {
 
     }

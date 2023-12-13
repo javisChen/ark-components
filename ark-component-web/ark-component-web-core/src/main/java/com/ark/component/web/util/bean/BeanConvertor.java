@@ -59,8 +59,8 @@ public class BeanConvertor {
     }
 
     public static <S, T> PageResponse<T> copyPage(PageResponse<S> page, Class<T> targetClazz) {
-        Collection<S> srcList = page.getRecords();
-        Collection<T> targetList = null;
+        List<S> srcList = page.getRecords();
+        List<T> targetList = null;
         if (CollectionUtils.isNotEmpty(srcList)) {
             targetList = copyList(srcList, targetClazz);
         } else {

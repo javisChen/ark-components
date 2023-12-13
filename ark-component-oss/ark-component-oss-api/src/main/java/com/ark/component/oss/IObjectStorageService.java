@@ -14,7 +14,12 @@ import java.io.InputStream;
  */
 public interface IObjectStorageService {
 
+    /**
+     * 上传对象
+     */
     String put(String bucketName, String objectName, InputStream inputstream);
+
+    String put(boolean createBucketIfNotExist, String bucketName, String objectName, InputStream inputstream);
 
     void delete(String bucketName, String objectName);
 
