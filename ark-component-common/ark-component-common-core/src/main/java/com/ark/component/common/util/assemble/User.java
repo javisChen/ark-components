@@ -1,5 +1,6 @@
 package com.ark.component.common.util.assemble;
 
+import com.ark.component.common.util.assemble.v2.FieldsAssemblerV2;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
@@ -15,12 +16,16 @@ public class User {
     public static void main(String[] args) {
         User user = new User();
         user.setId(1L);
-        FieldsAssembler.execute(Lists.newArrayList(user),
-                User::getId,
-                RoleQuery::byUserIds,
-                User::setRoleList,
-                Role::getUserId);
-        ;
+
+        FieldsAssemblerV2.execute(FieldAssembleConfig.<User, Role>builder()
+                .condition(true)
+                .records(List.of(new User()))
+                .recordId(User::getId)
+                .datasource(RoleQuery::byUserIds)
+                .field(User::setRoleList)
+                .bindingKey(Role::getUserId)
+                .build());
+
     }
 
     @Data

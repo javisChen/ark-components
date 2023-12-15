@@ -1,6 +1,7 @@
-package com.ark.component.common.util.assemble;
+package com.ark.component.common.util.assemble.v2;
 
 import cn.hutool.core.collection.CollUtil;
+import com.ark.component.common.util.assemble.FieldAssembleConfig;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
@@ -11,7 +12,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class FieldsAssembler {
+public class FieldsAssemblerV2 {
+
 
 //    /**
 //     * 装配字段
@@ -54,11 +56,11 @@ public class FieldsAssembler {
      * @param <SOURCE>   待装配的数据源
      */
     private static <RECORD, SOURCE> void execute(boolean condition,
-                                                 List<RECORD> records,
-                                                 Function<? super RECORD, Long> recordId,
-                                                 Function<List<Long>, List<SOURCE>> datasource,
-                                                 BiConsumer<RECORD, List<SOURCE>> field,
-                                                 Function<? super SOURCE, Long> bindingKey) {
+                                                List<RECORD> records,
+                                                Function<? super RECORD, Long> recordId,
+                                                Function<List<Long>, List<SOURCE>> datasource,
+                                                BiConsumer<RECORD, List<SOURCE>> field,
+                                                Function<? super SOURCE, Long> bindingKey) {
         if (!condition) {
             return;
         }
