@@ -9,79 +9,184 @@ import java.util.function.Function;
 
 @Getter
 @Setter
-public class FieldAssembleConfig<RECORD, SOURCE> {
+public class FieldAssembleConfig<T, S, ID> {
 
+    /**
+     * 是否执行的前置条件
+     */
     private boolean condition;
 
-    private List<RECORD> records;
+    /**
+     * 需要装配的数据集
+     */
+    private List<T> dataSet;
 
-    private Function<? super RECORD, Long> recordId;
+    /**
+     * 查询需要数据的字段
+     */
+    private Function<T, ID> queryKeyFunction;
 
-    private Function<List<Long>, List<SOURCE>> datasource;
+    /**
+     * 查询数据的结果集
+     */
+    private Function<List<ID>, List<S>> resultSet;
 
-    private BiConsumer<RECORD, List<SOURCE>> field;
+    /**
+     * 设置装配单个对象的字段
+     */
+    private BiConsumer<T, S> fieldConsumer;
 
-    private Function<? super SOURCE, Long> bindingKey;
+    /**
+     * 设置装配集合的字段
+     */
+    private BiConsumer<T, List<S>> collectionFieldConsumer;
 
-    public static <RECORD, SOURCE> Builder<RECORD, SOURCE> builder() {
-        return new Builder<>();
+    /**
+     * 装配数据和填充数据的映射key
+     */
+    private Function<S, ID> mapKey;
+
+    public static <T, S, ID> Multiple<T, S, ID> Multiple(List<T> dataSet, Function<List<ID>, List<S>> resultSet) {
+        return new Multiple<>(dataSet, resultSet);
     }
-    
-    public static class Builder<RECORD, SOURCE> {
+
+    public static <T, S, ID> Multiple<T, S, ID> Multiple() {
+        return new Multiple<>();
+    }
+
+    public static <T, S, ID> Single<T, S, ID> Single() {
+        return new Single<>();
+    }
+    public static <T, S, ID> Single<T, S, ID> Single(List<T> dataSet, Function<List<ID>, List<S>> resultSet) {
+        return new Single<>(dataSet, resultSet);
+    }
+
+    public static class Multiple<T, S, ID> {
         private boolean condition;
 
-        private List<RECORD> records;
+        private List<T> dataSet;
 
-        private Function<? super RECORD, Long> recordId;
+        private Function<T, ID> queryKeyFunction;
 
-        private Function<List<Long>, List<SOURCE>> datasource;
+        private Function<List<ID>, List<S>> resultSet;
 
-        private BiConsumer<RECORD, List<SOURCE>> field;
+        private BiConsumer<T, List<S>> collectionField;
 
-        private Function<? super SOURCE, Long> bindingKey;
+        private Function<S, ID> mapKey;
 
-        public Builder() {}
+        public Multiple(List<T> dataSet, Function<List<ID>, List<S>> resultSet) {
+            this.dataSet = dataSet;
+            this.resultSet = resultSet;
+        }
 
-        public FieldAssembleConfig<RECORD, SOURCE> build() {
-            FieldAssembleConfig<RECORD, SOURCE> config = new FieldAssembleConfig<>();
+        public Multiple() {}
+
+        public FieldAssembleConfig<T, S, ID> build() {
+            FieldAssembleConfig<T, S, ID> config = new FieldAssembleConfig<>();
             config.setCondition(this.condition);
-            config.setRecords(this.records);
-            config.setRecordId(this.recordId);
-            config.setDatasource(this.datasource);
-            config.setField(this.field);
-            config.setBindingKey(this.bindingKey);
+            config.setDataSet(this.dataSet);
+            config.setQueryKeyFunction(this.queryKeyFunction);
+            config.setResultSet(this.resultSet);
+            config.setCollectionFieldConsumer(this.collectionField);
+            config.setMapKey(this.mapKey);
             return config;
         }
 
-        public Builder<RECORD, SOURCE> condition(boolean condition) {
+        public Multiple<T, S, ID> condition(boolean condition) {
             this.condition = condition;
             return this;
         }
 
-        public Builder<RECORD, SOURCE> records(List<RECORD> records) {
-            this.records = records;
+        public Multiple<T, S, ID> dataSet(List<T> dataSet) {
+            this.dataSet = dataSet;
             return this;
         }
 
-        public Builder<RECORD, SOURCE> recordId(Function<? super RECORD, Long> recordId) {
-            this.recordId = recordId;
+        public Multiple<T, S, ID> queryKey(Function<T, ID> queryKeyFunction) {
+            this.queryKeyFunction = queryKeyFunction;
             return this;
         }
 
-        public Builder<RECORD, SOURCE> datasource(Function<List<Long>, List<SOURCE>> datasource) {
-            this.datasource = datasource;
+        public Multiple<T, S, ID> resultSet(Function<List<ID>, List<S>> resultSet) {
+            this.resultSet = resultSet;
             return this;
         }
 
-        public Builder<RECORD, SOURCE> field(BiConsumer<RECORD, List<SOURCE>> field) {
+        public Multiple<T, S, ID> collectionField(BiConsumer<T, List<S>> collectionField) {
+            this.collectionField = collectionField;
+            return this;
+        }
+
+        public Multiple<T, S, ID> mapKey(Function<S, ID> mapKey) {
+            this.mapKey = mapKey;
+            return this;
+        }
+
+    }
+
+    public static class Single<T, S, ID> {
+        private boolean condition;
+
+        private List<T> dataSet;
+
+        private Function<T, ID> queryKeyFunction;
+
+        private Function<List<ID>, List<S>> resultSet;
+
+        private BiConsumer<T, S> field;
+
+        private Function<S, ID> mapKey;
+
+
+        public Single(List<T> dataSet, Function<List<ID>, List<S>> resultSet) {
+            this.dataSet = dataSet;
+            this.resultSet = resultSet;
+        }
+
+        public Single() {
+        }
+
+        public FieldAssembleConfig<T, S, ID> build() {
+            FieldAssembleConfig<T, S, ID> config = new FieldAssembleConfig<>();
+            config.setCondition(this.condition);
+            config.setDataSet(this.dataSet);
+            config.setQueryKeyFunction(this.queryKeyFunction);
+            config.setResultSet(this.resultSet);
+            config.setFieldConsumer(this.field);
+            config.setMapKey(this.mapKey);
+            return config;
+        }
+
+        public Single<T, S, ID> condition(boolean condition) {
+            this.condition = condition;
+            return this;
+        }
+
+        public Single<T, S, ID> dataSet(List<T> dataSet) {
+            this.dataSet = dataSet;
+            return this;
+        }
+
+        public Single<T, S, ID> queryKey(Function<T, ID> queryKeyFunction) {
+            this.queryKeyFunction = queryKeyFunction;
+            return this;
+        }
+
+        public Single<T, S, ID> resultSet(Function<List<ID>, List<S>> resultSet) {
+            this.resultSet = resultSet;
+            return this;
+        }
+
+        public Single<T, S, ID> field(BiConsumer<T, S> field) {
             this.field = field;
             return this;
         }
 
-        public Builder<RECORD, SOURCE> bindingKey(Function<? super SOURCE, Long> bindingKey) {
-            this.bindingKey = bindingKey;
+        public Single<T, S, ID> mapKey(Function<S, ID> mapKey) {
+            this.mapKey = mapKey;
             return this;
         }
+
     }
 
 }
