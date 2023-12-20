@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class CollectionProcessor<K, S, RS> implements ICollectionProcessor<S, RS> {
+public class CollectionProcessor<K, S, RS> implements Processor<S, List<RS>> {
 
     private final List<S> sources;
 

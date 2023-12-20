@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class ObjectProcessorImpl<K, S, RS> implements Processor<S, RS> {
+public class ObjectProcessor<K, S, RS> implements Processor<S, RS> {
 
     private final List<S> sources;
 
@@ -13,7 +13,7 @@ public class ObjectProcessorImpl<K, S, RS> implements Processor<S, RS> {
 
     private final Function<S, K> keySelector;
 
-    public ObjectProcessorImpl(List<S> sources, Function<S, K> keySelector, Map<K, RS> keyed) {
+    public ObjectProcessor(List<S> sources, Function<S, K> keySelector, Map<K, RS> keyed) {
         this.sources = sources;
         this.keyed = keyed;
         this.keySelector = keySelector;

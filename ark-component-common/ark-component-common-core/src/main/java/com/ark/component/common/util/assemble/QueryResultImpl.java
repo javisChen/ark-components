@@ -1,8 +1,7 @@
 package com.ark.component.common.util.assemble;
 
 import com.ark.component.common.util.assemble.processor.CollectionProcessor;
-import com.ark.component.common.util.assemble.processor.ICollectionProcessor;
-import com.ark.component.common.util.assemble.processor.ObjectProcessorImpl;
+import com.ark.component.common.util.assemble.processor.ObjectProcessor;
 import com.ark.component.common.util.assemble.processor.Processor;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -26,7 +25,7 @@ public class QueryResultImpl<K, S, RS> implements QueryResult<S, RS> {
     }
 
     @Override
-    public ICollectionProcessor<S, RS> collection() {
+    public Processor<S, List<RS>> collection() {
         Map<K, List<RS>> keyed = null;
         if (CollectionUtils.isNotEmpty(resultSet)) {
             keyed = resultSet.stream().collect(Collectors.groupingBy(resultKeySelector));
@@ -40,6 +39,6 @@ public class QueryResultImpl<K, S, RS> implements QueryResult<S, RS> {
         if (CollectionUtils.isNotEmpty(resultSet)) {
             keyed = resultSet.stream().collect(Collectors.toMap(resultKeySelector, Function.identity()));
         }
-        return new ObjectProcessorImpl<>(sources, keySelector, keyed);
+        return new ObjectProcessor<>(sources, keySelector, keyed);
     }
 }

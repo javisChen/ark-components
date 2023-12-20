@@ -8,38 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class FieldsAssemblerTest {
+public class DataProcessTest {
 
     @org.junit.jupiter.api.Test
-    void fill() {
-        List<User> dataset = List.of(new User());
-        FieldsAssembler.fill(FieldAssembleConfig.<User, User.Role, Long>Multiple()
-                .condition(true)
-                .dataSet(dataset)
-                .queryKey(User::getRoleId)
-                .resultSet(User.RoleQuery::byIds)
-                .collectionField(User::setRoleList)
-                .mapKey(User.Role::getId)
-                .build());
-        System.out.println(dataset);
-    }
-
-    @org.junit.jupiter.api.Test
-    void fillSingle() {
-        List<User> dataset = List.of(new User());
-        FieldsAssembler.fillSingle(FieldAssembleConfig.<User, User.Type, Long>Single()
-                .condition(true)
-                .dataSet(dataset)
-                .queryKey(User::getId)
-                .resultSet(User.TypeQuery::byIds)
-                .field((user1, type) -> user1.setType(type.getName()))
-                .mapKey(User.Type::getId)
-                .build());
-    }
-
-    @org.junit.jupiter.api.Test
-    void fillNew() {
-        ArrayList<User> users = new ArrayList<>();
+    void test_data_process() {
+        List<User> users = new ArrayList<>();
         User user = new User();
         user.setRoleId(1L);
         user.setTypeId(1L);
