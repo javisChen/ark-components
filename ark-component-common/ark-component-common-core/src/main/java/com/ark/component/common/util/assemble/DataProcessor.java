@@ -17,6 +17,12 @@ public class DataProcessor<S> {
         this.sources = sources;
     }
 
+    public static <S> DataProcessor<S> create(List<S> sources) {
+        return new DataProcessor<>(sources);
+    }
+    public static <S> DataProcessor<S> create(S source) {
+        return new DataProcessor<>(source);
+    }
 
     public <K> KeySelector<K, S> keySelect(Function<S, K> keySelector) {
         return new CollectionDataSource<>(sources).keySelect(keySelector);
