@@ -9,6 +9,7 @@ public class DataProcessor<S> {
 
     private final List<S> sources;
 
+
     public DataProcessor(S source) {
         this.sources = Lists.newArrayList(source);
     }
