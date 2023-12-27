@@ -37,15 +37,28 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 当前版本 mbp 不支持 Spring Boot 3.2.0 需要先手动更新mybatis-spring为3.0.5 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>druid-spring-boot-3-starter</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba</groupId>-->
+        <!--            <artifactId>druid-spring-boot-3-starter</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.ark.context</groupId>
