@@ -20,8 +20,8 @@ public class RedisCacheService implements CacheService {
     }
 
 
-    public Long executeScript(String script, List<String> keys, List<Object> args) {
-        return redisTemplate.execute(RedisScript.of(script, Long.class), keys, args.toArray());
+    public <T> T executeScript(RedisScript<T> script, List<String> keys, List<Object> args) {
+        return redisTemplate.execute(script, keys, args.toArray());
     }
 
     @Override
