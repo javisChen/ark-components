@@ -31,11 +31,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ark.statemachine</groupId>
-            <artifactId>ark-component-statemachine-dao</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.ark.context</groupId>
             <artifactId>ark-component-context-core</artifactId>
         </dependency>
