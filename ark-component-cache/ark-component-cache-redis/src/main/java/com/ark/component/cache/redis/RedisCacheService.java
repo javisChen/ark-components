@@ -6,7 +6,7 @@ import com.ark.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +20,8 @@ public class RedisCacheService implements CacheService {
     }
 
 
-    public String executeScript(String script, List<String> keys, List<Object> args) {
-        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>(script);
-        return redisTemplate.execute(redisScript, keys, args.toArray());
+    public Long executeScript(String script, List<String> keys, List<Object> args) {
+        return redisTemplate.execute(RedisScript.of(script, Long.class), keys, args.toArray());
     }
 
     @Override
