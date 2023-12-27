@@ -6,7 +6,7 @@ import com.ark.component.cache.exception.CacheException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -19,9 +19,10 @@ public class RedisCacheService implements CacheService {
         this.redisTemplate = redisTemplate;
     }
 
-    public String executeScript(String script, List<String> keys, Object... args) {
-        RedisScript<String> redisScript = RedisScript.of(script);
-        return redisTemplate.execute(redisScript, keys, args);
+
+    public String executeScript(String script, List<String> keys, List<Object> args) {
+        DefaultRedisScript<String> redisScript = new DefaultRedisScript<>(script);
+        return redisTemplate.execute(redisScript, keys, args.toArray());
     }
 
     @Override
@@ -167,9 +168,14 @@ public class RedisCacheService implements CacheService {
         Arrays.stream(keys).forEach(this::remove);
     }
 
+    @Override
+    public void delele(Collection<String> keys) {
+        redisTemplate.delete(keys);
+    }
+
     public void removePattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
-        if (keys != null && keys.size() > 0) {
+        if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
         }
     }

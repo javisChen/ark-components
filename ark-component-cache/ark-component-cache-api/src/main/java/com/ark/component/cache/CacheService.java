@@ -47,4 +47,6 @@ public interface CacheService {
     List<Object> hashMultiGet(String key, Collection<Object> hashKeys);
 
     void remove(String... keys);
+
+    void delele(Collection<String> keys);
 }

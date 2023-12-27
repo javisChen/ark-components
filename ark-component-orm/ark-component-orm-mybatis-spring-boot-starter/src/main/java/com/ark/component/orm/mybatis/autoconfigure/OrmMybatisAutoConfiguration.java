@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.ark.component.orm.mybatis.handler.BaseFieldAutoFillObjectHandler;
+import com.ark.component.orm.mybatis.handlers.BaseFieldAutoFillObjectHandler;
 import com.ark.component.orm.mybatis.support.DefaultUserInfo;
 import com.ark.component.orm.mybatis.support.ServiceContextUserInfo;
 import com.ark.component.orm.mybatis.support.UserInfo;

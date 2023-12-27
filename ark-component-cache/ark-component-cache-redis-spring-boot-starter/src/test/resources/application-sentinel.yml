@@ -1,10 +1,11 @@
 spring:
-  redis:
-    sentinel:
-      nodes:
-        - 127.0.0.1:26377
-        - 127.0.0.1:26378
-        - 127.0.0.1:26379
-      master: mymaster
-    # redis-server的密码
-    password: 123456
+  data:
+    redis:
+      client-type: lettuce
+      sentinel:
+        master: mymaster
+        nodes:
+          - 127.0.0.1:26377
+          - 127.0.0.1:26378
+          - 127.0.0.1:26379
+        password: 123456
