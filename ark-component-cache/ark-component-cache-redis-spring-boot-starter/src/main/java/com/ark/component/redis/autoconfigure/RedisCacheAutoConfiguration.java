@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
@@ -29,13 +28,11 @@ public class RedisCacheAutoConfiguration {
         template.setConnectionFactory(factory);
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // key采用String的序列化方式
+        // key value 采用String的序列化方式
         template.setKeySerializer(stringRedisSerializer);
-        // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        // value序列化方式采用fastjson
         template.setValueSerializer(fastJsonRedisSerializer);
-        // hash的value序列化方式采用jackson
+        // hash的key value 也采用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
         template.afterPropertiesSet();
         return template;
