@@ -30,9 +30,9 @@ public interface CacheService {
 
     void hMSet(String key, Map<String, Object> value, Long expires);
 
-    void hIncrBy(String key, String hashField, long delta);
+    Long hIncrBy(String key, String hashField, long delta);
 
-    void hIncrBy(String key, String hashField, double delta);
+    Double hIncrBy(String key, String hashField, double delta);
 
     void hMSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit);
 

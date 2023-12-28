@@ -89,18 +89,18 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void hIncrBy(String key, String hashField, long delta) {
+    public Long hIncrBy(String key, String hashField, long delta) {
         try {
-            redisTemplate.opsForHash().increment(key, hashField, delta);
+            return redisTemplate.opsForHash().increment(key, hashField, delta);
         } catch (Exception e) {
             throw new CacheException(e);
         }
     }
 
     @Override
-    public void hIncrBy(String key, String hashField, double delta) {
+    public Double hIncrBy(String key, String hashField, double delta) {
         try {
-            redisTemplate.opsForHash().increment(key, hashField, delta);
+            return redisTemplate.opsForHash().increment(key, hashField, delta);
         } catch (Exception e) {
             throw new CacheException(e);
         }
