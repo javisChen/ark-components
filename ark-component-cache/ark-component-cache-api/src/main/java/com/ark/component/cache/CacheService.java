@@ -17,36 +17,40 @@ import java.util.concurrent.TimeUnit;
  * @author victor
  */
 public interface CacheService {
-    void setAdd(String key, Object... values);
+    void sAdd(String key, Object... values);
 
-    Set<Object> setMembers(String key);
+    Set<Object> sMembers(String key);
     void set(String key, Object value);
 
     boolean set(String key, Object value, Long expires);
 
     boolean set(String key, Object value, Long expires, TimeUnit timeUnit);
 
-    void hashSet(String key, Map<String, Object> value);
+    void hMSet(String key, Map<String, Object> value);
 
-    void hashSet(String key, Map<String, Object> value, Long expires);
+    void hMSet(String key, Map<String, Object> value, Long expires);
 
-    void hashSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit);
+    void hIncrBy(String key, String hashField, long delta);
 
-    void multiSet(Map<String, Object> map);
+    void hIncrBy(String key, String hashField, double delta);
 
-    Long increment(String key, Long value);
+    void hMSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit);
 
-    Long decrement(String key, Long value);
+    void mSet(Map<String, Object> map);
+
+    Long incrBy(String key, Long value);
+
+    Long decrBy(String key, Long value);
 
     Object get(String key);
 
     <T> T get(String key, Class<T> target);
 
-    Object hashGet(String key, String hashKey);
+    Object hGet(String key, String hashKey);
 
-    List<Object> hashMultiGet(String key, Collection<Object> hashKeys);
+    List<Object> hMGet(String key, Collection<Object> hashKeys);
 
-    void remove(String... keys);
+    void del(Collection<String> keys);
 
-    void delele(Collection<String> keys);
+    void del(String key);
 }

@@ -73,7 +73,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         Map<String, Object> map = BeanUtil.beanToMap(loginUser, false, true);
         map.put("authorities", loginAuthenticationToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
-        cacheService.hashSet(RedisKeyUtils.createAccessTokenKey(accessToken), map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
+        cacheService.hMSet(RedisKeyUtils.createAccessTokenKey(accessToken), map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 
         cacheService.set(RedisKeyUtils.createUserIdKey(loginUser.getUserId()), accessToken, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 
@@ -85,7 +85,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         if (StringUtils.isEmpty(accessToken)) {
             return context;
         }
-        List<Object> values = cacheService.hashMultiGet(RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
+        List<Object> values = cacheService.hMGet(RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
         if (CollectionUtils.isEmpty(values)) {
             return context;
         }

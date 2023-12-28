@@ -34,7 +34,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void setAdd(String key, Object... values) {
+    public void sAdd(String key, Object... values) {
         try {
             redisTemplate.opsForSet().add(key, values);
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public Set<Object> setMembers(String key) {
+    public Set<Object> sMembers(String key) {
         try {
             return redisTemplate.opsForSet().members(key);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void hashSet(String key, Map<String, Object> value) {
+    public void hMSet(String key, Map<String, Object> value) {
         try {
             HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
             operations.putAll(key, value);
@@ -78,7 +78,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void hashSet(String key, Map<String, Object> value, Long expires) {
+    public void hMSet(String key, Map<String, Object> value, Long expires) {
         try {
             HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
             operations.putAll(key, value);
@@ -89,7 +89,25 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void hashSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
+    public void hIncrBy(String key, String hashField, long delta) {
+        try {
+            redisTemplate.opsForHash().increment(key, hashField, delta);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void hIncrBy(String key, String hashField, double delta) {
+        try {
+            redisTemplate.opsForHash().increment(key, hashField, delta);
+        } catch (Exception e) {
+            throw new CacheException(e);
+        }
+    }
+
+    @Override
+    public void hMSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
         try {
             HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
             operations.putAll(key, value);
@@ -100,7 +118,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void multiSet(Map<String, Object> map) {
+    public void mSet(Map<String, Object> map) {
         try {
             redisTemplate.opsForValue().multiSet(map);
         } catch (Exception e) {
@@ -109,7 +127,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public Long increment(String key, Long value) {
+    public Long incrBy(String key, Long value) {
         try {
             return redisTemplate.opsForValue().increment(key, value);
         } catch (Exception e) {
@@ -118,7 +136,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public Long decrement(String key, Long value) {
+    public Long decrBy(String key, Long value) {
         try {
             return redisTemplate.opsForValue().decrement(key, value);
         } catch (Exception e) {
@@ -137,7 +155,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public Object hashGet(String key, String hashKey) {
+    public Object hGet(String key, String hashKey) {
         try {
             HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
             return operations.get(key, hashKey);
@@ -153,7 +171,7 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public List<Object> hashMultiGet(String key, Collection<Object> hashKeys) {
+    public List<Object> hMGet(String key, Collection<Object> hashKeys) {
         try {
             HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
             return operations.multiGet(key, hashKeys);
@@ -163,29 +181,13 @@ public class RedisCacheService implements CacheService {
     }
 
     @Override
-    public void remove(String... keys) {
-        Arrays.stream(keys).forEach(this::remove);
-    }
-
-    @Override
-    public void delele(Collection<String> keys) {
+    public void del(Collection<String> keys) {
         redisTemplate.delete(keys);
     }
 
-    public void removePattern(String pattern) {
-        Set<String> keys = redisTemplate.keys(pattern);
-        if (keys != null && !keys.isEmpty()) {
-            redisTemplate.delete(keys);
-        }
+    @Override
+    public void del(String key) {
+        redisTemplate.delete(key);
     }
 
-    public void remove(String key) {
-        if (exists(key)) {
-            redisTemplate.delete(key);
-        }
-    }
-
-    public boolean exists(String key) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
-    }
 }
