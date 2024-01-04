@@ -11,8 +11,8 @@ public class BaseFieldAutoFillObjectHandler implements MetaObjectHandler {
 
     private final static String COLUMN_CREATOR = "creator";
     private final static String COLUMN_MODIFIER = "modifier";
-    private final static String COLUMN_GMT_CREATE = "gmtCreate";
-    private final static String COLUMN_GMT_MODIFIED = "gmtModified";
+    private final static String COLUMN_GMT_CREATE = "createTime";
+    private final static String COLUMN_GMT_MODIFIED = "updateTime";
 
     private final UserInfo userInfo;
 
