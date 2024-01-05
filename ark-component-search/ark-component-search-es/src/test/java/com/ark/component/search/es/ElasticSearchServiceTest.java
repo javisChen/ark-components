@@ -1,28 +1,30 @@
 package com.ark.component.search.es;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.mapping.SourceField;
+import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
+import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import com.ark.component.search.es.repository.Hotel;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.elasticsearch.action.DocWriteResponse;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.*;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.xcontent.XContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Map;
+import java.io.StringReader;
 
-public class ElasticSearchServiceTest extends ApplicationTests  {
+public class ElasticSearchServiceTest extends ApplicationTests {
 
     private final UsernamePasswordCredentials credentials
             = new UsernamePasswordCredentials("elastic", "123");
@@ -78,38 +80,57 @@ public class ElasticSearchServiceTest extends ApplicationTests  {
             "  }\n" +
             "}";
 
+    private ElasticsearchClient client;
+
+    @BeforeEach
+    public void beforeAll() {
+        client = getClient();
+    }
+
+    /**
+     * 创建索引
+     */
     @Test
     public void testCreateIndex() {
-        RestHighLevelClient client = getClient();
         try {
-            IndicesClient indices = client.indices();
-            if (indices.exists(new GetIndexRequest("hotel"), RequestOptions.DEFAULT)) {
-                indices.delete(new DeleteIndexRequest("hotel"), RequestOptions.DEFAULT);
-                System.out.println("索引已存在，先删除索引");
-            }
-            CreateIndexRequest createIndexRequest = new CreateIndexRequest("hotel")
-                    .source(MAPPINGS, XContentType.JSON);
-            indices.create(createIndexRequest, RequestOptions.DEFAULT);
+            CreateIndexResponse response = client
+                    .indices()
+                    .create((builder -> builder.index("hotel")));
+            System.out.println(response.acknowledged());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    public void testCreateIndexWithMappings() {
+        ElasticsearchClient client = getClient();
+        try {
+            CreateIndexResponse response = client.indices().create((builder -> builder.index("hotel").mappings(fn -> fn.source(SourceField.of(s -> s.withJson(new StringReader(MAPPINGS)))))));
+            System.out.println(response.acknowledged());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test
     public void testDeleteIndex() {
-        RestHighLevelClient client = getClient();
+        ElasticsearchClient client = getClient();
         try {
-            IndicesClient indices = client.indices();
-            if (indices.exists(new GetIndexRequest("hotel"), RequestOptions.DEFAULT)) {
-                indices.delete(new DeleteIndexRequest("hotel"), RequestOptions.DEFAULT);
-                System.out.println("索引已存在，先删除索引");
+
+            ElasticsearchIndicesClient indices = client.indices();
+            if (indices.exists(fn -> fn.index("hotel")).value()) {
+                DeleteIndexResponse response = indices.delete(builder -> builder.index("hotel"));
+                System.out.println(response);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     public void testCreateDoc() {
-        RestHighLevelClient client = getClient();
+        ElasticsearchClient client = getClient();
         try {
             IndexRequest hotel = new IndexRequest("hotel");
             hotel.id("2");
@@ -119,8 +140,7 @@ public class ElasticSearchServiceTest extends ApplicationTests  {
                     "  \"price\": \"100\",\n" +
                     "  \"city\": \"广州\"\n" +
                     "}", XContentType.JSON);
-            DocWriteResponse.Result result = client.index(hotel, RequestOptions.DEFAULT).getResult();
-            System.out.println("添加文档结果：" + result);
+            System.out.println(client.index(fn -> fn.index("hotel").document(hotel)).result().jsonValue());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -128,71 +148,78 @@ public class ElasticSearchServiceTest extends ApplicationTests  {
 
     @Test
     public void testGetDocById() {
-        RestHighLevelClient client = getClient();
+        ElasticsearchClient client = getClient();
         try {
-            GetRequest request = new GetRequest("hotel", "2");
-            GetResponse response = client.get(request, RequestOptions.DEFAULT);
-            String sourceAsString = response.getSourceAsString();
-            System.out.println(sourceAsString);
+            co.elastic.clients.elasticsearch.core.GetResponse<Hotel> hotel = client.get(fn -> fn.index("hotel").id("2"), Hotel.class);
+            System.out.println(hotel.source());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Test
-    public void testUpdateDocById() {
-        RestHighLevelClient client = getClient();
-        try {
-            UpdateRequest request = new UpdateRequest("hotel", "2");
-            request.doc("name", "汉庭");
-            UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
-            System.out.println(response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Test
+//    public void testUpdateDocById() {
+//        ElasticsearchClient client = getClient();
+//        try {
+//            UpdateRequest request = new UpdateRequest("hotel", "2");
+//            request.doc("name", "汉庭");
+//            UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
+//            System.out.println(response);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Test
+//    public void testDeleteDocById() {
+//        ElasticsearchClient client = getClient();
+//        try {
+//            DeleteRequest request = new DeleteRequest("hotel", "2");
+//            DeleteResponse response = client.delete(request, RequestOptions.DEFAULT);
+//            System.out.println(response);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    @Test
+//    public void test() {
+//        ElasticsearchClient restHighLevelClient = getClient();
+//        try {
+//            GetResponse hotel = restHighLevelClient.get(new GetRequest("hotel", "1"), RequestOptions.DEFAULT);
+//            Map<String, Object> source = hotel.getSource();
+//            System.out.println(source);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            try {
+//                restHighLevelClient.close();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
-    @Test
-    public void testDeleteDocById() {
-        RestHighLevelClient client = getClient();
-        try {
-            DeleteRequest request = new DeleteRequest("hotel", "2");
-            DeleteResponse response = client.delete(request, RequestOptions.DEFAULT);
-            System.out.println(response);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Test
-    public void test() {
-        RestHighLevelClient restHighLevelClient = getClient();
-        try {
-            GetResponse hotel = restHighLevelClient.get(new GetRequest("hotel", "1"), RequestOptions.DEFAULT);
-            Map<String, Object> source = hotel.getSource();
-            System.out.println(source);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                restHighLevelClient.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private RestHighLevelClient getClient() {
+    private ElasticsearchClient getClient() {
         httpHosts[0] = new HttpHost("localhost", 9200, "http");
         RestClientBuilder builder = RestClient.builder(httpHosts)
                 .setHttpClientConfigCallback(httpAsyncClientBuilder -> {
-                    httpAsyncClientBuilder.disableAuthCaching();
                     BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                     credentialsProvider.setCredentials(AuthScope.ANY, credentials);
-                    return httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                    return httpAsyncClientBuilder
+                            .setDefaultRequestConfig(RequestConfig.custom().build())
+                            .disableAuthCaching()
+                            .setDefaultCredentialsProvider(credentialsProvider);
                 });
-        RestHighLevelClient restHighLevelClient = new RestHighLevelClient(builder);
-        return restHighLevelClient;
+        RestClient restClient = builder.build();
+
+
+        ElasticsearchTransport transport = new RestClientTransport(
+                restClient,
+                new JacksonJsonpMapper()
+        );
+
+        return new ElasticsearchClient(transport);
     }
 
 }

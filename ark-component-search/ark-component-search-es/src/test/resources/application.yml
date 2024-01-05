@@ -1,6 +1,5 @@
 spring:
   elasticsearch:
-    rest:
-      password: 407Xj7+o1jU99EB9Qy32
-      username: elastic
-      uris: http://localhost:9200
+#    password: 407Xj7+o1jU99EB9Qy32
+#    username: elastic
+    uris: http://localhost:9200
