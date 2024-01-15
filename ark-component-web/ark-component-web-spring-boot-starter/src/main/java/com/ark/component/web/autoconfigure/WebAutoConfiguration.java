@@ -91,10 +91,17 @@ public class WebAutoConfiguration {
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 
-        // 解决Long返回前端精度丢失的问题
-        JSON.config(JSONWriter.Feature.WriteNullListAsEmpty,
+        /*
+            统一数据响应的规范
+            WriteNullListAsEmpty：如果集合为空，默认写回空集合给前端，即：[]
+            WriteNullStringAsEmpty：如果字符串，默认写回空串给前端，即：""
+            WriteLongAsString：把Long类型转换成String类型，解决前端精度丢失的问题
+            LargeObject：fastjson2限制了序列化大小为64M，超过了就会OOM，启用后即可
+         */
+        JSON.config(
+                JSONWriter.Feature.WriteNullListAsEmpty,
                 JSONWriter.Feature.WriteNullStringAsEmpty,
-                JSONWriter.Feature.WriteLongAsString,
+                JSONWriter.Feature.WriteLongAsString, // 把Long类型转换成String类型，解决前端精度丢失问题
                 JSONWriter.Feature.LargeObject);
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
