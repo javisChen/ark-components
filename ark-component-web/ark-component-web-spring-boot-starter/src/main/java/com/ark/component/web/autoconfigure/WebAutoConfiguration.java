@@ -92,7 +92,10 @@ public class WebAutoConfiguration {
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
 
         // 解决Long返回前端精度丢失的问题
-        JSON.config(JSONWriter.Feature.WriteLongAsString, JSONWriter.Feature.LargeObject);
+        JSON.config(JSONWriter.Feature.WriteNullListAsEmpty,
+                JSONWriter.Feature.WriteNullStringAsEmpty,
+                JSONWriter.Feature.WriteLongAsString,
+                JSONWriter.Feature.LargeObject);
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 
