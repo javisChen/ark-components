@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>ark-component-ddd</name>
-    <groupId>com.ark.dto</groupId>
+    <groupId>com.ark.ddd</groupId>
     <artifactId>ark-component-ddd</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
