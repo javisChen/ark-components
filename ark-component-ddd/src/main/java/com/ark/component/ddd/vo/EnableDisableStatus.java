@@ -7,13 +7,12 @@ import lombok.RequiredArgsConstructor;
  * 启用和禁用状态值对象
  */
 @Getter
-@RequiredArgsConstructor
 public enum EnableDisableStatus {
 
     DISABLED(0),
     ENABLED(1);
 
-    private Integer value;
+    private final Integer value;
 
     EnableDisableStatus(int value) {
         this.value = value;
