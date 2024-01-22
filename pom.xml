@@ -12,6 +12,7 @@
     <modules>
         <module>ark-component-common</module>
         <module>ark-component-dto</module>
+        <module>ark-component-ddd</module>
         <module>ark-component-oss</module>
         <module>ark-component-security</module>
         <module>ark-component-context</module>
