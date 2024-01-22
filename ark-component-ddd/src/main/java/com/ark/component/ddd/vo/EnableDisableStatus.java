@@ -1,13 +1,12 @@
 package com.ark.component.ddd.vo;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * 启用和禁用状态值对象
  */
 @Getter
-public enum EnableDisableStatus {
+public enum EnableDisableStatus implements BaseEnum {
 
     DISABLED(0),
     ENABLED(1);
@@ -18,7 +17,7 @@ public enum EnableDisableStatus {
         this.value = value;
     }
 
-    public EnableDisableStatus from(Integer value) {
+    public static EnableDisableStatus from(Integer value) {
         if (DISABLED.value.equals(value)) {
             return DISABLED;
         }
@@ -27,4 +26,5 @@ public enum EnableDisableStatus {
         }
         return null;
     }
+
 }
