@@ -1,5 +1,7 @@
 package com.ark.component.exception;
 
+import java.util.function.Supplier;
+
 /**
  * @ Description   :  异常工厂实现
  * @ Author        :  JavisChen
@@ -36,6 +38,15 @@ public class ExceptionFactory {
      */
     public static UserException userException(String errorMessage) {
         return new UserException(errorMessage);
+    }
+
+    /**
+     * 用户操作异常
+     * @param errorMessage 具体错误信息
+     * @return UserException
+     */
+    public static Supplier<RuntimeException> userExceptionSupplier(String errorMessage) {
+        return () -> new UserException(errorMessage);
     }
 
     /**
