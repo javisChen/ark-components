@@ -6,7 +6,6 @@ import com.ark.ddd.domain.AggregateRoot;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -16,7 +15,6 @@ import static java.time.Instant.now;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class DomainEvent {
 
     @TableId
@@ -70,6 +68,12 @@ public class DomainEvent {
     @TableField
     private Instant triggeredAt;
 
+    /**
+     * 触发事件的时间
+     */
+    @TableField
+    private String eventData;
+
     protected DomainEvent(String type, Long userId) {
         Assert.notNull(type, "Domain event type must not be null.");
 
@@ -82,7 +86,7 @@ public class DomainEvent {
         this.triggeredAt = now();
     }
 
-    protected DomainEvent(String type) {
+    public DomainEvent(String type) {
         Assert.notBlank(type, "Domain event type must not be null.");
         this.id = newEventId();
         this.type = type;

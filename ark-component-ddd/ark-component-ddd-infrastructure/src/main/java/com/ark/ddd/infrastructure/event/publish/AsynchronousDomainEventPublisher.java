@@ -1,6 +1,5 @@
 package com.ark.ddd.infrastructure.event.publish;
 
-import com.mryqr.common.event.DomainEventJobs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -17,12 +16,12 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 @RequiredArgsConstructor
 public class AsynchronousDomainEventPublisher implements DomainEventPublisher {
     private final TaskExecutor taskExecutor;
-    private final DomainEventJobs domainEventJobs;
+//    private final DomainEventJobs domainEventJobs;
 
     @Override
     public void publish(List<String> eventIds) {
         if (isNotEmpty(eventIds)) {
-            taskExecutor.execute(domainEventJobs::publishDomainEvents);
+//            taskExecutor.execute(domainEventJobs::publishDomainEvents);
         }
     }
 

@@ -5,11 +5,11 @@ public interface DomainEventDao {
 
     void insert(List<DomainEvent> events);
 
-    DomainEvent byId(String id);
+    DomainEvent byId(Long id);
 
-    List<DomainEvent> byIds(List<String> ids);
+    List<DomainEvent> byIds(List<Long> ids);
 
-    <T extends DomainEvent> T latestEventFor(String arId, DomainEventType type, Class<T> eventClass);
+    <T extends DomainEvent> T latestEventFor(Long arId, DomainEventType type, Class<T> eventClass);
 
     void successPublish(DomainEvent event);
 
@@ -19,5 +19,5 @@ public interface DomainEventDao {
 
     void failConsume(DomainEvent event);
 
-    List<DomainEvent> tobePublishedEvents(String startId, int limit);
+    List<DomainEvent> tobePublishedEvents(Long startId, int limit);
 }
