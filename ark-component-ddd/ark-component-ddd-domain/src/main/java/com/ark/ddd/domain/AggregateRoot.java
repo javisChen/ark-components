@@ -16,9 +16,9 @@ public abstract class AggregateRoot implements Identity {
 
     private Long id;//通过Snowflake算法生成
     private Long tenantId = 1L;//在多租户下，所有聚合根都需要一个tenantId来对应某个租户
-    private Instant createdAt;//创建时间
+    private Instant createTime;//创建时间
     private Long creator;//创建人Id
-    private Instant updatedAt;//更新时间
+    private Instant updateTime;//更新时间
     private Long modifier;//更新人MemberId
     private List<DomainEvent> events;//领域事件列表，用于临时存放完成某个业务流程中所发出的事件，会被BaseRepository保存到事件表中
     // private LinkedList<OpsLog> opsLogs;//操作日志
@@ -33,7 +33,7 @@ public abstract class AggregateRoot implements Identity {
 
         this.id = IdUtil.getSnowflakeNextId();
 //        this.tenantId = 1L;
-        this.createdAt = now();
+        this.createTime = now();
 //        this.creator = user.getMemberId();
 //        this.creator = user.getName();
     }
@@ -74,7 +74,7 @@ public abstract class AggregateRoot implements Identity {
 //        return opsLogs;
 //    }
 
-    public void publishEvent(DomainEvent event) {
+    public void raiseEvent(DomainEvent event) {
         event.setArInfo(this);
         allEvents().add(event);
     }
@@ -87,7 +87,6 @@ public abstract class AggregateRoot implements Identity {
         if (events == null) {
             this.events = new ArrayList<>();
         }
-
         return events;
     }
 

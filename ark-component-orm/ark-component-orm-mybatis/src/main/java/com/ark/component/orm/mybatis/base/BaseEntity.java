@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public abstract class BaseEntity {
+
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 

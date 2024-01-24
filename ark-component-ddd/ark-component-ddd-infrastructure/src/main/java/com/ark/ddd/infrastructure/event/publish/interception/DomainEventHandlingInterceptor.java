@@ -1,6 +1,6 @@
 //package com.ark.ddd.infrastructure.event.publish.interception;
 //
-//import com.mryqr.common.event.publish.DomainEventPublisher;
+//import com.ark.ddd.infrastructure.event.publish.DomainEventPublisher;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
 //import lombok.RequiredArgsConstructor;
@@ -15,21 +15,22 @@
 //@Component
 //@RequiredArgsConstructor
 //public class DomainEventHandlingInterceptor implements HandlerInterceptor {
+//
 //    private final DomainEventPublisher domainEventPublisher;
 //
 //    @Override
 //    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-//        ThreadLocalDomainEventIdHolder.clear();//确保开始处理请求时，holder中没有其它事件ID
+//        DomainEventIdThreadLocalHolder.clear();//确保开始处理请求时，holder中没有其它事件ID
 //        return true;
 //    }
 //
 //    @Override
 //    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-//        List<String> eventIds = ThreadLocalDomainEventIdHolder.allEventIds();
+//        List<Long> eventIds = DomainEventIdThreadLocalHolder.allEventIds();
 //        try {
 //            domainEventPublisher.publish(eventIds);
 //        } finally {
-//            ThreadLocalDomainEventIdHolder.remove();
+//            DomainEventIdThreadLocalHolder.remove();
 //        }
 //    }
 //
