@@ -74,7 +74,7 @@ public abstract class AggregateRoot implements Identity {
 //        return opsLogs;
 //    }
 
-    protected void publishEvent(DomainEvent event) {
+    public void publishEvent(DomainEvent event) {
         event.setArInfo(this);
         allEvents().add(event);
     }
