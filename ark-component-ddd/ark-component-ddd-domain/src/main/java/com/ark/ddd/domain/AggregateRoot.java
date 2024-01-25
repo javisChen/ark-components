@@ -5,6 +5,7 @@ import com.ark.ddd.domain.event.DomainEvent;
 import lombok.Getter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +17,9 @@ public abstract class AggregateRoot implements Identity {
 
     private Long id;//通过Snowflake算法生成
     private Long tenantId = 1L;//在多租户下，所有聚合根都需要一个tenantId来对应某个租户
-    private Instant createTime;//创建时间
+    private LocalDateTime createTime;//创建时间
+    private LocalDateTime updateTime;//更新时间
     private Long creator;//创建人Id
-    private Instant updateTime;//更新时间
     private Long modifier;//更新人MemberId
     private List<DomainEvent> events;//领域事件列表，用于临时存放完成某个业务流程中所发出的事件，会被BaseRepository保存到事件表中
     // private LinkedList<OpsLog> opsLogs;//操作日志
@@ -33,7 +34,7 @@ public abstract class AggregateRoot implements Identity {
 
         this.id = IdUtil.getSnowflakeNextId();
 //        this.tenantId = 1L;
-        this.createTime = now();
+        this.createTime = LocalDateTime.now();
 //        this.creator = user.getMemberId();
 //        this.creator = user.getName();
     }
