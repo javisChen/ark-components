@@ -1,6 +1,6 @@
 package com.ark.ddd.infrastructure.event.db;
 
-import com.ark.ddd.domain.event.DomainEvent;
+import com.ark.component.ddd.domain.event.DomainEvent;
 
 public class UserCreatedEvent extends DomainEvent {
 

@@ -1,8 +1,9 @@
 package com.ark.ddd.infrastructure.event.db;
 
 import cn.hutool.core.util.IdUtil;
-import com.ark.ddd.domain.event.DomainEvent;
-import com.ark.ddd.domain.event.DomainEventStatus;
+import com.ark.component.ddd.domain.event.DomainEvent;
+import com.ark.component.ddd.domain.event.DomainEventStatus;
+import com.ark.component.ddd.infrastructure.event.db.MySQLDomainEventDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.DataSourceBuilder;
