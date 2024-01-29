@@ -9,13 +9,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.EventObject;
 
 import static java.time.Instant.now;
 
 
 @Getter
 @Setter
-public class DomainEvent {
+public class DomainEvent extends EventObject {
 
     @TableId
     private Long id;
@@ -48,7 +49,6 @@ public class DomainEvent {
      * 已经发布的次数，无论成功与否
      */
     @TableField
-
     private int publishedCount;
     /**
      * 已经被消费的次数，无论成功与否
@@ -74,9 +74,9 @@ public class DomainEvent {
     @TableField
     private String eventData;
 
-    protected DomainEvent(String type, Long userId) {
+    protected DomainEvent(Object source, String type, Long userId) {
+        super(source);
         Assert.notNull(type, "Domain event type must not be null.");
-
         this.id = newEventId();
         this.type = type;
         this.status = DomainEventStatus.CREATED;
@@ -86,7 +86,8 @@ public class DomainEvent {
         this.triggeredAt = now();
     }
 
-    public DomainEvent(String type) {
+    public DomainEvent(Object source, String type) {
+        super(source);
         Assert.notBlank(type, "Domain event type must not be null.");
         this.id = newEventId();
         this.type = type;

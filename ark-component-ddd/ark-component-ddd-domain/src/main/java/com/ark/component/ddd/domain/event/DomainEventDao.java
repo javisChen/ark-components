@@ -5,11 +5,13 @@ public interface DomainEventDao {
 
     void insert(List<DomainEvent> events);
 
+    void insert(DomainEvent event);
+
     DomainEvent byId(Long id);
 
     List<DomainEvent> byIds(List<Long> ids);
 
-    <T extends DomainEvent> T latestEventFor(Long arId, DomainEventType type, Class<T> eventClass);
+    <T extends DomainEvent> T latestEventFor(Long arId, String type, Class<T> eventClass);
 
     void successPublish(DomainEvent event);
 

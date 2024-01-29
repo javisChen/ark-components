@@ -1,5 +1,6 @@
 package com.ark.component.ddd.domain.vo;
 
+import com.ark.component.exception.ExceptionFactory;
 import lombok.Getter;
 
 /**
@@ -24,7 +25,7 @@ public enum EnableDisableStatus implements BaseEnum {
         if (ENABLED.value.equals(value)) {
             return ENABLED;
         }
-        return null;
+        throw ExceptionFactory.userException("status value is wrong");
     }
 
 }

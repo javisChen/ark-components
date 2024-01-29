@@ -1,5 +1,6 @@
 package com.ark.component.ddd.infrastructure.event.db;
 
+import com.ark.component.ddd.domain.AggregateRoot;
 import com.ark.component.ddd.domain.event.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,9 +20,7 @@ import static cn.hutool.core.lang.Assert.notNull;
 
 @Slf4j
 @Component
-public class MySQLDomainEventDao implements DomainEventDao {
-
-//    private final JdbcClient jdbcClient;
+public class MySQLDomainEventDao <T, M, AR extends AggregateRoot> implements DomainEventDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,6 +29,11 @@ public class MySQLDomainEventDao implements DomainEventDao {
     public MySQLDomainEventDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    }
+
+    @Override
+    public void insert(DomainEvent event) {
+        insert(List.of(event));
     }
 
     @Override
@@ -80,7 +84,7 @@ public class MySQLDomainEventDao implements DomainEventDao {
     }
 
     @Override
-    public <T extends DomainEvent> T latestEventFor(Long arId, DomainEventType type, Class<T> eventClass) {
+    public <T extends DomainEvent> T latestEventFor(Long arId, String type, Class<T> eventClass) {
         notNull(arId, "AR ID must not be blank.");
         notNull(type, "Domain event type must not be null.");
         notNull(eventClass, "Domain event class must not be null.");
@@ -179,7 +183,7 @@ public class MySQLDomainEventDao implements DomainEventDao {
     public static class DomainEventRowMapper implements RowMapper<DomainEvent> {
         @Override
         public DomainEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
-            DomainEvent event = new DomainEvent(rs.getString("type"));
+            DomainEvent event = new DomainEvent(null, rs.getString("type"));
             event.setId(rs.getLong("id"));
             event.setTenantId(rs.getLong("tenantId"));
             event.setArId(rs.getLong("arId"));
