@@ -24,6 +24,8 @@ public interface BaseRepository<AR extends AggregateRoot, ID extends Serializabl
 
     AR byId(ID id);
 
+    AR byIdOrThrowError(ID id);
+
     List<AR> byIds(List<ID> ids);
 
 }

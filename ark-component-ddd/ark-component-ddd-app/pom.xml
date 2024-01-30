@@ -10,7 +10,7 @@
     </parent>
     <packaging>jar</packaging>
 
-    <artifactId>ark-component-ddd-application</artifactId>
+    <artifactId>ark-component-ddd-app</artifactId>
 
     <properties>
 

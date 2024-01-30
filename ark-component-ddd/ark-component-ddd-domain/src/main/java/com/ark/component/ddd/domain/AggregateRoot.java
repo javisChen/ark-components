@@ -3,6 +3,7 @@ package com.ark.component.ddd.domain;
 import cn.hutool.core.util.IdUtil;
 import com.ark.component.ddd.domain.event.DomainEvent;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +92,5 @@ public abstract class AggregateRoot implements Identity {
     public Long getIdentifier() {
         return id;
     }
-
 }
+
