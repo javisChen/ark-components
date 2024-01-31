@@ -102,6 +102,13 @@ public class BaseDBRepository<AR extends AggregateRoot, ID extends Serializable>
     }
 
     @Override
+    public AR byIdOrThrowError(ID id) {
+        AR ar = byId(id);
+        notNull(ar, "Cannot find the ar.");
+        return ar;
+    }
+
+    @Override
     public List<AR> byIds(List<ID> ids) {
         if (isEmpty(ids)) {
             return emptyList();
