@@ -12,13 +12,11 @@ import java.util.List;
  */
 public interface BaseRepository<AR extends AggregateRoot, ID extends Serializable> {
 
-    void persist(AR ar);
+    void saveAndPublishEvents(AR ar);
 
-    void persistAll(List<AR> ars);
+    void saveAndPublishEvents(List<AR> ars);
 
-    void deleteById(ID id);
-
-    void delete(AR ar);
+    void deleteAndPublishEvents(AR ar);
 
     void deleteAll(List<AR> ars);
 
@@ -26,6 +24,6 @@ public interface BaseRepository<AR extends AggregateRoot, ID extends Serializabl
 
     AR byIdOrThrowError(ID id);
 
-    List<AR> byIds(List<ID> ids);
+//    List<AR> byIds(List<ID> ids);
 
 }
