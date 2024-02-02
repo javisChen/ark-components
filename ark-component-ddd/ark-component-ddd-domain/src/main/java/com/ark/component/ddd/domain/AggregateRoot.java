@@ -74,6 +74,7 @@ public abstract class AggregateRoot implements Identity {
 
     public void raiseEvent(DomainEvent event) {
 //        event.setArInfo(this);
+        // 防止重复发送事件
         allEvents().add(event);
     }
 

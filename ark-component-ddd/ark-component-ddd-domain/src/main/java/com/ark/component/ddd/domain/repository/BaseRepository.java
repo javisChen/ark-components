@@ -4,9 +4,11 @@ import com.ark.component.ddd.domain.AggregateRoot;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 定义资源库接口
+ *
  * @param <AR> 聚合根
  * @param <ID> ID类型
  */
@@ -24,6 +26,12 @@ public interface BaseRepository<AR extends AggregateRoot, ID extends Serializabl
 
     AR byIdOrThrowError(ID id);
 
-//    List<AR> byIds(List<ID> ids);
+    <X extends Throwable> AR byIdOrThrowError(ID id, Supplier<X> throwable) throws X;
+
+    AR byIdOrThrowError(ID id, String msg);
+
+    default List<AR> byIds(List<ID> ids) {
+        return null;
+    }
 
 }

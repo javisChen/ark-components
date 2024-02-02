@@ -5,6 +5,7 @@ import com.ark.component.ddd.domain.event.DomainEvent;
 import com.ark.component.ddd.domain.event.DomainEventDao;
 import com.ark.component.ddd.domain.repository.BaseRepository;
 import com.ark.component.ddd.infrastructure.event.ThreadLocalDomainEventIdHolder;
+import com.ark.component.exception.ExceptionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static cn.hutool.core.lang.Assert.notNull;
 import static java.util.Objects.requireNonNull;
@@ -92,8 +94,18 @@ public abstract class BaseDBRepository<AR extends AggregateRoot, ID extends Seri
 
     @Override
     public AR byIdOrThrowError(ID id) {
+        return byIdOrThrowError(id, ExceptionFactory.userExceptionSupplier("资源不存在"));
+    }
+
+    @Override
+    public AR byIdOrThrowError(ID id, String msg) {
+        return byIdOrThrowError(id, ExceptionFactory.userExceptionSupplier(msg));
+    }
+
+    @Override
+    public <X extends Throwable> AR byIdOrThrowError(ID id, Supplier<X> throwable) throws X {
         AR ar = byId(id);
-        notNull(ar, "Cannot find the ar.");
+        notNull(ar, throwable);
         return ar;
     }
 
