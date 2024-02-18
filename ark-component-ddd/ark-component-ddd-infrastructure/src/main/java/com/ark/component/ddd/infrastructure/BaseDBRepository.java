@@ -116,10 +116,12 @@ public abstract class BaseDBRepository<AR extends AggregateRoot, ID extends Seri
         }
     }
 
-    protected abstract void save(AR ar);
+    public abstract void save(AR ar);
 
-    protected abstract void delete(AR it);
+    public abstract void delete(AR ar);
 
-    protected abstract void delete(List<Long> ids);
+    public void delete(List<Long> ids) {
+
+    }
 
 }
