@@ -1,12 +1,26 @@
 package com.ark.component.common.util.excel;
 
+import cn.hutool.core.io.FileUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 public class ExcelTest {
+
+    @Test
+    public void test() {
+        String fileName = "/Users/chenjiawei/code/myself/ark/ark-components/ark-component-common/ark-component-common-core/src/test/resources/code.txt";
+        List<String> strings = FileUtil.readLines(fileName, Charset.defaultCharset());
+        String collect = strings.stream().map(item -> "'" + item + "'").collect(Collectors.joining(","));
+        String s = "select * from us_button where code in (%s)".formatted(collect);
+        System.out.println(s);
+    }
 
     @Test
     public void simpleRead() {
