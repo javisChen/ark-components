@@ -2,11 +2,9 @@ package com.ark.component.ddd.infrastructure;
 
 import com.ark.component.ddd.domain.AggregateRoot;
 import com.ark.component.ddd.domain.event.DomainEvent;
-import com.ark.component.ddd.domain.event.DomainEventDao;
 import com.ark.component.ddd.domain.repository.BaseRepository;
 import com.ark.component.ddd.infrastructure.event.ThreadLocalDomainEventIdHolder;
 import com.ark.component.exception.ExceptionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,8 +24,8 @@ import static org.apache.commons.collections4.CollectionUtils.isEmpty;
  */
 public abstract class BaseDBRepository<AR extends AggregateRoot, ID extends Serializable> implements BaseRepository<AR, ID> {
 
-    @Autowired
-    private DomainEventDao domainEventDao;
+//    @Autowired
+//    private DomainEventDao domainEventDao;
 
     @Override
     public void saveAndPublishEvents(AR ar) {
@@ -111,7 +109,7 @@ public abstract class BaseDBRepository<AR extends AggregateRoot, ID extends Seri
 
     private void saveEvents(List<DomainEvent> events) {
         if (!isEmpty(events)) {
-            domainEventDao.insert(events);
+            // domainEventDao.insert(events);
             ThreadLocalDomainEventIdHolder.addEvents(events);
         }
     }
