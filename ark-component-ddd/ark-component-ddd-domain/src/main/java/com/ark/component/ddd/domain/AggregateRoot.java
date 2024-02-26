@@ -3,12 +3,14 @@ package com.ark.component.ddd.domain;
 import cn.hutool.core.util.IdUtil;
 import com.ark.component.ddd.domain.event.DomainEvent;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@SuperBuilder
 public abstract class AggregateRoot implements Identity {
     private static final int MAX_OPS_LOG_SIZE = 20;
 
@@ -21,56 +23,10 @@ public abstract class AggregateRoot implements Identity {
     private List<DomainEvent> events;//领域事件列表，用于临时存放完成某个业务流程中所发出的事件，会被BaseRepository保存到事件表中
     // private LinkedList<OpsLog> opsLogs;//操作日志
 
-//    protected AggregateRoot() {
-//        this.clearEvents();
-//    }
-
     public AggregateRoot() {
-//        notNull(user, "User must not be null.");
-//        notBlank(user.getTenantId(), "Tenant ID must not be blank.");
-
         this.id = IdUtil.getSnowflakeNextId();
-//        this.tenantId = 1L;
         this.createTime = LocalDateTime.now();
-//        this.creator = user.getMemberId();
-//        this.creator = user.getName();
     }
-
-//    protected AggregateRoot(Long id, Long tenantId) {
-//        notNull(id, "AR ID must not be blank.");
-//        notNull(tenantId, "Tenant ID must not be blank.");
-////        notNull(user, "User must not be null.");
-//
-//        this.id = id;
-//        this.tenantId = tenantId;
-//        this.createdAt = now();
-////        this.creator = user.getMemberId();
-////        this.creator = user.getName();
-//    }
-
-//    protected void addOpsLog(String note, User user) {
-//        if (user.isLoggedIn()) {
-//            OpsLog log = OpsLog.builder().note(note).optAt(now()).optBy(user.getMemberId()).obn(user.getName()).build();
-//            List<OpsLog> opsLogs = allOpsLogs();
-//
-//            opsLogs.add(log);
-//            if (opsLogs.size() > MAX_OPS_LOG_SIZE) {//最多保留最近100条
-//                this.opsLogs.remove();
-//            }
-//
-//            this.updatedAt = now();
-//            this.modifier = user.getMemberId();
-//            this.updater = user.getName();
-//        }
-//    }
-//
-//    private List<OpsLog> allOpsLogs() {
-//        if (opsLogs == null) {
-//            this.opsLogs = new LinkedList<>();
-//        }
-//
-//        return opsLogs;
-//    }
 
     public void raiseEvent(DomainEvent event) {
 //        event.setArInfo(this);
