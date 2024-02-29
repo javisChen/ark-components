@@ -1,16 +1,11 @@
 package com.ark.component.ddd.domain;
 
-import cn.hutool.core.util.IdUtil;
 import com.ark.component.ddd.domain.event.DomainEvent;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@SuperBuilder
 public abstract class AggregateRoot implements Identity {
     private static final int MAX_OPS_LOG_SIZE = 20;
 
@@ -24,8 +19,10 @@ public abstract class AggregateRoot implements Identity {
     // private LinkedList<OpsLog> opsLogs;//操作日志
 
     public AggregateRoot() {
-        this.id = IdUtil.getSnowflakeNextId();
-        this.createTime = LocalDateTime.now();
+    }
+
+    public AggregateRoot(Long id) {
+        this.id = id;
     }
 
     public void raiseEvent(DomainEvent event) {
@@ -48,6 +45,62 @@ public abstract class AggregateRoot implements Identity {
     @Override
     public Long getIdentifier() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
+    }
+
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public Long getModifier() {
+        return modifier;
+    }
+
+    public List<DomainEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<DomainEvent> events) {
+        this.events = events;
     }
 }
 
