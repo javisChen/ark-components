@@ -20,6 +20,8 @@ public interface BaseRepository<AR extends AggregateRoot, ID extends Serializabl
 
     void deleteAndPublishEvents(AR ar);
 
+    void deleteAndPublishEvents(List<AR> ars);
+
     void deleteAll(List<AR> ars);
 
     AR byId(ID id);

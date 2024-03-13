@@ -69,6 +69,26 @@ public abstract class BaseDBRepository<AR extends AggregateRoot, ID extends Seri
     }
 
     @Override
+    public void deleteAndPublishEvents(List<AR> ars) {
+        if (isEmpty(ars)) {
+            return;
+        }
+        List<DomainEvent> events = new ArrayList<>();
+        List<Long> ids = new ArrayList<>(ars.size());
+        ars.forEach(ar -> {
+            if (!isEmpty(ar.getEvents())) {
+                events.addAll(ar.getEvents());
+                ar.clearEvents();
+            }
+            ids.add(ar.getId());
+        });
+
+        saveEvents(events);
+
+        delete(ids);
+    }
+
+    @Override
     public void deleteAll(List<AR> ars) {
         if (isEmpty(ars)) {
             return;
