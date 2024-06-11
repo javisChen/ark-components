@@ -14,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CheckService<T extends BaseEntity> {
 
-    @Autowired
-    private IService<T> service;
+    private final IService<T> service;
+
+    public CheckService(IService<T> service) {
+        this.service = service;
+    }
 
     /**
      * 判断数据行是否不存在
