@@ -19,6 +19,15 @@ public class ExceptionFactory {
         return new SysException(errorMessage);
     }
 
+    /**
+     * 系统内部异常
+     * @param errorMessage 具体错误信息
+     * @return UserException
+     */
+    public static Supplier<RuntimeException> sysExceptionSupplier(String errorMessage) {
+        return () -> new SysException(errorMessage);
+    }
+
     public static SysException sysException(String errorCode, String errorMessage) {
         return new SysException(errorCode, errorMessage);
     }

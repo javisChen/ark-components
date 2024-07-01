@@ -1,0 +1,40 @@
+{
+  "states": [
+    "UN_PAY",
+    "PAID",
+    "CLOSED"
+  ],
+  "events": [
+    "CREATE_ORDER",
+    "PAY",
+    "CLOSE"
+  ],
+  "initState": "UN_PAY",
+  "finalState": "CLOSED",
+  "transitions": [
+    {
+      "name": "订单创建",
+      "guards": [
+        "com.ark.component.statemachine.guard.OrderCreateGuard"
+      ],
+      "source": "",
+      "event": "CREATE_ORDER",
+      "target": "UN_PAY",
+      "actions": [
+        "com.ark.component.statemachine.action.OrderCreateAction"
+      ]
+    },
+    {
+      "name": "订单支付",
+      "guards": [
+        "com.ark.component.statemachine.guard.OrderPayGuard"
+      ],
+      "source": "UN_PAY",
+      "event": "PAY",
+      "target": "PAID",
+      "actions": [
+        "com.ark.component.statemachine.action.OrderPayAction"
+      ]
+    }
+  ]
+}
