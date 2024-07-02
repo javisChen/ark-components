@@ -2,9 +2,12 @@ package com.ark.component.tree;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import cn.hutool.core.util.IdUtil;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.orm.mybatis.base.BaseEntity;
-import com.ark.component.tree.dao.TreeNodeMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.incrementer.SapHanaKeyGenerator;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.ArrayList;
@@ -12,51 +15,54 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service
+//@Service
 @RequiredArgsConstructor
-public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> implements TreeService {
+public class AbstractTreeService<E extends TreeNode> extends ServiceImpl<BaseMapper<E>, E> implements TreeService {
 
     private final static String PATH_SEPARATOR = "/";
 
     @Override
-    public Long addNode(String bizType, Long bizId) {
-        return addNode(bizType, bizId, null);
-    }
-
-    @Override
-    public Long addNode(String bizType, Long bizId, Long pid) {
+    public Long addNode(TreeNode node) {
         TreeNode parent = null;
 
-        if (pid != null) {
-            parent = getNode(bizType, pid);
+        if (node.getId() == null) {
+            node.setId(IdUtil.getSnowflakeNextId());
+        }
+
+        if (node.getPid() != null) {
+            parent = getNode(node.getPid());
             Assert.notNull(parent, ExceptionFactory.userExceptionSupplier("父节点不存在"));
         }
 
+        Long nodeId = node.getId();
         String levelPath = parent == null
-                ? bizId + PATH_SEPARATOR
-                : parent.getLevelPath() + bizId + PATH_SEPARATOR;
+                ? nodeId + PATH_SEPARATOR
+                : parent.getLevelPath() + nodeId + PATH_SEPARATOR;
         Long parentId = parent != null ? parent.getId() : 0;
         int level = parent != null ? parent.getLevel() + 1 : 0;
 
-        TreeNode treeNode = new TreeNode();
+        E treeNode = null;
+        try {
+
+            treeNode = getEntityClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         treeNode.setApplicationId(0L);
-        treeNode.setBizId(bizId);
-        treeNode.setBizType(bizType);
         treeNode.setPid(parentId);
         treeNode.setLevelPath(levelPath);
         treeNode.setLevel(level);
         treeNode.setId(0L);
-        return null;
+        save(treeNode);
+        return treeNode.getId();
     }
 
-    private TreeNode getNode(String bizType, Long bizId) {
+    private E getNode(Long bizId) {
         return lambdaQuery()
-                .eq(TreeNode::getBizType, bizType)
-                .eq(TreeNode::getBizId, bizId)
+                .eq(E::getId, bizId)
                 .one();
     }
 
@@ -64,12 +70,12 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     @Override
     public void removeNode(String bizType, Long bizId) {
 
-        TreeNode node = getNode(bizType, bizId);
+        E node = getNode(bizId);
         if (node == null) {
             return;
         }
-        List<TreeNode> children = lambdaQuery()
-                .select(BaseEntity::getId)
+        List<E> children = lambdaQuery()
+                .select(E::getId)
                 .likeRight(TreeNode::getLevelPath, node.getLevelPath())
                 .list();
         List<Long> willDeleteIds;
@@ -86,9 +92,8 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public List<TreeNode> queryNodes(String bizType) {
+    public List<E> queryNodes(String bizType) {
         return lambdaQuery()
-                .eq(TreeNode::getBizType, bizType)
                 .list();
     }
 }

@@ -2,7 +2,7 @@ package com.ark.component.tree;
 
 import java.util.List;
 
-public interface TreeService {
+public interface TreeService<E extends TreeNode> {
 
     /**
      * 添加树节点
@@ -11,17 +11,7 @@ public interface TreeService {
      * @param bizId   业务id
      * @return 节点id
      */
-    Long addNode(String bizType, Long bizId);
-
-    /**
-     * 添加树节点
-     *
-     * @param bizType 业务类型
-     * @param bizId   业务id
-     * @param pid     父id
-     * @return 节点id
-     */
-    Long addNode(String bizType, Long bizId, Long pid);
+    Long addNode(E node);
 
 
     /**
