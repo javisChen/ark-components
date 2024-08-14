@@ -21,6 +21,7 @@
         <module>ark-component-logging</module>
         <module>ark-component-logger</module>
         <module>ark-component-statemachine</module>
+        <module>ark-component-tree</module>
         <module>ark-component-biz-log</module>
         <module>ark-component-cache</module>
         <module>ark-component-lock</module>
