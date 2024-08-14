@@ -14,9 +14,9 @@ import java.io.InputStream;
 public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
 
     private MinioClient minioClient = null;
-    private final MinIoOssProperties minIoOssProperties;
+    private final MinIOOssProperties minIoOssProperties;
 
-    public MinIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
+    public MinIoOssObjectStorageService(MinIOOssProperties minIoOssProperties) {
         this.minIoOssProperties = minIoOssProperties;
         init();
     }
@@ -51,7 +51,7 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
                 argsBuilder.contentType(contentType);
             }
             minioClient.putObject(argsBuilder.build());
-            return minIoOssProperties.getEndPoint() + File.separator + bucketName+ File.separator + objectName;
+            return minIoOssProperties.getEndPoint() + File.separator + bucketName + File.separator + objectName;
         } catch (Exception e) {
             throw new OssException(e);
         }
@@ -66,4 +66,14 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
             throw new OssException(e);
         }
     }
+
+//    @Override
+//    public InputStream get(String bucketName, String objectName) {
+//        try {
+//            GetObjectArgs args = GetObjectArgs.builder().bucket(bucketName).object(objectName).build();
+//            return minioClient.getObject(args);
+//        } catch (Exception e) {
+//            throw new OssException(e);
+//        }
+//    }
 }

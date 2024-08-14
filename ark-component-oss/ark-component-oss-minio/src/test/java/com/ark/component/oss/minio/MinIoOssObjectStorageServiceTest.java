@@ -15,7 +15,7 @@ public class MinIoOssObjectStorageServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MinIoOssProperties minIoOssProperties = new MinIoOssProperties();
+        MinIOOssProperties minIoOssProperties = new MinIOOssProperties();
         minIoOssProperties.setEndPoint("http://127.0.0.1:9000");
         minIoOssProperties.setAccessKey("admin");
         minIoOssProperties.setSecretKey("admin123456");
