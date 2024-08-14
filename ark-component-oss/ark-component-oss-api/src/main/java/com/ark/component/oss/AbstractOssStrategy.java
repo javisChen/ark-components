@@ -2,7 +2,7 @@ package com.ark.component.oss;
 
 import java.io.InputStream;
 
-public class AbstractObjectStorageService implements IObjectStorageService {
+public abstract class AbstractOssStrategy implements OssStrategy {
 
     @Override
     public String put(String bucketName, String objectName, InputStream inputstream) {

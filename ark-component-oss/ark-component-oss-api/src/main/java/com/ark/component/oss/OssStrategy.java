@@ -12,7 +12,7 @@ import java.io.InputStream;
  * 定义OSS通用接口
  * @author victor
  */
-public interface IObjectStorageService {
+public interface OssStrategy {
 
     /**
      * 上传对象
@@ -28,5 +28,7 @@ public interface IObjectStorageService {
     InputStream get(String bucketName, String objectName);
 
     String getFileUrl(String objectName);
+
+    OssType ossType();
 
 }

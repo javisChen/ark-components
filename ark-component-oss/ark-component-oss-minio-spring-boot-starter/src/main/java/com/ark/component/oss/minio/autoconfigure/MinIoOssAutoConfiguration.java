@@ -1,7 +1,7 @@
 package com.ark.component.oss.minio.autoconfigure;
 
 import com.ark.component.oss.minio.MinIoOssProperties;
-import com.ark.component.oss.minio.MinIoOssObjectStorageService;
+import com.ark.component.oss.minio.MinIoOssStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,8 +23,8 @@ public class MinIoOssAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "ark.component.oss.minio.enabled", havingValue = "true")
-    public MinIoOssObjectStorageService minIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
-        return new MinIoOssObjectStorageService(minIoOssProperties);
+    public MinIoOssStrategy minIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
+        return new MinIoOssStrategy(minIoOssProperties);
     }
 
 }

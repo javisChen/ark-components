@@ -1,7 +1,8 @@
 package com.ark.component.oss.minio;
 
 import cn.hutool.core.io.FileUtil;
-import com.ark.component.oss.AbstractObjectStorageService;
+import com.ark.component.oss.AbstractOssStrategy;
+import com.ark.component.oss.OssType;
 import com.ark.component.oss.exception.OssException;
 import io.minio.*;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,12 @@ import java.io.File;
 import java.io.InputStream;
 
 @Slf4j
-public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
+public class MinIoOssStrategy extends AbstractOssStrategy {
 
     private MinioClient minioClient = null;
     private final MinIoOssProperties minIoOssProperties;
 
-    public MinIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
+    public MinIoOssStrategy(MinIoOssProperties minIoOssProperties) {
         this.minIoOssProperties = minIoOssProperties;
         init();
     }
@@ -65,6 +66,11 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
         } catch (Exception e) {
             throw new OssException(e);
         }
+    }
+
+    @Override
+    public OssType ossType() {
+        return OssType.MINIO;
     }
 
 //    @Override

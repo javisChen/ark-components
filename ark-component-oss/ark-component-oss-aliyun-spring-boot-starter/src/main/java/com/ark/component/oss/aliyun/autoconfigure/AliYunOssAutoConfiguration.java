@@ -1,6 +1,6 @@
 package com.ark.component.oss.aliyun.autoconfigure;
 
-import com.ark.component.oss.aliyun.AliYunObjectStorageService;
+import com.ark.component.oss.aliyun.AliYunOssStrategy;
 import com.ark.component.oss.aliyun.AliYunOssProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,8 +23,8 @@ public class AliYunOssAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "ark.component.oss.aliyun.enabled", havingValue = "true")
-    public AliYunObjectStorageService aliYunObjectStorageService(AliYunOssProperties aliYunOssProperties) {
-        return new AliYunObjectStorageService(aliYunOssProperties);
+    public AliYunOssStrategy aliYunObjectStorageService(AliYunOssProperties aliYunOssProperties) {
+        return new AliYunOssStrategy(aliYunOssProperties);
     }
 
 }
