@@ -1,8 +1,8 @@
 package com.ark.component.oss.minio;
 
+import cn.hutool.core.io.FileUtil;
 import com.ark.component.oss.AbstractObjectStorageService;
 import com.ark.component.oss.exception.OssException;
-import com.ark.component.oss.util.FileContentTypeUtil;
 import io.minio.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +14,9 @@ import java.io.InputStream;
 public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
 
     private MinioClient minioClient = null;
-    private final MinIOOssProperties minIoOssProperties;
+    private final MinIoOssProperties minIoOssProperties;
 
-    public MinIoOssObjectStorageService(MinIOOssProperties minIoOssProperties) {
+    public MinIoOssObjectStorageService(MinIoOssProperties minIoOssProperties) {
         this.minIoOssProperties = minIoOssProperties;
         init();
     }
@@ -46,7 +46,7 @@ public class MinIoOssObjectStorageService extends AbstractObjectStorageService {
                     .bucket(bucketName)
                     .object(objectName)
                     .stream(inputstream, inputstream.available(), -1);
-            String contentType = FileContentTypeUtil.getType(objectName);
+            String contentType = FileUtil.getMimeType(objectName);
             if (StringUtils.isNotEmpty(contentType)) {
                 argsBuilder.contentType(contentType);
             }

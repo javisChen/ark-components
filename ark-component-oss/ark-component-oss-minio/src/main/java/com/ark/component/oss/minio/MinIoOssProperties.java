@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "ark.component.oss.minio")
 @Data
-public class MinIOOssProperties {
+public class MinIoOssProperties {
 
     private String endPoint;
 
