@@ -1,10 +1,11 @@
-package com.ark.component.oss.aliyun;
+package com.ark.component.oss.aliyun.strategy;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.PutObjectResult;
-import com.ark.component.oss.AbstractOssStrategy;
-import com.ark.component.oss.OssType;
+import com.ark.component.oss.aliyun.AliYunOssProperties;
+import com.ark.component.oss.api.OssType;
+import com.ark.component.oss.core.strategy.AbstractOssStrategy;
 
 import java.io.InputStream;
 
@@ -34,6 +35,6 @@ public class AliYunOssStrategy extends AbstractOssStrategy {
 
     @Override
     public OssType ossType() {
-        return OssType.ALIYUN;
+        return OssType.ALI_CLOUD;
     }
 }

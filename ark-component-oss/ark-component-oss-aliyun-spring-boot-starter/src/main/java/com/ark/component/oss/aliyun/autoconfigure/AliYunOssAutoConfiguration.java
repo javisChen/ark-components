@@ -1,6 +1,6 @@
 package com.ark.component.oss.aliyun.autoconfigure;
 
-import com.ark.component.oss.aliyun.AliYunOssStrategy;
+import com.ark.component.oss.aliyun.strategy.AliYunOssStrategy;
 import com.ark.component.oss.aliyun.AliYunOssProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

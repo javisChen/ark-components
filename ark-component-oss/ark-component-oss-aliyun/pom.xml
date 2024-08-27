@@ -48,6 +48,10 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.ark.oss</groupId>
+            <artifactId>ark-component-oss-api</artifactId>
+        </dependency>
 
     </dependencies>
 

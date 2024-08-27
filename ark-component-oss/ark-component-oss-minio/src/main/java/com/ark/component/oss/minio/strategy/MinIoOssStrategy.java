@@ -1,9 +1,10 @@
-package com.ark.component.oss.minio;
+package com.ark.component.oss.minio.strategy;
 
 import cn.hutool.core.io.FileUtil;
-import com.ark.component.oss.AbstractOssStrategy;
-import com.ark.component.oss.OssType;
-import com.ark.component.oss.exception.OssException;
+import com.ark.component.oss.core.strategy.AbstractOssStrategy;
+import com.ark.component.oss.api.OssType;
+import com.ark.component.oss.api.exception.OssException;
+import com.ark.component.oss.minio.MinIoOssProperties;
 import io.minio.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 public class MinIoOssStrategy extends AbstractOssStrategy {
 
     private MinioClient minioClient = null;
+
     private final MinIoOssProperties minIoOssProperties;
 
     public MinIoOssStrategy(MinIoOssProperties minIoOssProperties) {

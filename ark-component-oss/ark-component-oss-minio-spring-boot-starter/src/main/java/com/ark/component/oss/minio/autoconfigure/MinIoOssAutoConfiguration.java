@@ -1,7 +1,7 @@
 package com.ark.component.oss.minio.autoconfigure;
 
 import com.ark.component.oss.minio.MinIoOssProperties;
-import com.ark.component.oss.minio.MinIoOssStrategy;
+import com.ark.component.oss.minio.strategy.MinIoOssStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

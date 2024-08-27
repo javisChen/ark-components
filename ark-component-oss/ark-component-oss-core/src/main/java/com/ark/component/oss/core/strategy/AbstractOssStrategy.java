@@ -1,8 +1,9 @@
-package com.ark.component.oss.core;
+package com.ark.component.oss.core.strategy;
 
-import com.ark.component.oss.api.OssStrategy;
+import com.ark.component.oss.api.strategy.OssStrategy;
 
 import java.io.InputStream;
+
 
 public abstract class AbstractOssStrategy implements OssStrategy {
 

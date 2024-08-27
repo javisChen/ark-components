@@ -3,8 +3,10 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.ark.component.oss.api;
+package com.ark.component.oss.api.strategy;
 
+
+import com.ark.component.oss.api.OssType;
 
 import java.io.InputStream;
 
@@ -14,9 +16,6 @@ import java.io.InputStream;
  */
 public interface OssStrategy {
 
-    /**
-     * 上传对象
-     */
     String put(String bucketName, String objectName, InputStream inputstream);
 
     String put(boolean createBucketIfNotExist, String bucketName, String objectName, InputStream inputstream);

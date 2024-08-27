@@ -1,7 +1,8 @@
 package com.ark.component.oss.minio;
 
 import cn.hutool.core.io.IoUtil;
-import com.ark.component.oss.OssStrategy;
+import com.ark.component.oss.api.strategy.OssStrategy;
+import com.ark.component.oss.minio.strategy.MinIoOssStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

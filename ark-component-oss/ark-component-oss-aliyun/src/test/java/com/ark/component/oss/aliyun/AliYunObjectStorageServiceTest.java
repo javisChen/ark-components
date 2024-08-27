@@ -1,7 +1,8 @@
 package com.ark.component.oss.aliyun;
 
 import cn.hutool.core.io.IoUtil;
-import com.ark.component.oss.OssStrategy;
+import com.ark.component.oss.aliyun.strategy.AliYunOssStrategy;
+import com.ark.component.oss.api.strategy.OssStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,11 @@ public class AliYunObjectStorageServiceTest {
 
     @BeforeEach
     public void setUp() {
-        AliYunOssProperties minIoConfiguration = new AliYunOssProperties();
-        minIoConfiguration.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
-        minIoConfiguration.setAccessKey("");
-        minIoConfiguration.setSecretKey("");
-        ossStrategy = new AliYunOssStrategy(minIoConfiguration);
+        AliYunOssProperties aliYunOssProperties = new AliYunOssProperties();
+        aliYunOssProperties.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
+        aliYunOssProperties.setAccessKey("");
+        aliYunOssProperties.setSecretKey("");
+        ossStrategy = new AliYunOssStrategy(aliYunOssProperties);
     }
 
     @Test
