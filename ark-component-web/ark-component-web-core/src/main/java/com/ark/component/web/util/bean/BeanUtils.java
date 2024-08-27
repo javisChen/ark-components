@@ -15,7 +15,8 @@ import java.util.*;
  * @author victor
  */
 @Slf4j
-public class BeanConvertor {
+public class BeanUtils {
+
     public static <S, T> T copy(S src, Class<T> targetClazz) {
         if (Objects.isNull(src)) {
             return null;
@@ -31,6 +32,7 @@ public class BeanConvertor {
         beanCopier.copy(src, targetObj , null);
         return targetObj;
     }
+
     public static <S, T> List<T> copyList(Collection<S> srcList, Class<T> targetClazz) {
         if (CollectionUtils.isEmpty(srcList)) {
             return Collections.emptyList();
@@ -39,9 +41,11 @@ public class BeanConvertor {
         srcList.forEach(s -> targetList.add(copy(s, targetClazz)));
         return targetList;
     }
+
     public static <S, T> PageResponse<T> copyPage(IPage<S> page, Class<T> targetClazz) {
         return toPage(page, targetClazz);
     }
+
     private static <S, T> PageResponse<T> toPage(IPage<S> page, Class<T> targetClazz) {
         Collection<S> srcList = page.getRecords();
         List<T> targetList = null;
