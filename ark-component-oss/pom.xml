@@ -11,6 +11,7 @@
 
     <modules>
         <module>ark-component-oss-api</module>
+        <module>ark-component-oss-core</module>
         <module>ark-component-oss-minio</module>
         <module>ark-component-oss-aliyun</module>
         <module>ark-component-oss-minio-spring-boot-starter</module>
@@ -36,6 +37,12 @@
             <dependency>
                 <groupId>com.ark.oss</groupId>
                 <artifactId>ark-component-oss-api</artifactId>
+                <version>${ark-component-oss-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.oss</groupId>
+                <artifactId>ark-component-oss-core</artifactId>
                 <version>${ark-component-oss-api.version}</version>
             </dependency>
 

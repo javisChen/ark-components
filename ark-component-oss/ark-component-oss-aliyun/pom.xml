@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.ark.oss</groupId>
-            <artifactId>ark-component-oss-api</artifactId>
+            <artifactId>ark-component-oss-core</artifactId>
         </dependency>
 
         <dependency>

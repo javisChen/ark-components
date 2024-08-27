@@ -1,4 +1,6 @@
-package com.ark.component.oss;
+package com.ark.component.oss.core;
+
+import com.ark.component.oss.api.OssStrategy;
 
 import java.io.InputStream;
 

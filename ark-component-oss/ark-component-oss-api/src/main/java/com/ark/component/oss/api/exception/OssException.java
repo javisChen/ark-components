@@ -1,4 +1,4 @@
-package com.ark.component.oss.exception;
+package com.ark.component.oss.api.exception;
 
 /**
  * OSS操作异常类

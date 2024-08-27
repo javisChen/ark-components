@@ -1,9 +1,10 @@
-package com.ark.component.oss;
+package com.ark.component.oss.api;
 
 public enum OssType {
 
     MINIO("MINIO"),
-    ALIYUN("ALIYUN");
+
+    ALI_CLOUD("ALI_CLOUD");
 
     private final String value;
 

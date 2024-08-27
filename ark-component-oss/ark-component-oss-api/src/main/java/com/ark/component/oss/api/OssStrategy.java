@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.ark.component.oss;
+package com.ark.component.oss.api;
 
 
 import java.io.InputStream;
