@@ -70,6 +70,19 @@
         <appender-ref ref="ROLLING_FILE"/>
     </appender>
 
+<!--    <springProfile name="local,dev,test,sit">-->
+<!--        <root level="debug">-->
+<!--            <appender-ref ref="ASYNC_CONSOLE"/>-->
+<!--            <appender-ref ref="ASYNC_ROLLING_FILE"/>-->
+<!--        </root>-->
+<!--    </springProfile>-->
+
+<!--    <springProfile name="prod">-->
+<!--        <root level="info">-->
+<!--            <appender-ref ref="ASYNC_ROLLING_FILE"/>-->
+<!--        </root>-->
+<!--    </springProfile>-->
+
     <root level="info">
         <!--        <springProfile name="local,dev,test,sit">-->
         <!--            &lt;!&ndash; local本地配置时候打开控制台输出 &ndash;&gt;-->
