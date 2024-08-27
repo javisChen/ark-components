@@ -15,7 +15,7 @@ import java.util.*;
  * @author victor
  */
 @Slf4j
-public class BeanUtils {
+public class BeanConvertor {
 
     public static <S, T> T copy(S src, Class<T> targetClazz) {
         if (Objects.isNull(src)) {
