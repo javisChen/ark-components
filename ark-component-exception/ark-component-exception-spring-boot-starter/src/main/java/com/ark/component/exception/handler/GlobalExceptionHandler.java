@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +40,12 @@ public class GlobalExceptionHandler {
     public ServerResponse handle(Exception e) {
         log.error("Unknown exception：", e);
         return ServerResponse.error(BizErrorCode.SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ServerResponse handle(NoResourceFoundException e) {
+        return ServerResponse.error(USER_ERROR);
     }
 
     @ExceptionHandler(value = RpcException.class)
