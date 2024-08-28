@@ -2,25 +2,22 @@ package com.ark.component.tree;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import cn.hutool.core.util.IdUtil;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.orm.mybatis.base.BaseEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.incrementer.SapHanaKeyGenerator;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-
 
 //@Service
 @RequiredArgsConstructor
-public class AbstractTreeService<E extends TreeNode> extends ServiceImpl<BaseMapper<E>, E> implements TreeService {
+public class AbstractTreeService<E extends TreeNode> extends ServiceImpl<BaseMapper<E>, E> implements TreeService<E> {
 
     private final static String PATH_SEPARATOR = "/";
 

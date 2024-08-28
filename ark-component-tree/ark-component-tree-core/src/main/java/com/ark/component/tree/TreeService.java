@@ -25,7 +25,7 @@ public interface TreeService<E extends TreeNode> {
     /**
      * 获取所有树节点
      */
-    List<TreeNode> queryNodes(String bizType);
+    List<E> queryNodes(String bizType);
 
 
 }
