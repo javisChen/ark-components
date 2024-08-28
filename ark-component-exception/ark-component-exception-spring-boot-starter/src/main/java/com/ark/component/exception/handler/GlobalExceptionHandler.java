@@ -45,6 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ServerResponse handle(NoResourceFoundException e) {
+        log.error("Resource not found", e);
         return ServerResponse.error(USER_ERROR);
     }
 
