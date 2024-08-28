@@ -2,16 +2,14 @@ package com.ark.component.tree;
 
 import java.util.List;
 
-public interface TreeService<E extends TreeNode> {
+public interface TreeService {
 
     /**
      * 添加树节点
      *
-     * @param bizType 业务类型
-     * @param bizId   业务id
      * @return 节点id
      */
-    Long addNode(E node);
+    Long addNode(TreeNode node);
 
 
     /**
@@ -25,7 +23,7 @@ public interface TreeService<E extends TreeNode> {
     /**
      * 获取所有树节点
      */
-    List<E> queryNodes(String bizType);
+    List<TreeNode> queryNodes(String bizType);
 
 
 }
