@@ -101,8 +101,9 @@ public class WebAutoConfiguration {
         JSON.config(
                 JSONWriter.Feature.WriteNullListAsEmpty,
                 JSONWriter.Feature.WriteNullStringAsEmpty,
-                JSONWriter.Feature.WriteLongAsString, // 把Long类型转换成String类型，解决前端精度丢失问题
-                JSONWriter.Feature.LargeObject);
+                JSONWriter.Feature.WriteLongAsString // 把Long类型转换成String类型，解决前端精度丢失问题
+//                JSONWriter.Feature.LargeObject
+        );
         return new HttpMessageConverters(fastJsonHttpMessageConverter);
     }
 
