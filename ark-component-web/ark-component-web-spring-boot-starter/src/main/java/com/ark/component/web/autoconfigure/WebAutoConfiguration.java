@@ -51,7 +51,7 @@ public class WebAutoConfiguration {
         contact.setUrl("https://github.com/javisChen");
 
         Info info = new Info()
-                .title(application)
+                .title(application + "-api-docs")
                 .contact(contact)
                 .termsOfService("/" + application)
                 .description(application)
