@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,9 +93,32 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public List<TreeNode> queryNodes(String bizType) {
+    public List<TreeNode> queryNodes(String bizType, List<Long> menuIds) {
         return lambdaQuery()
                 .eq(TreeNode::getBizType, bizType)
+                .in(TreeNode::getBizId, menuIds)
                 .list();
     }
+
+    @Override
+    public List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds, Consumer<TreeNode> treeNodeConsumer) {
+
+        List<TreeNode> treeNodes = queryNodes("MENU", menuIds);
+
+        // page 转成Map以id为key
+//        Map<Long, MenuDTO> menuMap = menuDTO.stream().collect(Collectors.toMap(MenuDTO::getId, menu -> menu));
+
+        return null;
+//        return TreeUtil.build(treeNodes, 0L, (TreeNode treeNode, Tree<Long> tree) -> {
+//            tree.setId(treeNode.getId());
+//            tree.setParentId(treeNode.getParentBizId());
+//            treeNodeConsumer.accept(treeNode);
+//            if (menuMap.containsKey(treeNode.getBizId())) {
+//                MenuDTO menu = menuMap.get(treeNode.getBizId());
+//                tree.setName(menu.getName());
+//                tree.putAll(BeanUtil.beanToMap(menu));
+//            }
+//        });
+    }
+
 }

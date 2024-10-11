@@ -11,6 +11,7 @@
     <description>树形结构组件</description>
 
     <modules>
+        <module>ark-component-tree-dto</module>
         <module>ark-component-tree-core</module>
         <module>ark-component-tree-spring-boot-starter</module>
     </modules>
@@ -27,6 +28,12 @@
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ark.tree</groupId>
+                <artifactId>ark-component-tree-dto</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>

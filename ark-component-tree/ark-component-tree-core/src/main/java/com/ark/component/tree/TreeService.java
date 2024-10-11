@@ -1,6 +1,7 @@
 package com.ark.component.tree;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface TreeService {
 
@@ -23,7 +24,10 @@ public interface TreeService {
     /**
      * 获取所有树节点
      */
-    List<TreeNode> queryNodes(String bizType);
+    List<TreeNode> queryNodes(String bizType, List<Long> menuIds);
 
 
+//    List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds);
+
+    List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds, Consumer<TreeNode> treeNodeConsumer);
 }

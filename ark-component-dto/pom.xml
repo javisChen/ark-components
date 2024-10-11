@@ -69,6 +69,12 @@
             <artifactId>ark-component-validator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ark.tree</groupId>
+            <artifactId>ark-component-tree-dto</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>
