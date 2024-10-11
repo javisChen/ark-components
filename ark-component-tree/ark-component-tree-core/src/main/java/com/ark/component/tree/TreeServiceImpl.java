@@ -1,7 +1,10 @@
 package com.ark.component.tree;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.orm.mybatis.base.BaseEntity;
@@ -13,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,7 +92,6 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
         List<Long> ids = willDeleteIds.stream().sorted().collect(Collectors.toList());
         lambdaUpdate().in(BaseEntity::getId, ids).remove();
-
     }
 
     @Override
@@ -101,24 +103,21 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds, Consumer<TreeNode> treeNodeConsumer) {
+    public <T extends TreeDTO<Long>> List<Tree<Long>> queryTreeNodes(String bizType, List<T> data) {
 
-        List<TreeNode> treeNodes = queryNodes("MENU", menuIds);
+        List<TreeNode> treeNodes = queryNodes(bizType, data.stream().map(T::getId).toList());
 
-        // page 转成Map以id为key
-//        Map<Long, MenuDTO> menuMap = menuDTO.stream().collect(Collectors.toMap(MenuDTO::getId, menu -> menu));
+        Map<Long, T> dataMap = data.stream().collect(Collectors.toMap(T::getId, menu -> menu));
 
-        return null;
-//        return TreeUtil.build(treeNodes, 0L, (TreeNode treeNode, Tree<Long> tree) -> {
-//            tree.setId(treeNode.getId());
-//            tree.setParentId(treeNode.getParentBizId());
-//            treeNodeConsumer.accept(treeNode);
-//            if (menuMap.containsKey(treeNode.getBizId())) {
-//                MenuDTO menu = menuMap.get(treeNode.getBizId());
-//                tree.setName(menu.getName());
-//                tree.putAll(BeanUtil.beanToMap(menu));
-//            }
-//        });
+        return TreeUtil.build(treeNodes, 0L, (TreeNode treeNode, Tree<Long> tree) -> {
+            tree.setId(treeNode.getId());
+            tree.setParentId(treeNode.getParentBizId());
+            if (dataMap.containsKey(treeNode.getBizId())) {
+                T menu = dataMap.get(treeNode.getBizId());
+                tree.setName(menu.getName());
+                tree.putAll(BeanUtil.beanToMap(menu));
+            }
+        });
     }
 
 }

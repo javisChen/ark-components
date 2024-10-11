@@ -1,7 +1,8 @@
 package com.ark.component.tree;
 
+import cn.hutool.core.lang.tree.Tree;
+
 import java.util.List;
-import java.util.function.Consumer;
 
 public interface TreeService {
 
@@ -27,7 +28,12 @@ public interface TreeService {
     List<TreeNode> queryNodes(String bizType, List<Long> menuIds);
 
 
-//    List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds);
-
-    List<TreeNode> queryTreeNodes(String bizType, List<Long> menuIds, Consumer<TreeNode> treeNodeConsumer);
+    /**
+     *
+     * @param bizType
+     * @param data
+     * @return
+     * @param <T>
+     */
+    <T extends TreeDTO<Long>> List<Tree<Long>> queryTreeNodes(String bizType, List<T> data);
 }

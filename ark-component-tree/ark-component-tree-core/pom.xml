@@ -55,8 +55,8 @@
         </dependency>
 
         <dependency>
-            <artifactId>ark-component-tree-dto</artifactId>
             <groupId>com.ark.tree</groupId>
+            <artifactId>ark-component-tree-dto</artifactId>
         </dependency>
 
 
