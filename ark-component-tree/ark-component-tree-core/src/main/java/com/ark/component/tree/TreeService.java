@@ -1,17 +1,14 @@
 package com.ark.component.tree;
 
 import cn.hutool.core.lang.tree.Tree;
+import com.ark.component.tree.dto.TreeDTO;
 
 import java.util.List;
 
 public interface TreeService {
 
-    /**
-     * 添加树节点
-     *
-     * @return 节点id
-     */
-    Long addNode(TreeNode node);
+
+    TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence);
 
 
     /**
@@ -25,7 +22,13 @@ public interface TreeService {
     /**
      * 获取所有树节点
      */
-    List<TreeNode> queryNodes(String bizType, List<Long> menuIds);
+    List<TreeNode> queryNodes(String bizType, List<Long> bizIds);
+
+    /**
+     * 获取指定节点
+     */
+    TreeNode queryNode(String bizType, Long bizId);
+
 
 
     /**
@@ -36,4 +39,10 @@ public interface TreeService {
      * @param <T>
      */
     <T extends TreeDTO<Long>> List<Tree<Long>> queryTreeNodes(String bizType, List<T> data);
+
+    void move(String bizType, Long bizId, Long newParentBizId);
+
+    List<TreeNode> queryChildNodes(String bizType, Long bizId);
+
+    List<Long> queryChildNodeBizIds(String bizType, Long bizId);
 }

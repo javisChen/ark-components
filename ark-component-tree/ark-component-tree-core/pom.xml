@@ -59,7 +59,6 @@
             <artifactId>ark-component-tree-dto</artifactId>
         </dependency>
 
-
     </dependencies>
 
     <build>

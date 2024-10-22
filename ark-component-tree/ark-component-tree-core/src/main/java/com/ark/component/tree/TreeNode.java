@@ -3,12 +3,14 @@ package com.ark.component.tree;
 import com.ark.component.orm.mybatis.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
 @TableName("func_tree_node")
+@Getter
+@Setter
 public class TreeNode extends BaseEntity {
 
     @TableField("application_id")
@@ -31,6 +33,22 @@ public class TreeNode extends BaseEntity {
 
     @TableField("sequence")
     private Integer sequence;
+
+    public TreeNode() {
+
+    }
+
+
+    public TreeNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
+        this.bizId = bizId;
+        this.parentBizId = parentBizId;
+        this.bizType = bizType;
+        this.sequence = sequence;
+    }
+
+    public static TreeNode createTreeNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
+        return new TreeNode(bizType, bizId, parentBizId, sequence);
+    }
 
 
 }

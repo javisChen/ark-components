@@ -1,4 +1,4 @@
-package com.ark.component.tree;
+package com.ark.component.tree.dto;
 
 public interface TreeDTO<ID> {
 

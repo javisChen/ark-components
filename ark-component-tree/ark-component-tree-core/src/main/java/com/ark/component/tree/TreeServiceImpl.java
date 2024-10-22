@@ -9,8 +9,10 @@ import cn.hutool.core.util.IdUtil;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.orm.mybatis.base.BaseEntity;
 import com.ark.component.tree.dao.TreeNodeMapper;
+import com.ark.component.tree.dto.TreeDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,35 +27,42 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
     private final static String PATH_SEPARATOR = "/";
 
-    @Override
-    public Long addNode(TreeNode treeNode) {
+    private final static long DEFAULT_ROOT_PID = 0L;
 
+
+    @Override
+    public TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
+        TreeNode treeNode = TreeNode.createTreeNode(bizType, bizId, parentBizId, sequence);
+        return saveNode(treeNode);
+    }
+
+    private TreeNode saveNode(TreeNode treeNode) {
         if (treeNode.getId() == null) {
             treeNode.setId(IdUtil.getSnowflakeNextId());
         }
 
         TreeNode parentNode = getParentNode(treeNode);
-
         Long nodeId = treeNode.getId();
-
+        // 根据parent信息计算出当前层级信息
         String levelPath = parentNode == null
                 ? nodeId + PATH_SEPARATOR
                 : parentNode.getLevelPath() + nodeId + PATH_SEPARATOR;
-
         treeNode.setParentBizId(parentNode != null ? parentNode.getBizId() : 0);
         treeNode.setLevelPath(levelPath);
         treeNode.setLevel(parentNode != null ? parentNode.getLevel() + 1 : 1);
-        save(treeNode);
-        return treeNode.getId();
+
+        saveOrUpdate(treeNode);
+        return treeNode;
     }
 
     private TreeNode getParentNode(TreeNode treeNode) {
         TreeNode parentNode = null;
         Long parentBizId = treeNode.getParentBizId();
-        if (parentBizId != null && parentBizId != 0) {
-            parentNode = getNode(treeNode.getBizType(), parentBizId);
-            Assert.notNull(parentNode, ExceptionFactory.userExceptionSupplier("The parent node does not exists"));
+        if (parentBizId == null || parentBizId.equals(DEFAULT_ROOT_PID)) {
+            return parentNode;
         }
+        parentNode = getNode(treeNode.getBizType(), parentBizId);
+        Assert.notNull(parentNode, ExceptionFactory.userExceptionSupplier("The parent node does not exist"));
         return parentNode;
     }
 
@@ -64,30 +73,18 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
                 .one();
     }
 
-    private TreeNode getNode(TreeNode treeNode) {
-        return lambdaQuery()
-                .eq(TreeNode::getBizId, treeNode)
-                .one();
-    }
-
     @Transactional(rollbackFor = Throwable.class)
     @Override
     public void removeNode(String bizType, Long bizId) {
-
         TreeNode node = getNode(bizType, bizId);
         if (node == null) {
             return;
         }
-        List<TreeNode> children = lambdaQuery()
-                .select(TreeNode::getId)
-                .likeRight(TreeNode::getLevelPath, node.getLevelPath())
-                .list();
-        List<Long> willDeleteIds;
+        List<TreeNode> children = queryChildNodes(node.getLevelPath());
+        List<Long> willDeleteIds = new ArrayList<>(1);
         if (CollUtil.isNotEmpty(children)) {
             willDeleteIds = new ArrayList<>(children.size() + 1);
             willDeleteIds.addAll(children.stream().map(BaseEntity::getId).toList());
-        } else {
-            willDeleteIds = new ArrayList<>(1);
         }
 
         List<Long> ids = willDeleteIds.stream().sorted().collect(Collectors.toList());
@@ -95,11 +92,19 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public List<TreeNode> queryNodes(String bizType, List<Long> menuIds) {
+    public List<TreeNode> queryNodes(String bizType, List<Long> bizIds) {
         return lambdaQuery()
                 .eq(TreeNode::getBizType, bizType)
-                .in(TreeNode::getBizId, menuIds)
+                .in(TreeNode::getBizId, bizIds)
                 .list();
+    }
+
+    @Override
+    public TreeNode queryNode(String bizType, Long bizId) {
+        return lambdaQuery()
+                .eq(TreeNode::getBizType, bizType)
+                .eq(TreeNode::getBizId, bizId)
+                .one();
     }
 
     @Override
@@ -118,6 +123,91 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
                 tree.putAll(BeanUtil.beanToMap(menu));
             }
         });
+
+    }
+
+    @Override
+    public void move(String bizType, Long bizId, Long newParentBizId) {
+
+        TreeNode treeNode = queryNode(bizType, bizId);
+
+        // 如果pid不一致的话才做更新
+        if (treeNode.getParentBizId().equals(newParentBizId)) {
+            return;
+        }
+
+        Integer level = treeNode.getLevel();
+        String levelPath = treeNode.getLevelPath();
+
+        treeNode.setParentBizId(newParentBizId);
+        saveNode(treeNode);
+
+        Integer currentLevel = treeNode.getLevel();
+        moveChildNodes(currentLevel, level, levelPath);
+    }
+
+    @Override
+    public List<TreeNode> queryChildNodes(String bizType, Long bizId) {
+        TreeNode treeNode = queryNode(bizType, bizId);
+        return queryChildNodes(treeNode.getLevelPath());
+    }
+
+    @Override
+    public List<Long> queryChildNodeBizIds(String bizType, Long bizId) {
+        List<TreeNode> treeNodes = queryChildNodes(bizType, bizId);
+        return treeNodes.stream().map(TreeNode::getBizId).toList();
+    }
+
+    private void moveChildNodes(Integer currentLevel, Integer oldLevel, String levelPath) {
+        List<TreeNode> children = queryChildNodes(levelPath);
+        // 计算原等级和新等级差值
+        int diff = currentLevel - oldLevel;
+        List<TreeNode> entityList = new ArrayList<>();
+        for (TreeNode child : children) {
+            TreeNode node = new TreeNode();
+            node.setId(child.getId());
+            node.setLevel(child.getLevel() + diff);
+            node.setLevelPath(createChildLevelPath(child, levelPath));
+            entityList.add(node);
+        }
+        updateBatchById(entityList);
+    }
+
+    /**
+     * 查询所有子节点
+     */
+    private List<TreeNode> queryChildNodes(String parentLevelPath) {
+        return lambdaQuery()
+                .select(TreeNode::getId,
+                        TreeNode::getBizId,
+                        TreeNode::getBizType,
+                        TreeNode::getParentBizId,
+                        TreeNode::getLevel,
+                        TreeNode::getLevelPath)
+                .likeRight(TreeNode::getLevelPath, parentLevelPath)
+                .list();
+    }
+
+    /**
+     * 生成层级路径
+     * 实现逻辑：
+     * 1.例如当前child的id=101，层级路径是301/302/101
+     * 2.新的parent路径是401/402/
+     * 3.把301/302/ 替换成 401/402/ 即可完成移动
+     */
+    private String createChildLevelPath(TreeNode child,
+                                        String newParentPath) {
+        // 如果当前路由是"64.65.66." 父路由id是"65"，那么该值就是"64."，把该值替换成当前修改的父级路由的level_path
+        String oldParentPath = StringUtils.substringBefore(child.getLevelPath(), String.valueOf(child.getBizId()));
+        return StringUtils.replace(child.getLevelPath(), oldParentPath, newParentPath);
+    }
+
+    public static void main(String[] args) {
+//        TreeNode treeNode = TreeNode.createTreeNode();
+//        treeNode.setBizId(3L);
+//        treeNode.setLevelPath("1/2/3");
+//        String childLevelPath = new TreeServiceImpl().createChildLevelPath(treeNode, "11/22/");
+//        System.out.println(childLevelPath);
     }
 
 }
