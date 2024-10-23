@@ -5,9 +5,15 @@ import com.ark.component.tree.dto.TreeDTO;
 
 import java.util.List;
 
+/**
+ * 树形结构操作接口
+ */
 public interface TreeService {
 
 
+    /**
+     * 增加节点
+     */
     TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence);
 
 
@@ -21,28 +27,52 @@ public interface TreeService {
 
     /**
      * 获取所有树节点
+     *
+     * @param bizType 业务类型
+     * @param bizIds  业务id
      */
     List<TreeNode> queryNodes(String bizType, List<Long> bizIds);
 
     /**
      * 获取指定节点
+     *
+     * @param bizType 业务类型
+     * @param bizId   业务id
      */
     TreeNode queryNode(String bizType, Long bizId);
 
 
+    /**
+     * 根据原始数据查询层级
+     *
+     * @param bizType 业务类型
+     * @param data    原始数据
+     */
+    <T extends TreeDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data);
 
     /**
+     * 移动节点
      *
-     * @param bizType
-     * @param data
-     * @return
-     * @param <T>
+     * @param bizType        业务类型
+     * @param bizId          业务id
+     * @param newParentBizId 新的上级节点id
      */
-    <T extends TreeDTO<Long>> List<Tree<Long>> queryTreeNodes(String bizType, List<T> data);
-
     void move(String bizType, Long bizId, Long newParentBizId);
 
+    /**
+     * 查询子节点
+     *
+     * @param bizType        业务类型
+     * @param bizId          业务id
+     */
     List<TreeNode> queryChildNodes(String bizType, Long bizId);
 
+    /**
+     * 查询子节点业务id集合
+     * @param bizType        业务类型
+     * @param bizId          业务id
+     */
     List<Long> queryChildNodeBizIds(String bizType, Long bizId);
+
+    <T extends TreeDTO<Long>> T transformToTreeNode(String bizType, T data);
 }

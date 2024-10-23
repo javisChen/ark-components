@@ -1,8 +1,25 @@
 package com.ark.component.tree.dto;
 
-public interface TreeDTO<ID> {
+import lombok.Data;
 
-    ID getId();
+@Data
+public class TreeDTO<ID> {
 
-    String getName();
+    private ID id;
+    private ID parentId;
+    private String name;
+    private String levelPath;
+    private Integer level;
+//
+//    ID getBizId();
+//
+//    String getName();
+//
+//    void setLevelPath(String levelPath);
+//
+//    void setLevel(Integer level);
+//
+//    String getLevelPath();
+//
+//    Integer getLevel();
 }

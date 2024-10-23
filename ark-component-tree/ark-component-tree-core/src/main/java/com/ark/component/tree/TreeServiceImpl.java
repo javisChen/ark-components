@@ -12,17 +12,21 @@ import com.ark.component.tree.dao.TreeNodeMapper;
 import com.ark.component.tree.dto.TreeDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> implements TreeService {
 
     private final static String PATH_SEPARATOR = "/";
@@ -42,11 +46,11 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
         }
 
         TreeNode parentNode = getParentNode(treeNode);
-        Long nodeId = treeNode.getId();
+        Long nodeBizId = treeNode.getBizId();
         // 根据parent信息计算出当前层级信息
         String levelPath = parentNode == null
-                ? nodeId + PATH_SEPARATOR
-                : parentNode.getLevelPath() + nodeId + PATH_SEPARATOR;
+                ? nodeBizId + PATH_SEPARATOR
+                : parentNode.getLevelPath() + nodeBizId + PATH_SEPARATOR;
         treeNode.setParentBizId(parentNode != null ? parentNode.getBizId() : 0);
         treeNode.setLevelPath(levelPath);
         treeNode.setLevel(parentNode != null ? parentNode.getLevel() + 1 : 1);
@@ -80,12 +84,16 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
         if (node == null) {
             return;
         }
-        List<TreeNode> children = queryChildNodes(node.getLevelPath());
+        log.info("Starting remove tree nodes, bizType = {}, bizId = {}", bizType, bizId);
+        String levelPath = node.getLevelPath();
+        List<TreeNode> children = queryChildNodes(levelPath);
         List<Long> willDeleteIds = new ArrayList<>(1);
         if (CollUtil.isNotEmpty(children)) {
             willDeleteIds = new ArrayList<>(children.size() + 1);
             willDeleteIds.addAll(children.stream().map(BaseEntity::getId).toList());
         }
+
+        log.info("path = {}, {} nodes will be removed", levelPath, willDeleteIds.size());
 
         List<Long> ids = willDeleteIds.stream().sorted().collect(Collectors.toList());
         lambdaUpdate().in(BaseEntity::getId, ids).remove();
@@ -108,22 +116,36 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public <T extends TreeDTO<Long>> List<Tree<Long>> queryTreeNodes(String bizType, List<T> data) {
-
+    public <T extends TreeDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data) {
+        if (CollectionUtils.isEmpty(data)) {
+            return Collections.emptyList();
+        }
         List<TreeNode> treeNodes = queryNodes(bizType, data.stream().map(T::getId).toList());
-
         Map<Long, T> dataMap = data.stream().collect(Collectors.toMap(T::getId, menu -> menu));
-
-        return TreeUtil.build(treeNodes, 0L, (TreeNode treeNode, Tree<Long> tree) -> {
-            tree.setId(treeNode.getId());
-            tree.setParentId(treeNode.getParentBizId());
+        return TreeUtil.build(treeNodes, DEFAULT_ROOT_PID, (TreeNode treeNode, Tree<Long> tree) -> {
             if (dataMap.containsKey(treeNode.getBizId())) {
-                T menu = dataMap.get(treeNode.getBizId());
-                tree.setName(menu.getName());
-                tree.putAll(BeanUtil.beanToMap(menu));
+                T bizNode = dataMap.get(treeNode.getBizId());
+                bizNode.setLevelPath(treeNode.getLevelPath());
+                bizNode.setLevel(treeNode.getLevel());
+                bizNode.setParentId(treeNode.getParentBizId());
+                tree.setName(bizNode.getName());
+                tree.setWeight(treeNode.getSequence());
+                tree.putAll(BeanUtil.beanToMap(bizNode));
             }
+            tree.setId(treeNode.getBizId());
+            tree.setParentId(treeNode.getParentBizId());
         });
 
+    }
+
+
+    @Override
+    public <T extends TreeDTO<Long>> T transformToTreeNode(String bizType, T data) {
+        TreeNode treeNode = queryNode(bizType, data.getId());
+        data.setLevelPath(treeNode.getLevelPath());
+        data.setLevel(treeNode.getLevel());
+        data.setParentId(treeNode.getParentBizId());
+        return data;
     }
 
     @Override
