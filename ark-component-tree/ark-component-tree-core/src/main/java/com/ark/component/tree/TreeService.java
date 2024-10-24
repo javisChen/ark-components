@@ -12,7 +12,7 @@ public interface TreeService {
 
 
     /**
-     * 增加节点
+     * 添加节点
      */
     TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence);
 
@@ -51,7 +51,7 @@ public interface TreeService {
     <T extends TreeDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data);
 
     /**
-     * 移动节点
+     * 移动节点层级
      *
      * @param bizType        业务类型
      * @param bizId          业务id

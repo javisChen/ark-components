@@ -33,13 +33,15 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
     private final static long DEFAULT_ROOT_PID = 0L;
 
-
     @Override
     public TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
         TreeNode treeNode = TreeNode.createTreeNode(bizType, bizId, parentBizId, sequence);
         return saveNode(treeNode);
     }
 
+    /**
+     * 保存节点，节点会根据父级节点自动计算出当前层级、层级路径等
+     */
     private TreeNode saveNode(TreeNode treeNode) {
         if (treeNode.getId() == null) {
             treeNode.setId(IdUtil.getSnowflakeNextId());
@@ -65,22 +67,15 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
         if (parentBizId == null || parentBizId.equals(DEFAULT_ROOT_PID)) {
             return parentNode;
         }
-        parentNode = getNode(treeNode.getBizType(), parentBizId);
+        parentNode = queryNode(treeNode.getBizType(), parentBizId);
         Assert.notNull(parentNode, ExceptionFactory.userExceptionSupplier("The parent node does not exist"));
         return parentNode;
-    }
-
-    private TreeNode getNode(String bizType, Long bizId) {
-        return lambdaQuery()
-                .eq(TreeNode::getBizType, bizType)
-                .eq(TreeNode::getBizId, bizId)
-                .one();
     }
 
     @Transactional(rollbackFor = Throwable.class)
     @Override
     public void removeNode(String bizType, Long bizId) {
-        TreeNode node = getNode(bizType, bizId);
+        TreeNode node = queryNode(bizType, bizId);
         if (node == null) {
             return;
         }
@@ -93,10 +88,11 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
             willDeleteIds.addAll(children.stream().map(BaseEntity::getId).toList());
         }
 
-        log.info("path = {}, {} nodes will be removed", levelPath, willDeleteIds.size());
-
+        log.info("Path = {}, {} nodes will be removed", levelPath, willDeleteIds.size());
         List<Long> ids = willDeleteIds.stream().sorted().collect(Collectors.toList());
-        lambdaUpdate().in(BaseEntity::getId, ids).remove();
+        lambdaUpdate()
+                .in(BaseEntity::getId, ids)
+                .remove();
     }
 
     @Override
@@ -112,6 +108,7 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
         return lambdaQuery()
                 .eq(TreeNode::getBizType, bizType)
                 .eq(TreeNode::getBizId, bizId)
+                .last("limit 1")
                 .one();
     }
 
