@@ -100,6 +100,7 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
         return lambdaQuery()
                 .eq(TreeNode::getBizType, bizType)
                 .in(TreeNode::getBizId, bizIds)
+                .orderByDesc(TreeNode::getSequence)
                 .list();
     }
 
@@ -167,8 +168,8 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
     @Override
     public List<TreeNode> queryChildNodes(String bizType, Long bizId) {
-        TreeNode treeNode = queryNode(bizType, bizId);
-        return queryChildNodes(treeNode.getLevelPath());
+        // TreeNode treeNode = queryNode(bizType, bizId);
+        return queryChildNodes(String.valueOf(bizId));
     }
 
     @Override
