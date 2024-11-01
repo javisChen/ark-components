@@ -34,6 +34,7 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     private final static long DEFAULT_ROOT_PID = 0L;
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public TreeNode addNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
         TreeNode treeNode = TreeNode.createTreeNode(bizType, bizId, parentBizId, sequence);
         return saveNode(treeNode);
@@ -74,25 +75,31 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
     @Transactional(rollbackFor = Throwable.class)
     @Override
-    public void removeNode(String bizType, Long bizId) {
+    public List<Long> removeNodeAndChildren(String bizType, Long bizId) {
         TreeNode node = queryNode(bizType, bizId);
         if (node == null) {
-            return;
+            return Collections.emptyList();
         }
         log.info("Starting remove tree nodes, bizType = {}, bizId = {}", bizType, bizId);
         String levelPath = node.getLevelPath();
         List<TreeNode> children = queryChildNodes(levelPath);
-        List<Long> willDeleteIds = new ArrayList<>(1);
+        List<Long> treeNodeIds = new ArrayList<>(1);
+        // bizIds, return to the user
+        List<Long> treeNodeBizIds = new ArrayList<>(1);
         if (CollUtil.isNotEmpty(children)) {
-            willDeleteIds = new ArrayList<>(children.size() + 1);
-            willDeleteIds.addAll(children.stream().map(BaseEntity::getId).toList());
+            treeNodeIds = new ArrayList<>(children.size() + 1);
+            treeNodeIds.addAll(children.stream().map(BaseEntity::getId).toList());
+
+            treeNodeBizIds = new ArrayList<>(children.size() + 1);
+            treeNodeBizIds.addAll(children.stream().map(TreeNode::getBizId).toList());
         }
 
-        log.info("Path = {}, {} nodes will be removed", levelPath, willDeleteIds.size());
-        List<Long> ids = willDeleteIds.stream().sorted().collect(Collectors.toList());
+        log.info("Path = {}, {} nodes will be removed", levelPath, treeNodeIds.size());
         lambdaUpdate()
-                .in(BaseEntity::getId, ids)
+                .in(BaseEntity::getId, treeNodeIds.stream().sorted().collect(Collectors.toList()))
                 .remove();
+
+        return treeNodeBizIds;
     }
 
     @Override

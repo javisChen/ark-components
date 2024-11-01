@@ -18,12 +18,13 @@ public interface TreeService {
 
 
     /**
-     * 删除树节点
+     * 删除节点和其子节点
      *
      * @param bizType 业务类型
      * @param bizId   业务id
+     * @return 返回被删掉节点业务id，方便上层删除业务表数据。
      */
-    void removeNode(String bizType, Long bizId);
+    List<Long> removeNodeAndChildren(String bizType, Long bizId);
 
     /**
      * 获取所有树节点
