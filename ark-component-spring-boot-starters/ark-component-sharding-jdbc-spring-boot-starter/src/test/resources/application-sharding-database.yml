@@ -5,14 +5,14 @@ spring:
       ds0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/lagou1
-        password: Root1234!@#$
+        jdbc-url: jdbc:mysql://localhost:3306/iam
+        password: root
         username: root
       ds1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/lagou2
-        password: Root1234!@#$
+        jdbc-url: jdbc:mysql://localhost:3306/trade
+        password: root
         username: root
     rules:
       sharding:

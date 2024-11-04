@@ -1,5 +1,6 @@
 package com.ark.component.tree;
 
+import cn.hutool.core.lang.Assert;
 import com.ark.component.orm.mybatis.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -43,10 +44,13 @@ public class TreeNode extends BaseEntity {
         this.bizId = bizId;
         this.parentBizId = parentBizId;
         this.bizType = bizType;
-        this.sequence = sequence;
+        this.sequence = sequence == null ? 0 : sequence;
     }
 
     public static TreeNode createTreeNode(String bizType, Long bizId, Long parentBizId, Integer sequence) {
+        Assert.notNull(bizType, "bizType must not be null");
+        Assert.notNull(bizType, "bizId must not be null");
+        Assert.notNull(bizType, "parentBizId must not be null");
         return new TreeNode(bizType, bizId, parentBizId, sequence);
     }
 
