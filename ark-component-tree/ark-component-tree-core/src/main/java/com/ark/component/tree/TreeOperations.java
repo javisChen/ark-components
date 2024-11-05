@@ -1,14 +1,14 @@
 package com.ark.component.tree;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.ark.component.tree.dto.TreeDTO;
+import com.ark.component.tree.dto.HierarchyDTO;
 
 import java.util.List;
 
 /**
  * 树形结构操作接口
  */
-public interface TreeService {
+public interface TreeOperations {
 
 
     /**
@@ -42,15 +42,6 @@ public interface TreeService {
      */
     TreeNode queryNode(String bizType, Long bizId);
 
-
-    /**
-     * 根据原始数据查询层级
-     *
-     * @param bizType 业务类型
-     * @param data    原始数据
-     */
-    <T extends TreeDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data);
-
     /**
      * 移动节点层级
      *
@@ -75,5 +66,20 @@ public interface TreeService {
      */
     List<Long> queryChildNodeBizIds(String bizType, Long bizId);
 
-    <T extends TreeDTO<Long>> T transformToTreeNode(String bizType, T data);
+    /**
+     * 把业务对象填充层级信息
+     *
+     * @param bizType 业务类型
+     * @param data    原始业务对象
+     */
+    <T extends HierarchyDTO<Long>> T transformToTreeNode(String bizType, T data);
+
+
+    /**
+     * 把扁平化的原始数据转换成树形结构数据
+     *
+     * @param bizType 业务类型
+     * @param data    原始数据
+     */
+    <T extends HierarchyDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data);
 }

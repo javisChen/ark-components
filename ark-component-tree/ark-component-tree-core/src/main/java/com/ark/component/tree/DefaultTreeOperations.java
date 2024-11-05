@@ -9,7 +9,7 @@ import cn.hutool.core.util.IdUtil;
 import com.ark.component.exception.ExceptionFactory;
 import com.ark.component.orm.mybatis.base.BaseEntity;
 import com.ark.component.tree.dao.TreeNodeMapper;
-import com.ark.component.tree.dto.TreeDTO;
+import com.ark.component.tree.dto.HierarchyDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> implements TreeService {
+public class DefaultTreeOperations extends ServiceImpl<TreeNodeMapper, TreeNode> implements TreeOperations {
 
     private final static String PATH_SEPARATOR = "/";
 
@@ -121,7 +121,7 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
     }
 
     @Override
-    public <T extends TreeDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data) {
+    public <T extends HierarchyDTO<Long>> List<Tree<Long>> transformToTree(String bizType, List<T> data) {
         if (CollectionUtils.isEmpty(data)) {
             return Collections.emptyList();
         }
@@ -145,7 +145,7 @@ public class TreeServiceImpl extends ServiceImpl<TreeNodeMapper, TreeNode> imple
 
 
     @Override
-    public <T extends TreeDTO<Long>> T transformToTreeNode(String bizType, T data) {
+    public <T extends HierarchyDTO<Long>> T transformToTreeNode(String bizType, T data) {
         TreeNode treeNode = queryNode(bizType, data.getId());
         data.setLevelPath(treeNode.getLevelPath());
         data.setLevel(treeNode.getLevel());

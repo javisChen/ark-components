@@ -3,7 +3,7 @@ package com.ark.component.tree.dto;
 import lombok.Data;
 
 @Data
-public class TreeDTO<ID> {
+public class HierarchyDTO<ID> {
 
     private ID id;
     private ID parentId;
