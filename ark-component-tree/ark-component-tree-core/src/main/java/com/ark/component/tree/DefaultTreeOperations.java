@@ -145,15 +145,6 @@ public class DefaultTreeOperations extends ServiceImpl<TreeNodeMapper, TreeNode>
 
 
     @Override
-    public <T extends HierarchyDTO<Long>> T transformToTreeNode(String bizType, T data) {
-        TreeNode treeNode = queryNode(bizType, data.getId());
-        data.setLevelPath(treeNode.getLevelPath());
-        data.setLevel(treeNode.getLevel());
-        data.setParentId(treeNode.getParentBizId());
-        return data;
-    }
-
-    @Override
     public void move(String bizType, Long bizId, Long newParentBizId) {
 
         TreeNode treeNode = queryNode(bizType, bizId);
@@ -177,12 +168,6 @@ public class DefaultTreeOperations extends ServiceImpl<TreeNodeMapper, TreeNode>
     public List<TreeNode> queryChildNodes(String bizType, Long bizId) {
         // TreeNode treeNode = queryNode(bizType, bizId);
         return queryChildNodes(String.valueOf(bizId));
-    }
-
-    @Override
-    public List<Long> queryChildNodeBizIds(String bizType, Long bizId) {
-        List<TreeNode> treeNodes = queryChildNodes(bizType, bizId);
-        return treeNodes.stream().map(TreeNode::getBizId).toList();
     }
 
     private void moveChildNodes(Integer currentLevel, Integer oldLevel, String levelPath) {

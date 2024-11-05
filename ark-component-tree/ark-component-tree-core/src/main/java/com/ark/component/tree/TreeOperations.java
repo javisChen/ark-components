@@ -59,21 +59,6 @@ public interface TreeOperations {
      */
     List<TreeNode> queryChildNodes(String bizType, Long bizId);
 
-    /**
-     * 查询子节点业务id集合
-     * @param bizType        业务类型
-     * @param bizId          业务id
-     */
-    List<Long> queryChildNodeBizIds(String bizType, Long bizId);
-
-    /**
-     * 把业务对象填充层级信息
-     *
-     * @param bizType 业务类型
-     * @param data    原始业务对象
-     */
-    <T extends HierarchyDTO<Long>> T transformToTreeNode(String bizType, T data);
-
 
     /**
      * 把扁平化的原始数据转换成树形结构数据

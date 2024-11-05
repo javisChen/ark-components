@@ -29,7 +29,7 @@ public class HierarchyCommand {
         this.sequence = sequence;
     }
 
-    public HierarchyCommand(Long parentId, Long id, String bizType) {
+    public HierarchyCommand(String bizType, Long id, Long parentId) {
         this.parentId = parentId;
         this.id = id;
         this.bizType = bizType;
