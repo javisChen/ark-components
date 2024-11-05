@@ -107,6 +107,7 @@ public class DefaultTreeOperations extends ServiceImpl<TreeNodeMapper, TreeNode>
         return lambdaQuery()
                 .eq(TreeNode::getBizType, bizType)
                 .in(TreeNode::getBizId, bizIds)
+                .orderByAsc(TreeNode::getLevel)
                 .orderByDesc(TreeNode::getSequence)
                 .list();
     }

@@ -4,13 +4,18 @@ import cn.hutool.core.lang.tree.Tree;
 import com.ark.component.tree.dto.HierarchyCommand;
 import com.ark.component.tree.dto.HierarchyDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 封装一层方便上层调用的API
  */
 @RequiredArgsConstructor
+@Slf4j
 public abstract class BizTreeService {
 
     public abstract String bizType();
@@ -46,6 +51,16 @@ public abstract class BizTreeService {
     }
 
     /**
+     * 删除节点和其子节点
+     *
+     * @param nodeId 节点id
+     * @return 返回被删掉节点业务id，方便上层删除业务表数据。
+     */
+    public List<Long> removeNodeAndChildren(Long nodeId) {
+        return treeOperations.removeNodeAndChildren(bizType(), nodeId);
+    }
+
+    /**
      * 设置节点参数
      *
      * @param data 原业务对象
@@ -58,13 +73,22 @@ public abstract class BizTreeService {
     }
 
     /**
-     * 删除节点和其子节点
+     * 设置节点参数
      *
-     * @param nodeId 节点id
-     * @return 返回被删掉节点业务id，方便上层删除业务表数据。
+     * @param data 原业务对象
      */
-    public List<Long> removeNodeAndChildren(Long nodeId) {
-        return treeOperations.removeNodeAndChildren(bizType(), nodeId);
+    public <T extends HierarchyDTO<Long>> void populateNodeParams(List<T> data) {
+        List<TreeNode> treeNodes = treeOperations.queryNodes(bizType(), data.stream().map(HierarchyDTO::getId).toList());
+        Map<Long, TreeNode> nodeMap = treeNodes.stream().collect(Collectors.toMap(TreeNode::getBizId, Function.identity()));
+        for (T datum : data) {
+            if (!nodeMap.containsKey(datum.getId())) {
+                log.warn("BizId {} does not exist in the tree data ", datum.getId());
+                continue;
+            }
+            TreeNode treeNode = nodeMap.get(datum.getId());
+            datum.setLevelPath(treeNode.getLevelPath());
+            datum.setLevel(treeNode.getLevel());
+            datum.setParentId(treeNode.getParentBizId());
+        }
     }
-
 }
