@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = SysException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ServerResponse handle(SysException e) {
-        log.error("sys exception：", e);
+        log.error("Sys exception：", e);
         return ServerResponse.error(e.getErrCode(), e.getMessage());
     }
 
@@ -100,12 +100,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ServerResponse handle(MethodArgumentNotValidException e) {
+        log.error("MethodArgumentNotValidException", e);
         BindingResult bindingResult = e.getBindingResult();
         if (bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             List<ValidationResult.FieldError> validationResultErrors = new ArrayList<>(fieldErrors.size());
-            fieldErrors.forEach((error -> validationResultErrors
-                    .add(new ValidationResult.FieldError(error.getField(), error.getDefaultMessage()))));
+            fieldErrors.forEach((error ->
+                    validationResultErrors.add(new ValidationResult.FieldError(error.getField(), error.getDefaultMessage()))));
             FieldError fieldError = bindingResult.getFieldError();
             String defaultMessage = "";
             if (Objects.nonNull(fieldError)) {
