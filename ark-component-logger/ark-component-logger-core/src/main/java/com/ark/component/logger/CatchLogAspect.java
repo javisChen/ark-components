@@ -55,12 +55,12 @@ public class CatchLogAspect {
     private void logRequest(ProceedingJoinPoint joinPoint, HttpServletRequest request) {
         try {
             log.info("========================= Request Begin =========================");
-            log.info("Uri: " + request.getRequestURI());
-            log.info("RemoteHost: " + request.getRemoteHost());
-            log.info("HttpMethod: " + request.getMethod());
-            log.info("Signature: " + joinPoint.getSignature().toString());
+            log.info("Uri: {}", request.getRequestURI());
+            log.info("RemoteHost: {}", request.getRemoteHost());
+            log.info("HttpMethod: {}", request.getMethod());
+            log.info("Signature: {}", joinPoint.getSignature().toString());
             log.info("============================ Headers ============================");
-            logHeaders(request);
+            // logHeaders(request);
             log.info("============================ Headers ============================");
             logArgs(request, joinPoint);
         } catch (Exception e) {
@@ -70,8 +70,8 @@ public class CatchLogAspect {
 
     private void logResponse(StopWatch stopWatch, Object response) {
         try {
-            log.info("Response : " + JSON.toJSONString(response));
-            log.info("Cost : " + stopWatch.getTotalTimeMillis() + " ms");
+            log.info("Response : {}", JSON.toJSONString(response));
+            log.info("Cost : {} ms", stopWatch.getTotalTimeMillis());
         } catch (Exception e) {
             log.error("Log Response Error", e);
         } finally {
@@ -96,12 +96,12 @@ public class CatchLogAspect {
         String contentType = request.getContentType();
         Object[] args = joinPoint.getArgs();
         if (contentType == null) {
-            log.info("QueryString Args: " + request.getQueryString());
+            log.info("QueryString Args: {}", request.getQueryString());
             return;
         }
         if (isMatchMediaType(contentType, MediaType.APPLICATION_JSON_VALUE)) {
             if (args.length > 0) {
-                log.info("Json Args: " + JSON.toJSONString(args[0]));
+                log.info("Json Args: {}", JSON.toJSONString(args[0]));
             }
         } else if (isMatchMediaType(contentType, MediaType.MULTIPART_FORM_DATA_VALUE)) {
             for (Object arg : args) {
@@ -110,14 +110,14 @@ public class CatchLogAspect {
                         LinkedList<?> linkedList = (LinkedList<?>) arg;
                         linkedList.forEach(item -> {
                             MultipartFile file = (MultipartFile) item;
-                            log.info("File name: " + file.getOriginalFilename());
-                            log.info("File size: " + file.getSize());
+                            log.info("File name: {}", file.getOriginalFilename());
+                            log.info("File size: {}", file.getSize());
                         });
                     }
                 }
             }
         } else {
-            log.info("QueryString Args: " + request.getQueryString());
+            log.info("QueryString Args: {}", request.getQueryString());
         }
     }
 
