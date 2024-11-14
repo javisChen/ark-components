@@ -26,7 +26,7 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
 
     @Override
     public void handle(byte[] body, String msgId, RAW raw) throws MQException {
-        log.info("[MQ] Consume Message MsgId = {}, BodySize = {}", msgId, body.length);
+        log.info("[MQ] Recevied Message: msgId = {}, BodySize = {}", msgId, body.length);
         // 反序列化
         MsgBody message;
         T msgBody;
