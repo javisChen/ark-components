@@ -26,16 +26,19 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
 
     @Override
     public void handle(byte[] body, String msgId, RAW raw) throws MQException {
-        log.info("[MQ] Recevied Message: msgId = {}, BodySize = {}", msgId, body.length);
-        // 反序列化
+        if (log.isDebugEnabled()) {
+            log.debug("Recevied Message: msgId = {}, bodySize = {}", msgId, body.length);
+        }
         MsgBody message;
         T msgBody;
         try {
             message = messageSerializer.deserialize(body, MsgBody.class);
-            log.info("[MQ] Consume Message MsgId = {}, Decoded = {}", msgId, JSON.toJSONString(message));
+            if (log.isDebugEnabled()) {
+                log.debug("Message {} has been successfully deserialized, content = [{}].", msgId, JSON.toJSONString(message));
+            }
             msgBody = convertMsgBody(message);
         } catch (MQSerializerException e) {
-            log.error("[MQ] Consume Message Decode Error MsgId = " + msgId, e);
+            log.error("Message {} failed to be deserialized.", msgId, e);
             throw new MQSerializerException(e);
         }
         String bizKey = message.getBizKey();
@@ -43,16 +46,16 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
             // 消费幂等校验
             if (isRepeatMessage(msgId, bizKey, msgBody, raw)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("[MQ] Message Already Consume MsgId = {}", msgId);
+                    log.debug("Message {} has already been processed before.", msgId);
                 }
                 return;
             }
             handleMessage(msgId, bizKey, msgBody, raw);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ] Message Consume Success");
+                log.debug("Message {} has been successfully processed", msgId);
             }
         } catch (Exception e) {
-            log.error("[MQ] Message Consume Handle Rrror", e);
+            log.error("Message {} prcessing failed", msgId, e);
             throw new MQException(e);
         }
     }
