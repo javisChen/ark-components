@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
 /**
@@ -22,6 +23,8 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 public abstract class AbstractMQService<P, R> implements MQService, ApplicationContextAware {
+
+    private Environment environment;
 
     private final MQConfiguration mqConfiguration;
 
@@ -42,6 +45,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.msgIdGenerator = applicationContext.getBean(MsgIdGenerator.class);
+        environment = applicationContext.getEnvironment();
     }
 
     @Override
@@ -152,7 +156,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
             timeout = mqConfiguration.getSendMessageTimeout();
         }
         try {
-            P message = buildMessage(topic, tag, delayLevel, payLoad);
+            P message = buildMessage(wrapTopic(topic), tag, delayLevel, payLoad);
             if (log.isDebugEnabled()) {
                 log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} payLoad = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
@@ -166,6 +170,10 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
             log.error("[MQ]:send message error bizKey:" + bizKey, e);
             throw new MQException(e);
         }
+    }
+
+    private String wrapTopic(String topic) {
+        return topic + environment.getActiveProfiles()[0];
     }
 
     private void doAsyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback, long timeout, int delayLevel) {
