@@ -216,7 +216,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
 
     private String buildBizKey(MsgBody payLoad) {
         String bizKey = payLoad.getBizKey();
-        if (StringUtils.isEmpty(bizKey)) {
+        if (!StringUtils.hasText(bizKey)) {
             bizKey = msgIdGenerator.getId();
         }
         return bizKey;
