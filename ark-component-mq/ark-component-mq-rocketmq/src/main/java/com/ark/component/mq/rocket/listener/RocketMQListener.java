@@ -39,7 +39,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
         consumer.setNamesrvAddr(configuration.getServer());
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());
         consumer.setConsumeTimeout(listenerConfig.getConsumeTimeout());
-        consumer.setConsumeMessageBatchMaxSize(1);
+        consumer.setConsumeMessageBatchMaxSize(listenerConfig.getConsumeMessageBatchMaxSize());
         consumer.setMaxReconsumeTimes(10);
         try {
             consumer.setMessageModel(convertMessageModel(listenerConfig.getConsumeMode()));
