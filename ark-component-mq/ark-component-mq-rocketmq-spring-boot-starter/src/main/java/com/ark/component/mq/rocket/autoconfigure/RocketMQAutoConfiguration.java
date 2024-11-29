@@ -1,12 +1,9 @@
 package com.ark.component.mq.rocket.autoconfigure;
 
-import com.ark.component.mq.MQService;
-import com.ark.component.mq.core.producer.MessageProducer;
 import com.ark.component.mq.rocket.RocketMQService;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import com.ark.component.mq.rocket.listener.RocketMQListener;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
