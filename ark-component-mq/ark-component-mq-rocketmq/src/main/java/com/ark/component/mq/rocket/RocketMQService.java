@@ -1,11 +1,10 @@
 package com.ark.component.mq.rocket;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.ark.component.mq.MQType;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.SendResult;
 import com.ark.component.mq.SendConfirm;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.core.AbstractMQService;
 import com.ark.component.mq.exception.MQException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
@@ -15,6 +14,7 @@ import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.util.Assert;
 
 @Slf4j
 public class RocketMQService extends AbstractMQService<Message, org.apache.rocketmq.client.producer.SendResult> {
@@ -28,6 +28,7 @@ public class RocketMQService extends AbstractMQService<Message, org.apache.rocke
 
     private void initProducer(RocketMQConfiguration rocketMQConfig) {
         RocketMQConfiguration.Producer producer = rocketMQConfig.getProducer();
+        Assert.notNull(producer, "producer must not be null");
         this.defaultMQProducer = new DefaultMQProducer();
         this.defaultMQProducer.setProducerGroup(producer.getGroup());
         this.defaultMQProducer.setNamesrvAddr(rocketMQConfig.getServer());
