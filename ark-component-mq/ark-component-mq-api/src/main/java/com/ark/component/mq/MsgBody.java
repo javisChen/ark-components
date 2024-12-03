@@ -20,7 +20,7 @@ public class MsgBody {
     /**
      * 业务标识
      */
-    private String reqId;
+    private String traceId;
 
     public MsgBody(Object body) {
         this.body = body;
@@ -35,7 +35,7 @@ public class MsgBody {
         return new MsgBody(body);
     }
 
-    public static MsgBody of(String reqId, Object body) {
-        return new MsgBody(reqId, body);
+    public static MsgBody of(String traceId, Object body) {
+        return new MsgBody(traceId, body);
     }
 }

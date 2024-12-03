@@ -1,6 +1,7 @@
 package com.ark.component.mq.core;
 
 import com.alibaba.fastjson2.JSON;
+import com.ark.component.common.id.TraceIdUtils;
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.MsgBody;
 import com.ark.component.mq.SendConfirm;
@@ -10,11 +11,14 @@ import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
 import com.ark.component.mq.core.generator.MsgIdGenerator;
 import com.ark.component.mq.exception.MQException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
+
+import static com.ark.component.context.core.contants.ContextConstants.HEADER_TRACE_ID;
 
 /**
  *
@@ -176,21 +180,23 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         return topic + environment.getActiveProfiles()[0];
     }
 
-    private void doAsyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback, long timeout, int delayLevel) {;
-        String bizKey = buildBizKey(payLoad);
-        payLoad.setBizKey(bizKey);
+    private void doAsyncSend(String topic, String tag, MsgBody msgBody, SendConfirm callback, long timeout, int delayLevel) {
+        String traceId = org.apache.commons.lang3.StringUtils.defaultIfBlank(msgBody.getTraceId(), TraceIdUtils.getId());
+        String bizKey = buildBizKey(msgBody);
+        msgBody.setBizKey(bizKey);
         if (timeout <= 0) {
             timeout = mqConfiguration.getSendMessageTimeout();
         }
         try {
-            P message = buildMessage(topic, tag, delayLevel, payLoad);
+            P message = buildMessage(topic, tag, delayLevel, msgBody);
             if (log.isDebugEnabled()) {
                 log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} message = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new SendConfirm() {
+            executeAsyncSend0(bizKey, topic, tag, message, timeout, delayLevel, new SendConfirm() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
+                    MDC.put(HEADER_TRACE_ID, traceId);
                     if (log.isDebugEnabled()) {
                         log.debug("[MQ]:send message success, bizKey = {} topic = {} tag = {} message = {} ",
                                 bizKey, topic, tag, JSON.toJSONString(message));
@@ -202,6 +208,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
 
                 @Override
                 public void onException(SendResult sendResult) {
+                    MDC.put(HEADER_TRACE_ID, traceId);
                     log.error("[MQ]:send message error", sendResult.getThrowable());
                     if (callback != null) {
                         callback.onException(sendResult);
@@ -235,7 +242,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, SendConfirm callback);
+    protected abstract void executeAsyncSend0(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, SendConfirm callback);
 
     /**
      * 转换回统一的MQ响应体

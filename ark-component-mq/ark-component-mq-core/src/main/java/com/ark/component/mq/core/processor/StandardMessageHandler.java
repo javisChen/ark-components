@@ -38,7 +38,7 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
         T msgBody;
         try {
             message = messageSerializer.deserialize(body, MsgBody.class);
-            String reqId = message.getReqId();
+            String reqId = message.getTraceId();
             MDC.put(HEADER_TRACE_ID, StringUtils.defaultIfBlank(reqId, TraceIdUtils.getId()));
             if (log.isDebugEnabled()) {
                 log.debug("Message {} has been successfully deserialized, content = [{}].", msgId, JSON.toJSONString(message));
