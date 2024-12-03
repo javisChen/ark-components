@@ -19,12 +19,15 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.ark.context</groupId>
+            <artifactId>ark-component-context-core</artifactId>
+        </dependency>
 
-
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-            </dependency>
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>

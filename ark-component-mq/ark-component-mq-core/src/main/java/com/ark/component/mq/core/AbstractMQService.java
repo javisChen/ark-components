@@ -3,8 +3,8 @@ package com.ark.component.mq.core;
 import com.alibaba.fastjson2.JSON;
 import com.ark.component.mq.MQService;
 import com.ark.component.mq.MsgBody;
-import com.ark.component.mq.SendResult;
 import com.ark.component.mq.SendConfirm;
+import com.ark.component.mq.SendResult;
 import com.ark.component.mq.configuation.MQConfiguration;
 import com.ark.component.mq.core.generator.DefaultMsgIdGenerator;
 import com.ark.component.mq.core.generator.MsgIdGenerator;
@@ -176,7 +176,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         return topic + environment.getActiveProfiles()[0];
     }
 
-    private void doAsyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback, long timeout, int delayLevel) {
+    private void doAsyncSend(String topic, String tag, MsgBody payLoad, SendConfirm callback, long timeout, int delayLevel) {;
         String bizKey = buildBizKey(payLoad);
         payLoad.setBizKey(bizKey);
         if (timeout <= 0) {

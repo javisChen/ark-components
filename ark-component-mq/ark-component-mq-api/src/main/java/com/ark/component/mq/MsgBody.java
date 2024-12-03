@@ -17,6 +17,11 @@ public class MsgBody {
      */
     private String bizKey;
 
+    /**
+     * 业务标识
+     */
+    private String reqId;
+
     public MsgBody(Object body) {
         this.body = body;
     }
@@ -28,5 +33,9 @@ public class MsgBody {
 
     public static MsgBody of(Object body) {
         return new MsgBody(body);
+    }
+
+    public static MsgBody of(String reqId, Object body) {
+        return new MsgBody(reqId, body);
     }
 }

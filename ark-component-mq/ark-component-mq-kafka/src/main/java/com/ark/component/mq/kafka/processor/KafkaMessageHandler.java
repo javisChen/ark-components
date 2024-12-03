@@ -12,6 +12,6 @@ import org.springframework.kafka.support.SendResult;
  * @param <T>
  */
 @Slf4j
-public abstract class RocketMessageHandler<T> extends StandardMessageHandler<T, SendResult> {
+public abstract class KafkaMessageHandler<T, K, V> extends StandardMessageHandler<T, SendResult<K, V>> {
 
 }

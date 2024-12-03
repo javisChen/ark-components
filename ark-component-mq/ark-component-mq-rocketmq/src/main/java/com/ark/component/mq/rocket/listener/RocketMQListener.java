@@ -12,11 +12,13 @@ import com.ark.component.mq.exception.MessageRequeueException;
 import com.ark.component.mq.rocket.configuation.RocketMQConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,7 +41,7 @@ public class RocketMQListener implements MQListener<MessageExt> {
         consumer.setNamesrvAddr(configuration.getServer());
         consumer.setConsumerGroup(listenerConfig.getConsumerGroup());
         consumer.setConsumeTimeout(listenerConfig.getConsumeTimeout());
-        consumer.setConsumeMessageBatchMaxSize(listenerConfig.getConsumeMessageBatchMaxSize());
+        consumer.setConsumeMessageBatchMaxSize(1);
         consumer.setMaxReconsumeTimes(10);
         try {
             consumer.setMessageModel(convertMessageModel(listenerConfig.getConsumeMode()));
@@ -70,24 +72,27 @@ public class RocketMQListener implements MQListener<MessageExt> {
     }
 
     private MessageListenerConcurrently registryMessageListener(MessageHandler<MessageExt> processor) {
-        return (msgList, context) -> {
-            String msgIds = msgList.stream().map(MessageExt::getMsgId).collect(Collectors.joining(","));
-            if (log.isDebugEnabled()) {
-                log.debug("[RocketMQ]:Receive message -> msgId=[{}]", msgIds);
-            }
-            try {
-                for (MessageExt messageExt : msgList) {
-                    processor.handle(messageExt.getBody(), messageExt.getMsgId(), messageExt);
+        return new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgList, ConsumeConcurrentlyContext context) {
+                String msgIds = msgList.stream().map(MessageExt::getMsgId).collect(Collectors.joining(","));
+                if (log.isDebugEnabled()) {
+                    log.debug("[RocketMQ]:Receive message -> msgId=[{}]", msgIds);
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } catch (MessageRequeueException e) {
-                log.error("[RocketMQ]:Consume Failed, message back to the queue -> msgId=[{}], err={}",
-                        msgIds, ExceptionUtil.stacktraceToString(e));
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-            } catch (MQException e) {
-                log.error("[RocketMQ]:Failed to consume, message discarded -> msgId=[{}], err={}",
-                        msgIds, ExceptionUtil.stacktraceToString(e));
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                try {
+                    for (MessageExt messageExt : msgList) {
+                        processor.handle(messageExt.getBody(), messageExt.getMsgId(), messageExt);
+                    }
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                } catch (MessageRequeueException e) {
+                    log.error("[RocketMQ]:Consume Failed, message back to the queue -> msgId=[{}], err={}",
+                            msgIds, ExceptionUtil.stacktraceToString(e));
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                } catch (MQException e) {
+                    log.error("[RocketMQ]:Failed to consume, message discarded -> msgId=[{}], err={}",
+                            msgIds, ExceptionUtil.stacktraceToString(e));
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                }
             }
         };
     }
