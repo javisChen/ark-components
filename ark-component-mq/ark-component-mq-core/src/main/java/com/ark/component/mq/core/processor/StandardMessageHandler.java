@@ -71,9 +71,9 @@ public abstract class StandardMessageHandler<T, RAW> implements MessageHandler<R
         return JSON.parseObject(JSON.toJSONString(msgBody.getBody()), TypeUtil.getTypeArgument(getClass()));
     }
 
-    protected abstract void handleMessage(String msgId, String sendId, T body, RAW raw);
+    protected abstract void handleMessage(String msgId, String bizKey, T body, RAW raw);
 
-    protected boolean isRepeatMessage(String msgId, String sendId, T body, RAW raw) {
+    protected boolean isRepeatMessage(String msgId, String bizKey, T body, RAW raw) {
         return false;
     }
 
