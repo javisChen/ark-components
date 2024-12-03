@@ -190,10 +190,10 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
         try {
             P message = buildMessage(topic, tag, delayLevel, msgBody);
             if (log.isDebugEnabled()) {
-                log.debug("[MQ]:start send message bizKey = {} topic = {} tag = {} message = {} ",
+                log.debug("[MQ]:Starting send message bizKey = {} topic = {} tag = {} message = {} ",
                         bizKey, topic, tag, JSON.toJSONString(message));
             }
-            executeAsyncSend0(bizKey, topic, tag, message, timeout, delayLevel, new SendConfirm() {
+            executeAsyncSend(bizKey, topic, tag, message, timeout, delayLevel, new SendConfirm() {
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     MDC.put(HEADER_TRACE_ID, traceId);
@@ -209,14 +209,14 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
                 @Override
                 public void onException(SendResult sendResult) {
                     MDC.put(HEADER_TRACE_ID, traceId);
-                    log.error("[MQ]:send message error", sendResult.getThrowable());
+                    log.error("[MQ]:Failed to send message", sendResult.getThrowable());
                     if (callback != null) {
                         callback.onException(sendResult);
                     }
                 }
             });
         } catch (Exception e) {
-            log.error("[MQ]:send message error", e);
+            log.error("[MQ]:Failed to send message", e);
             throw new MQException(e);
         }
     }
@@ -242,7 +242,7 @@ public abstract class AbstractMQService<P, R> implements MQService, ApplicationC
     /**
      * 执行异步发送，通过callback接收发送结果
      */
-    protected abstract void executeAsyncSend0(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, SendConfirm callback);
+    protected abstract void executeAsyncSend(String bizKey, String topic, String tag, P body, long timeout, int delayLevel, SendConfirm callback);
 
     /**
      * 转换回统一的MQ响应体

@@ -69,13 +69,13 @@ public class RabbitMQService extends AbstractMQService<Message, SendResult> {
     }
 
     @Override
-    protected void executeAsyncSend0(String bizKey,
-                                     String exchange,
-                                     String routingKey,
-                                     Message msgBody,
-                                     long timeout,
-                                     int delay,
-                                     SendConfirm callback) {
+    protected void executeAsyncSend(String bizKey,
+                                    String exchange,
+                                    String routingKey,
+                                    Message msgBody,
+                                    long timeout,
+                                    int delay,
+                                    SendConfirm callback) {
         String messageId = msgBody.getMessageProperties().getMessageId();
         try {
             if (delay > 0) {
