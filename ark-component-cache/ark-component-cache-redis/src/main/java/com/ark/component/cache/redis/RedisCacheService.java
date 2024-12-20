@@ -1,17 +1,13 @@
 package com.ark.component.cache.redis;
 
 import com.alibaba.fastjson2.JSON;
-import com.ark.component.cache.CacheService;
-import com.ark.component.cache.exception.CacheException;
-import org.springframework.data.redis.core.HashOperations;
+import com.ark.component.cache.core.AbstractCacheService;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.script.RedisScript;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class RedisCacheService implements CacheService {
+public class RedisCacheService extends AbstractCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -19,175 +15,85 @@ public class RedisCacheService implements CacheService {
         this.redisTemplate = redisTemplate;
     }
 
-
-    public <T> T executeScript(RedisScript<T> script, List<String> keys, List<Object> args) {
-        return redisTemplate.execute(script, keys, args.toArray());
+    @Override
+    protected void doSAdd(String key, Object... values) {
+        redisTemplate.opsForSet().add(key, values);
     }
 
     @Override
-    public void set(String key, Object value) {
-        try {
-            redisTemplate.opsForValue().set(key, value);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Set<Object> doSMembers(String key) {
+        return redisTemplate.opsForSet().members(key);
     }
 
     @Override
-    public void sAdd(String key, Object... values) {
-        try {
-            redisTemplate.opsForSet().add(key, values);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected void doSet(String key, Object value) {
+        redisTemplate.opsForValue().set(key, value);
     }
 
     @Override
-    public Set<Object> sMembers(String key) {
-        try {
-            return redisTemplate.opsForSet().members(key);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected boolean doSet(String key, Object value, Long expires, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, expires, timeUnit);
+        return true;
     }
 
     @Override
-    public boolean set(String key, Object value, Long expires) {
-        return set(key, value, expires, TimeUnit.SECONDS);
-    }
-
-
-    @Override
-    public boolean set(String key, Object value, Long expires, TimeUnit timeUnit) {
-        try {
-            ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-            return Boolean.TRUE.equals(operations.setIfAbsent(key, value, expires, timeUnit));
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected void doHMSet(String key, Map<String, Object> value) {
+        redisTemplate.opsForHash().putAll(key, value);
     }
 
     @Override
-    public void hMSet(String key, Map<String, Object> value) {
-        try {
-            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-            operations.putAll(key, value);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected void doHMSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
+        redisTemplate.opsForHash().putAll(key, value);
+        redisTemplate.expire(key, expires, timeUnit);
     }
 
     @Override
-    public void hMSet(String key, Map<String, Object> value, Long expires) {
-        try {
-            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-            operations.putAll(key, value);
-            redisTemplate.expire(key, expires, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Long doHIncrBy(String key, String hashField, long delta) {
+        return redisTemplate.opsForHash().increment(key, hashField, delta);
     }
 
     @Override
-    public Long hIncrBy(String key, String hashField, long delta) {
-        try {
-            return redisTemplate.opsForHash().increment(key, hashField, delta);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Double doHIncrByDouble(String key, String hashField, double delta) {
+        return redisTemplate.opsForHash().increment(key, hashField, delta);
     }
 
     @Override
-    public Double hIncrBy(String key, String hashField, double delta) {
-        try {
-            return redisTemplate.opsForHash().increment(key, hashField, delta);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected void doMSet(Map<String, Object> map) {
+        redisTemplate.opsForValue().multiSet(map);
     }
 
     @Override
-    public void hMSet(String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
-        try {
-            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-            operations.putAll(key, value);
-            redisTemplate.expire(key, expires, timeUnit);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Long doIncrBy(String key, Long value) {
+        return redisTemplate.opsForValue().increment(key, value);
     }
 
     @Override
-    public void mSet(Map<String, Object> map) {
-        try {
-            redisTemplate.opsForValue().multiSet(map);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Long doDecrBy(String key, Long value) {
+        return redisTemplate.opsForValue().decrement(key, value);
     }
 
     @Override
-    public Long incrBy(String key, Long value) {
-        try {
-            return redisTemplate.opsForValue().increment(key, value);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Object doGet(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 
     @Override
-    public Long decrBy(String key, Long value) {
-        try {
-            return redisTemplate.opsForValue().decrement(key, value);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected Object doHGet(String key, String hashKey) {
+        return redisTemplate.opsForHash().get(key, hashKey);
     }
 
     @Override
-    public Object get(String key) {
-        try {
-            ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-            return operations.get(key);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
+    protected List<Object> doHMGet(String key, Collection<Object> hashKeys) {
+        return redisTemplate.opsForHash().multiGet(key, hashKeys);
     }
 
     @Override
-    public Object hGet(String key, String hashKey) {
-        try {
-            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-            return operations.get(key, hashKey);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
-    }
-
-    @Override
-    public <T> T get(String key, Class<T> target) {
-        Object result = get(key);
-        return result == null ? null : JSON.to(target, result);
-    }
-
-    @Override
-    public List<Object> hMGet(String key, Collection<Object> hashKeys) {
-        try {
-            HashOperations<String, Object, Object> operations = redisTemplate.opsForHash();
-            return operations.multiGet(key, hashKeys);
-        } catch (Exception e) {
-            throw new CacheException(e);
-        }
-    }
-
-    @Override
-    public void del(Collection<String> keys) {
+    protected void doDel(Collection<String> keys) {
         redisTemplate.delete(keys);
     }
 
     @Override
-    public void del(String key) {
-        redisTemplate.delete(key);
+    protected <T> T doConvert(Object value, Class<T> target) {
+        return JSON.to(target, value);
     }
-
 }
