@@ -96,4 +96,14 @@ public class RedisCacheService extends AbstractCacheService {
     protected <T> T doConvert(Object value, Class<T> target) {
         return JSON.to(target, value);
     }
+
+    @Override
+    protected boolean doSetIfAbsent(String key, Object value) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value));
+    }
+
+    @Override
+    protected boolean doSetIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value, expires, timeUnit));
+    }
 }

@@ -95,7 +95,7 @@ public interface CacheService {
     Long hIncrBy(String key, String hashField, long delta);
 
     /**
-     * Hash表中指定字段的值增加给定的浮点数增量
+     * Hash表中指定字��的值增加给定的浮点数增量
      *
      * @param key Hash表的key
      * @param hashField Hash表中的字段名
@@ -188,4 +188,24 @@ public interface CacheService {
      * @param key 要删除的缓存key
      */
     void del(String key);
+
+    /**
+     * 当key不存在时设置值
+     *
+     * @param key 缓存key
+     * @param value 缓存value
+     * @return true if the key was set, false if the key was not set
+     */
+    boolean setIfAbsent(String key, Object value);
+
+    /**
+     * 当key不存在时设置值，同时设置过期时间
+     *
+     * @param key 缓存key
+     * @param value 缓存value
+     * @param expires 过期时间
+     * @param timeUnit 时间单位
+     * @return true if the key was set, false if the key was not set
+     */
+    boolean setIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit);
 }

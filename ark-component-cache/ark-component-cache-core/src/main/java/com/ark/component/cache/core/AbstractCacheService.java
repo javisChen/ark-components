@@ -155,6 +155,16 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
         doDel(Collections.singleton(wrapKey(key)));
     }
 
+    @Override
+    public boolean setIfAbsent(String key, Object value) {
+        return doSetIfAbsent(wrapKey(key), value);
+    }
+
+    @Override
+    public boolean setIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit) {
+        return doSetIfAbsent(wrapKey(key), value, expires, timeUnit);
+    }
+
     protected abstract void doSAdd(String key, Object... values);
     protected abstract Set<Object> doSMembers(String key);
     protected abstract void doSet(String key, Object value);
@@ -171,4 +181,6 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
     protected abstract List<Object> doHMGet(String key, Collection<Object> hashKeys);
     protected abstract void doDel(Collection<String> keys);
     protected abstract <T> T doConvert(Object value, Class<T> target);
+    protected abstract boolean doSetIfAbsent(String key, Object value);
+    protected abstract boolean doSetIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit);
 } 

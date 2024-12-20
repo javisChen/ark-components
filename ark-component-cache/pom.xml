@@ -4,14 +4,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ark.cache</groupId>
-    <name>ark-component-cache</name>
     <artifactId>ark-component-cache</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
+    
+    <name>ark-component-cache</name>
+    <description>ARK Cache Component</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0.0-SNAPSHOT</revision>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
+
+    <developers>
+        <developer>
+            <name>JC</name>
+            <email>your.email@example.com</email>
+            <organization>ARK</organization>
+        </developer>
+    </developers>
 
     <modules>
         <module>ark-component-cache-api</module>
@@ -21,12 +35,11 @@
     </modules>
 
     <dependencyManagement>
-
         <dependencies>
             <dependency>
                 <groupId>com.ark.boot</groupId>
                 <artifactId>ark-dependencies</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -34,22 +47,21 @@
             <dependency>
                 <groupId>com.ark.cache</groupId>
                 <artifactId>ark-component-cache-api</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ark.cache</groupId>
                 <artifactId>ark-component-cache-core</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ark.cache</groupId>
                 <artifactId>ark-component-cache-redis</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
     <build>
@@ -59,15 +71,16 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                    <target>21</target>
-                    <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -78,11 +91,8 @@
                 </executions>
                 <configuration>
                     <attach>true</attach>
-                    <defaultManifestFile/>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
