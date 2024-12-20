@@ -89,6 +89,7 @@
                 </executions>
                 <configuration>
                     <attach>true</attach>
+                    <defaultManifestFile/>
                 </configuration>
             </plugin>
 
