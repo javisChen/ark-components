@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.ark.component.cache.CacheService;
 import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
-import com.ark.component.security.core.config.SecurityConstants;
+import com.ark.component.security.core.common.SecurityConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

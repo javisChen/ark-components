@@ -1,4 +1,4 @@
-package com.ark.component.security.core.config;
+package com.ark.component.security.core.common;
 
 /**
  * 安全变量
@@ -25,5 +25,19 @@ public interface SecurityConstants {
      */
     String JWT_KEY_ID = "8d8bf81d-5032-4aeb-8962-ef473fd21ab1";
 
+    /**
+     * 请求来源Header
+     */
+    String HTTP_HEADER_SOURCE = "ark-access-from";
+
+    /**
+     * 网关请求标识
+     */
+    String ACCESS_SOURCE_GATEWAY = "ark-gateway";
+
+    /**
+     * 服务间调用标识
+     */
+    String ACCESS_SOURCE_SERVICE = "ark-service";
 
 }

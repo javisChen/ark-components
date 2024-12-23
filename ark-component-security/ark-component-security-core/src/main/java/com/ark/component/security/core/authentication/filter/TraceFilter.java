@@ -19,16 +19,23 @@ public class TraceFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String traceId = null;
         try {
-            String traceId = request.getHeader(HEADER_TRACE_ID);
+
+            traceId = request.getHeader(HEADER_TRACE_ID);
+            
+
             if (StringUtils.isEmpty(traceId)) {
                 traceId = TraceIdUtils.getId();
             }
+
             MDC.put(HEADER_TRACE_ID, traceId);
-        } catch (Exception e) {
-            log.error("Configure Trace Id Failure", e);
+            
+            filterChain.doFilter(request, response);
+        } finally {
+
+            MDC.remove(HEADER_TRACE_ID);
         }
-        filterChain.doFilter(request, response);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ark.component.security.core.config;
 
 import com.ark.component.cache.CacheService;
+import com.ark.component.security.core.configurers.ArkGenericHttpConfigurer;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -14,7 +15,6 @@ import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -28,8 +28,8 @@ import java.security.KeyPairGenerator;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.ark.component.security.core.config.SecurityConstants.JWT_KEY_ID;
-import static com.ark.component.security.core.config.SecurityConstants.JWT_SIGN_SECRET;
+import static com.ark.component.security.core.common.SecurityConstants.JWT_KEY_ID;
+import static com.ark.component.security.core.common.SecurityConstants.JWT_SIGN_SECRET;
 
 public class SecurityConfiguration {
 
@@ -85,7 +85,6 @@ public class SecurityConfiguration {
     }
 
     public static void applyDefaultSecurity(HttpSecurity httpSecurity) throws Exception {
-        SecurityGenericConfigurer securityGenericConfigurer = new SecurityGenericConfigurer();
         httpSecurity
                 // 暂时禁用SessionManagement
                 .sessionManagement(AbstractHttpConfigurer::disable)
@@ -107,11 +106,6 @@ public class SecurityConfiguration {
                                 .anyRequest()
                                     .permitAll()
                 )
-                .with(securityGenericConfigurer, new Customizer<SecurityGenericConfigurer>() {
-                    @Override
-                    public void customize(SecurityGenericConfigurer securityGenericConfigurer) {
-
-                    }
-                });
+                .with(new ArkGenericHttpConfigurer(), arkGenericHttpConfigurer -> {});
     }
 }
