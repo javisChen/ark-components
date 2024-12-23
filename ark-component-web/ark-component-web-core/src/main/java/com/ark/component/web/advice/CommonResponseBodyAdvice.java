@@ -37,12 +37,9 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object>, Env
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
-        if (body != null) {
-            if (ServerResponse.class.isAssignableFrom(body.getClass())) {
-                ServerResponse serverResponse = (ServerResponse) body;
-                serverResponse.setTraceId(ServiceContext.getTraceId());
-                serverResponse.setService(applicationName);
-            }
+        if (body instanceof ServerResponse serverResponse) {
+            serverResponse.setTraceId(ServiceContext.getTraceId());
+            serverResponse.setService(applicationName);
         }
         return body;
     }
@@ -56,5 +53,4 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object>, Env
     public void afterPropertiesSet() {
         applicationName = environment.getProperty("spring.application.name", String.class);
     }
-
 }

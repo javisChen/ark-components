@@ -14,6 +14,7 @@ import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -92,12 +93,25 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 禁用匿名登录
                 .anonymous(AbstractHttpConfigurer::disable)
+                // 公共白名单
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/doc.html")
+                        .permitAll()
+                )
                 // 权限拦截全部交给认证中心AccessController接口处理，由网关调用
                 .authorizeHttpRequests(requests ->
                         requests
                                 .anyRequest()
                                     .permitAll()
                 )
-                .apply(securityGenericConfigurer);
+                .with(securityGenericConfigurer, new Customizer<SecurityGenericConfigurer>() {
+                    @Override
+                    public void customize(SecurityGenericConfigurer securityGenericConfigurer) {
+
+                    }
+                });
     }
 }

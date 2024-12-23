@@ -5,7 +5,7 @@
 
     <groupId>com.ark.cache</groupId>
     <artifactId>ark-component-cache</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>ark-component-cache</name>
@@ -13,19 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>1.0.0-SNAPSHOT</revision>
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
-
-    <developers>
-        <developer>
-            <name>JC</name>
-            <email>your.email@example.com</email>
-            <organization>ARK</organization>
-        </developer>
-    </developers>
 
     <modules>
         <module>ark-component-cache-api</module>
@@ -39,27 +30,27 @@
             <dependency>
                 <groupId>com.ark.boot</groupId>
                 <artifactId>ark-dependencies</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
             <dependency>
-                <groupId>com.ark.cache</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>ark-component-cache-api</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ark.cache</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>ark-component-cache-core</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ark.cache</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>ark-component-cache-redis</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
