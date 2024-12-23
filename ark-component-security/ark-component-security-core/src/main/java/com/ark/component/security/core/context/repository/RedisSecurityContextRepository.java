@@ -28,6 +28,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -75,7 +76,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
 
         cacheService.hMSet(RedisKeyUtils.createAccessTokenKey(accessToken), map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 
-        cacheService.set(RedisKeyUtils.createUserIdKey(loginUser.getUserId()), accessToken, SecurityConstants.TOKEN_EXPIRES_SECONDS);
+        cacheService.set(RedisKeyUtils.createUserIdKey(loginUser.getUserId()), accessToken, SecurityConstants.TOKEN_EXPIRES_SECONDS, TimeUnit.SECONDS);
 
     }
 
@@ -85,7 +86,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         if (StringUtils.isEmpty(accessToken)) {
             return context;
         }
-        List<Object> values = cacheService.hMGet(RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
+        List<Object> values = cacheService.hMGet("auth", RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
         if (CollectionUtils.isEmpty(values)) {
             return context;
         }

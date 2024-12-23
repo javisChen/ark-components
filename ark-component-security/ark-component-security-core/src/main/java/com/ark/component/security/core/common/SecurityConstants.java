@@ -13,7 +13,7 @@ public interface SecurityConstants {
     /**
      * TOKEN过期时间（秒）
      */
-    long TOKEN_EXPIRES_SECONDS = 60 * 60 * 24 * 7;
+    Long TOKEN_EXPIRES_SECONDS = (long) (60 * 60 * 24 * 7);
 
     /**
      * JWT签名Secret

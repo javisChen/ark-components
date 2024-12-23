@@ -95,7 +95,7 @@ public interface CacheService {
     Long hIncrBy(String key, String hashField, long delta);
 
     /**
-     * Hash表中指定字��的值增加给定的浮点数增量
+     * Hash表中指定字段的值增加给定的浮点数增量
      *
      * @param key Hash表的key
      * @param hashField Hash表中的字段名
@@ -208,4 +208,91 @@ public interface CacheService {
      * @return true if the key was set, false if the key was not set
      */
     boolean setIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit);
+
+    /**
+     * 设置缓存键值对，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key 缓存key
+     * @param value 缓存value
+     */
+    void set(String appPrefix, String key, Object value);
+
+    /**
+     * 设置带过期时间的缓存键值对，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key 缓存key
+     * @param value 缓存value
+     * @param expires 过期时间(毫秒)
+     * @return 是否设置成功
+     */
+    boolean set(String appPrefix, String key, Object value, Long expires);
+
+    /**
+     * 设置带过期时间的缓存键值对，可指定时间单位，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key 缓存key
+     * @param value 缓存value
+     * @param expires 过期时间
+     * @param timeUnit 时间单位
+     * @return 是否设置成功
+     */
+    boolean set(String appPrefix, String key, Object value, Long expires, TimeUnit timeUnit);
+
+    /**
+     * 获取缓存值，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key 缓存key
+     * @return 缓存值
+     */
+    Object get(String appPrefix, String key);
+
+    /**
+     * Hash表操作相关方法重载
+     */
+    void hMSet(String appPrefix, String key, Map<String, Object> value);
+    void hMSet(String appPrefix, String key, Map<String, Object> value, Long expires);
+    void hMSet(String appPrefix, String key, Map<String, Object> value, Long expires, TimeUnit timeUnit);
+    Object hGet(String appPrefix, String key, String hashKey);
+    List<Object> hMGet(String appPrefix, String key, Collection<Object> hashKeys);
+    Long hIncrBy(String appPrefix, String key, String hashField, long delta);
+    Double hIncrBy(String appPrefix, String key, String hashField, double delta);
+
+    /**
+     * 集合操作相关方法重载
+     */
+    void sAdd(String appPrefix, String key, Object... values);
+    Set<Object> sMembers(String appPrefix, String key);
+
+    /**
+     * 计数操作相关方法重载
+     */
+    Long incrBy(String appPrefix, String key, Long value);
+    Long decrBy(String appPrefix, String key, Long value);
+
+    /**
+     * 删除操作相关方法重载
+     */
+    void del(String appPrefix, String key);
+    void del(String appPrefix, Collection<String> keys);
+
+    /**
+     * setIfAbsent操作相关方法重载
+     */
+    boolean setIfAbsent(String appPrefix, String key, Object value);
+    boolean setIfAbsent(String appPrefix, String key, Object value, Long expires, TimeUnit timeUnit);
+
+    /**
+     * 获取缓存值并转换为指定类型，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key 缓存key
+     * @param target 目标类型
+     * @param <T> 泛型类型
+     * @return 转换后的缓存值
+     */
+    <T> T get(String appPrefix, String key, Class<T> target);
 }

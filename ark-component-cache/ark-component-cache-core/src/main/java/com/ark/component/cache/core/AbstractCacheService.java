@@ -42,6 +42,13 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
     }
 
     /**
+     * 包装缓存key
+     */
+    protected String wrapKey(String appPrefix, String key) {
+        return keyGenerator.generate(key, appPrefix);
+    }
+
+    /**
      * 默认过期时间单位
      */
     protected static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
@@ -163,6 +170,113 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
     @Override
     public boolean setIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit) {
         return doSetIfAbsent(wrapKey(key), value, expires, timeUnit);
+    }
+
+    @Override
+    public void set(String appPrefix, String key, Object value) {
+        doSet(wrapKey(appPrefix, key), value);
+    }
+
+    @Override
+    public boolean set(String appPrefix, String key, Object value, Long expires) {
+        return doSet(wrapKey(appPrefix, key), value, expires, DEFAULT_TIME_UNIT);
+    }
+
+    @Override
+    public Object get(String appPrefix, String key) {
+        return doGet(wrapKey(appPrefix, key));
+    }
+
+    @Override
+    public boolean set(String appPrefix, String key, Object value, Long expires, TimeUnit timeUnit) {
+        return doSet(wrapKey(appPrefix, key), value, expires, timeUnit);
+    }
+
+    @Override
+    public <T> T get(String appPrefix, String key, Class<T> target) {
+        Object value = doGet(wrapKey(appPrefix, key));
+        if (value == null) {
+            return null;
+        }
+        return doConvert(value, target);
+    }
+
+    @Override
+    public void hMSet(String appPrefix, String key, Map<String, Object> value) {
+        doHMSet(wrapKey(appPrefix, key), value);
+    }
+
+    @Override
+    public void hMSet(String appPrefix, String key, Map<String, Object> value, Long expires) {
+        hMSet(appPrefix, key, value, expires, DEFAULT_TIME_UNIT);
+    }
+
+    @Override
+    public void hMSet(String appPrefix, String key, Map<String, Object> value, Long expires, TimeUnit timeUnit) {
+        doHMSet(wrapKey(appPrefix, key), value, expires, timeUnit);
+    }
+
+    @Override
+    public Object hGet(String appPrefix, String key, String hashKey) {
+        return doHGet(wrapKey(appPrefix, key), hashKey);
+    }
+
+    @Override
+    public List<Object> hMGet(String appPrefix, String key, Collection<Object> hashKeys) {
+        return doHMGet(wrapKey(appPrefix, key), hashKeys);
+    }
+
+    @Override
+    public Long hIncrBy(String appPrefix, String key, String hashField, long delta) {
+        return doHIncrBy(wrapKey(appPrefix, key), hashField, delta);
+    }
+
+    @Override
+    public Double hIncrBy(String appPrefix, String key, String hashField, double delta) {
+        return doHIncrByDouble(wrapKey(appPrefix, key), hashField, delta);
+    }
+
+    @Override
+    public void sAdd(String appPrefix, String key, Object... values) {
+        doSAdd(wrapKey(appPrefix, key), values);
+    }
+
+    @Override
+    public Set<Object> sMembers(String appPrefix, String key) {
+        return doSMembers(wrapKey(appPrefix, key));
+    }
+
+    @Override
+    public Long incrBy(String appPrefix, String key, Long value) {
+        return doIncrBy(wrapKey(appPrefix, key), value);
+    }
+
+    @Override
+    public Long decrBy(String appPrefix, String key, Long value) {
+        return doDecrBy(wrapKey(appPrefix, key), value);
+    }
+
+    @Override
+    public void del(String appPrefix, String key) {
+        doDel(Collections.singleton(wrapKey(appPrefix, key)));
+    }
+
+    @Override
+    public void del(String appPrefix, Collection<String> keys) {
+        Collection<String> wrappedKeys = keys.stream()
+            .map(key -> wrapKey(appPrefix, key))
+            .collect(Collectors.toList());
+        doDel(wrappedKeys);
+    }
+
+    @Override
+    public boolean setIfAbsent(String appPrefix, String key, Object value) {
+        return doSetIfAbsent(wrapKey(appPrefix, key), value);
+    }
+
+    @Override
+    public boolean setIfAbsent(String appPrefix, String key, Object value, Long expires, TimeUnit timeUnit) {
+        return doSetIfAbsent(wrapKey(appPrefix, key), value, expires, timeUnit);
     }
 
     protected abstract void doSAdd(String key, Object... values);

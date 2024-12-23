@@ -52,6 +52,30 @@ public class CacheKeyGenerator {
         return sb.toString();
     }
 
+    public String generate(String key, String appPrefix) {
+        if (!StringUtils.hasText(key)) {
+            throw new IllegalArgumentException("Cache key cannot be empty");
+        }
+
+        StringBuilder sb = new StringBuilder();
+        
+        // 添加环境前缀
+        if (config.isEnableEnvPrefix()) {
+            String envPrefix = getEnvPrefix();
+            if (StringUtils.hasText(envPrefix)) {
+                sb.append(envPrefix).append(DELIMITER);
+            }
+        }
+        
+        // 使用传入的应用前缀替代配置的应用前缀
+        if (StringUtils.hasText(appPrefix)) {
+            sb.append(appPrefix).append(DELIMITER);
+        }
+        
+        sb.append(key);
+        return sb.toString();
+    }
+
     private String getEnvPrefix() {
         return environment.getActiveProfiles().length > 0 ? 
             environment.getActiveProfiles()[0] : 
