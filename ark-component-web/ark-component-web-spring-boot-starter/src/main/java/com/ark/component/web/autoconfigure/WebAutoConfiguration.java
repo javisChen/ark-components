@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.JSONWriter;
 import com.alibaba.fastjson2.support.config.FastJsonConfig;
 import com.alibaba.fastjson2.support.spring6.http.converter.FastJsonHttpMessageConverter;
 import com.ark.component.web.advice.CommonResponseBodyAdvice;
+import com.ark.component.web.config.ApplicationInfoPrinter;
+
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -38,6 +40,11 @@ public class WebAutoConfiguration {
     @Bean
     public CommonResponseBodyAdvice commonResponseBodyAdvice() {
         return new CommonResponseBodyAdvice();
+    }
+
+    @Bean
+    public ApplicationInfoPrinter applicationInfoPrinter() {
+        return new ApplicationInfoPrinter();
     }
 
     @Bean
