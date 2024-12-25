@@ -42,8 +42,8 @@ import static com.ark.component.security.core.common.SecurityConstants.JWT_SIGN_
  *
  * @author JC
  */
-public final class ArkGenericHttpConfigurer
-        extends AbstractHttpConfigurer<ArkGenericHttpConfigurer, HttpSecurity> {
+public final class ArkServiceHttpConfigurer
+        extends AbstractHttpConfigurer<ArkServiceHttpConfigurer, HttpSecurity> {
 
     private ApplicationContext context;
 
@@ -70,10 +70,12 @@ public final class ArkGenericHttpConfigurer
             registerDefaultSecurityContextRepository(http);
         }
 
+
         AuthenticationErrorHandler errorHandler = new AuthenticationErrorHandler();
         http.setSharedObject(AuthenticationErrorHandler.class, errorHandler);
 
-        addFilters(http, errorHandler);
+        configureFilters(http, errorHandler);
+
         registerErrorHandler(http, errorHandler);
     }
 
@@ -81,7 +83,7 @@ public final class ArkGenericHttpConfigurer
      * 添加安全过滤器链
      * TraceFilter -> AccessCheckFilter -> SecurityContextHolderFilter
      */
-    private void addFilters(HttpSecurity http, AuthenticationErrorHandler errorHandler) {
+    private void configureFilters(HttpSecurity http, AuthenticationErrorHandler errorHandler) {
         AccessCheckFilter accessCheckFilter = new AccessCheckFilter(context, errorHandler);
         http.addFilterBefore(accessCheckFilter, SecurityContextHolderFilter.class);
 
@@ -93,8 +95,7 @@ public final class ArkGenericHttpConfigurer
      * 注册默认的安全上下文仓库
      */
     private void registerDefaultSecurityContextRepository(HttpSecurity http) throws Exception {
-        SecurityContextRepository securityContextRepository = 
-            http.getSharedObject(SecurityContextRepository.class);
+        SecurityContextRepository securityContextRepository = http.getSharedObject(SecurityContextRepository.class);
         http.securityContext(configurer -> 
             configurer.securityContextRepository(securityContextRepository));
     }

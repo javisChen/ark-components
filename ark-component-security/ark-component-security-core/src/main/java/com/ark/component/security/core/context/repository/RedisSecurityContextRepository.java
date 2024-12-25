@@ -110,7 +110,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
                 .map(item -> new SimpleGrantedAuthority((String) item))
                 .collect(Collectors.toUnmodifiableSet()));
         // LoginUser loginUser = convert(values);
-        context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken));
+        context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken, "", 0L));
         return context;
     }
 
