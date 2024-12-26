@@ -1,6 +1,7 @@
 package com.ark.component.redis.autoconfigure;
 
 import com.alibaba.fastjson2.support.spring6.data.redis.FastJsonRedisSerializer;
+import com.ark.component.cache.CacheService;
 import com.ark.component.cache.redis.RedisCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -48,8 +49,8 @@ public class RedisCacheAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(RedisCacheService.class)
-    public RedisCacheService redisCacheService(RedisTemplate<String, Object> redisTemplate) {
+    @ConditionalOnMissingBean(CacheService.class)
+    public CacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
         return new RedisCacheService(redisTemplate);
     }
 }

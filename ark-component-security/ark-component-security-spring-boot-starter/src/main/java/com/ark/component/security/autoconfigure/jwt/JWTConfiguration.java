@@ -1,6 +1,5 @@
 package com.ark.component.security.autoconfigure.jwt;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
 import com.ark.component.security.autoconfigure.SecurityProperties;
@@ -21,7 +20,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
 
 /**
  * JWT配置类
@@ -31,6 +29,8 @@ import java.util.UUID;
  */
 @EnableConfigurationProperties(JwtProperties.class)
 public class JWTConfiguration {
+
+    private final JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
 
     /**
      * 配置RSA密钥源
@@ -44,22 +44,11 @@ public class JWTConfiguration {
 
         JWK rsaKey = new RSAKey.Builder((RSAPublicKey) rsa.getPublicKey())
                 .privateKey(rsa.getPrivateKey())
-                .keyID("rsa-" + UUID.randomUUID())
-                .algorithm(JWSAlgorithm.RS256)
+                // .keyID("rsa-" + UUID.randomUUID())
+                .algorithm(jwsAlgorithm)
                 .build();
         
         return new ImmutableJWKSet<>(new JWKSet(rsaKey));
-    }
-
-    /**
-     * 格式化RSA密钥字符串
-     * 移除所有换行符、空格和回车符
-     */
-    private String formatKey(String key) {
-        if (StrUtil.isBlank(key)) {
-            return key;
-        }
-        return key.replaceAll("[\\s\\r\\n]", "");
     }
 
     /**
@@ -76,9 +65,11 @@ public class JWTConfiguration {
     @Bean
     public NimbusJwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
-        JWSKeySelector<SecurityContext> jwsKeySelector = 
-            new JWSVerificationKeySelector<>(JWSAlgorithm.RS256, jwkSource);
+
+        JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(jwsAlgorithm, jwkSource);
+
         jwtProcessor.setJWSKeySelector(jwsKeySelector);
-        return new NimbusJwtDecoder(jwtProcessor);
+        NimbusJwtDecoder nimbusJwtDecoder = new NimbusJwtDecoder(jwtProcessor);
+        return nimbusJwtDecoder;
     }
 }
