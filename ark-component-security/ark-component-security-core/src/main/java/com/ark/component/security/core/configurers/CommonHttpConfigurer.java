@@ -45,16 +45,16 @@ public final class CommonHttpConfigurer extends AbstractHttpConfigurer<CommonHtt
                 .csrf(AbstractHttpConfigurer::disable)
                 // 禁用匿名访问 - 要求认证
                 .anonymous(AbstractHttpConfigurer::disable)
-                // Swagger文档接口白名单
-                .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-                        .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/doc.html")
-                        .permitAll()
-                )
-                // 权限校验策略
-                // 默认放行所有请求，由网关统一调用认证中心的AccessController接口进行权限校验
+//                // Swagger文档接口白名单
+//                .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
+//                        .requestMatchers(
+//                                "/v3/api-docs/**",
+//                                "/swagger-ui/**",
+//                                "/doc.html")
+//                        .permitAll()
+//                )
+                //
+                // API权限校验策略：服务自身默认放行所有请求,所有请求都会经过网关路由,网关会统一走认证中心做校验。
                 .authorizeHttpRequests(requestMatcherRegistry ->
                         requestMatcherRegistry
                                 .anyRequest()
