@@ -11,10 +11,10 @@ import java.util.Set;
 @Getter
 public class LoginUser implements UserDetails, CredentialsContainer {
 
-    public final static String JWT_CLAIM_USER_ID = "userId";
-    public final static String JWT_CLAIM_USER_CODE = "userCode";
-    public final static String JWT_CLAIM_USERNAME = "username";
-    public final static String JWT_CLAIM_USER_IS_SUPER_ADMIN = "isSuperAdmin";
+    public final static String USER_ID = "userId";
+    public final static String USER_CODE = "userCode";
+    public final static String USERNAME = "username";
+    public final static String IS_SUPER_ADMIN = "isSuperAdmin";
 
     private Long userId;
     private String userCode;

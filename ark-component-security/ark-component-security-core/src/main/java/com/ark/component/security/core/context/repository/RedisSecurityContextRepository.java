@@ -6,6 +6,7 @@ import com.ark.component.cache.CacheService;
 import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
 import com.ark.component.security.core.common.SecurityConstants;
+import com.ark.component.security.core.userdetails.TokenUserDetailsExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +50,14 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             "accountNonLocked",
             "credentialsNonExpired",
             "enabled");
+    private final TokenUserDetailsExtractor userDetailsExtractor;
 
-    public RedisSecurityContextRepository(CacheService cacheService, JwtDecoder jwtDecoder) {
+    public RedisSecurityContextRepository(CacheService cacheService, 
+                                        JwtDecoder jwtDecoder,
+                                        TokenUserDetailsExtractor userDetailsExtractor) {
         this.cacheService = cacheService;
         this.jwtDecoder = jwtDecoder;
+        this.userDetailsExtractor = userDetailsExtractor;
     }
 
     @Override
@@ -86,30 +91,22 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         if (StringUtils.isEmpty(accessToken)) {
             return context;
         }
+        
         List<Object> values = cacheService.hMGet("auth", RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
-        if (CollectionUtils.isEmpty(values)) {
-            return context;
-        }
-        if (CollectionUtils.isEmpty(values.stream().filter(Objects::nonNull).toList())) {
+        if (CollectionUtils.isEmpty(values) || 
+            CollectionUtils.isEmpty(values.stream().filter(Objects::nonNull).collect(Collectors.toList()))) {
             return context;
         }
 
-        Jwt jwt = decodeToken(accessToken);
-        Object userCode = jwt.getClaim(LoginUser.JWT_CLAIM_USER_CODE);
-        Object username = jwt.getClaim(LoginUser.JWT_CLAIM_USERNAME);
-        Object userId = jwt.getClaim(LoginUser.JWT_CLAIM_USER_ID);
-        Object isSuperAdmin = jwt.getClaim(LoginUser.JWT_CLAIM_USER_IS_SUPER_ADMIN);
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(Long.parseLong(userId.toString()));
-        loginUser.setUserCode(String.valueOf(userCode));
-        loginUser.setIsSuperAdmin((Boolean) isSuperAdmin);
-        loginUser.setUsername(String.valueOf(username));
-        // 权限从缓存中取
+        // 从token中提取基本用户信息
+        LoginUser loginUser = userDetailsExtractor.extractUserDetails(accessToken);
+        
+        // 从缓存中获取权限信息
         JSONArray authorities = (JSONArray) values.get(5);
         loginUser.setAuthorities(authorities.stream()
                 .map(item -> new SimpleGrantedAuthority((String) item))
-                .collect(Collectors.toUnmodifiableSet()));
-        // LoginUser loginUser = convert(values);
+                .collect(Collectors.toSet()));
+                
         context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken, "", 0L));
         return context;
     }
