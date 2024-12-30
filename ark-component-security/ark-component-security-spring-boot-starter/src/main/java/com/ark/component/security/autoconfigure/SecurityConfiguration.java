@@ -39,9 +39,8 @@ public class SecurityConfiguration {
     @Bean
     @ConditionalOnMissingBean(SecurityContextRepository.class)
     public SecurityContextRepository securityContextRepository(CacheService cacheService,
-                                                               NimbusJwtDecoder jwtDecoder,
                                                                LoginUserDetailsService loginUserDetailsService) {
-        return new RedisSecurityContextRepository(cacheService, jwtDecoder, loginUserDetailsService);
+        return new RedisSecurityContextRepository(cacheService, loginUserDetailsService);
     }
 
     @Bean
