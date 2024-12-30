@@ -5,23 +5,21 @@ import com.alibaba.fastjson2.JSONArray;
 import com.ark.component.cache.CacheService;
 import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
+import com.ark.component.security.core.common.RedisKeyUtils;
 import com.ark.component.security.core.common.SecurityConstants;
-import com.ark.component.security.core.userdetails.TokenUserDetailsExtractor;
+import com.ark.component.security.core.userdetails.LoginUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
@@ -38,7 +36,6 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     private final BearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
     private final CacheService cacheService;
-    private final JwtDecoder jwtDecoder;
     private final List<Object> hashKeys = List.of(
             "userId",
             "userCode",
@@ -50,14 +47,14 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             "accountNonLocked",
             "credentialsNonExpired",
             "enabled");
-    private final TokenUserDetailsExtractor userDetailsExtractor;
+
+    private final LoginUserDetailsService loginUserDetailsService;
 
     public RedisSecurityContextRepository(CacheService cacheService, 
                                         JwtDecoder jwtDecoder,
-                                        TokenUserDetailsExtractor userDetailsExtractor) {
+                                          LoginUserDetailsService loginUserDetailsService) {
         this.cacheService = cacheService;
-        this.jwtDecoder = jwtDecoder;
-        this.userDetailsExtractor = userDetailsExtractor;
+        this.loginUserDetailsService = loginUserDetailsService;
     }
 
     @Override
@@ -99,7 +96,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         }
 
         // 从token中提取基本用户信息
-        LoginUser loginUser = userDetailsExtractor.extractUserDetails(accessToken);
+        LoginUser loginUser = loginUserDetailsService.loadUserByCredential(accessToken);
         
         // 从缓存中获取权限信息
         JSONArray authorities = (JSONArray) values.get(5);
@@ -109,34 +106,6 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
                 
         context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken, "", 0L));
         return context;
-    }
-
-    private Jwt decodeToken(String accessToken) {
-        Jwt jwt = null;
-        try {
-            jwt = jwtDecoder.decode(accessToken);
-        } catch (JwtException e) {
-            log.error("解析JWT失败", e);
-            throw new BadCredentialsException("无效凭证");
-        }
-        return jwt;
-    }
-
-    private LoginUser convert(List<Object> objects) {
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(Long.parseLong(objects.get(0).toString()));
-        loginUser.setUserCode(String.valueOf(objects.get(1)));
-        loginUser.setIsSuperAdmin((Boolean) objects.get(2));
-        loginUser.setUsername(String.valueOf(objects.get(4)));
-        JSONArray authorities = (JSONArray) objects.get(5);
-        loginUser.setAuthorities(authorities.stream()
-                .map(item -> new SimpleGrantedAuthority((String) item))
-                .collect(Collectors.toUnmodifiableSet()));
-        loginUser.setAccountNonExpired((Boolean) objects.get(6));
-        loginUser.setAccountNonLocked((Boolean) objects.get(7));
-        loginUser.setCredentialsNonExpired((Boolean) objects.get(8));
-        loginUser.setEnabled((Boolean) objects.get(9));
-        return loginUser;
     }
 
     protected String resolveToken(HttpServletRequest request) {

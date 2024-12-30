@@ -1,15 +1,19 @@
-package com.ark.component.security.core.token.generator;
+package com.ark.component.security.core.token.generate;
 
 import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.core.token.TokenMetadata;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.security.core.GrantedAuthority;
 
 /**
  * JWT Token生成器实现

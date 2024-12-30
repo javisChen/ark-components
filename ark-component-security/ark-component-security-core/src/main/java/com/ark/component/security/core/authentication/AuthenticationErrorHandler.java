@@ -5,7 +5,7 @@ package com.ark.component.security.core.authentication;
 import com.ark.component.common.util.spring.SpringUtils;
 import com.ark.component.dto.ServerResponse;
 import com.ark.component.dto.SingleResponse;
-import com.ark.component.security.core.authentication.exception.AuthException;
+import com.ark.component.security.core.exception.AuthException;
 import com.ark.component.security.core.common.ResponseUtils;
 import com.ark.component.security.core.exception.IllegalRequestException;
 import jakarta.servlet.http.HttpServletRequest;

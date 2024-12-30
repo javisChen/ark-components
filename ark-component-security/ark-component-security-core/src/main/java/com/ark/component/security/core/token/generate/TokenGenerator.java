@@ -1,4 +1,4 @@
-package com.ark.component.security.core.token.generator;
+package com.ark.component.security.core.token.generate;
 
 import com.ark.component.security.base.user.LoginUser;
 import com.ark.component.security.core.token.TokenMetadata;

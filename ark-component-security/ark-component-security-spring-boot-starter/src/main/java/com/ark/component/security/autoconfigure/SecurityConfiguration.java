@@ -4,12 +4,10 @@ import com.ark.component.cache.CacheService;
 import com.ark.component.security.core.configurers.ArkServiceHttpConfigurer;
 import com.ark.component.security.core.configurers.CommonHttpConfigurer;
 import com.ark.component.security.core.context.repository.RedisSecurityContextRepository;
-import com.ark.component.security.core.token.generator.JwtTokenGenerator;
-import com.ark.component.security.core.token.generator.TokenGenerator;
+import com.ark.component.security.core.token.generate.JwtTokenGenerator;
+import com.ark.component.security.core.token.generate.TokenGenerator;
 import com.ark.component.security.core.token.issuer.TokenIssuer;
-import com.ark.component.security.core.userdetails.JwtTokenUserDetailsExtractor;
-import com.ark.component.security.core.userdetails.TokenUserDetailsExtractor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.ark.component.security.core.userdetails.LoginUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,18 +31,17 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnBean(JwtTokenGenerator.class)
-    public TokenUserDetailsExtractor tokenUserDetailsExtractor(NimbusJwtDecoder jwtDecoder) {
-        return new JwtTokenUserDetailsExtractor(jwtDecoder);
+//    @ConditionalOnMissingBean
+    public LoginUserDetailsService loginUserDetailsService(NimbusJwtDecoder jwtDecoder) {
+        return new LoginUserDetailsService(jwtDecoder);
     }
 
     @Bean
     @ConditionalOnMissingBean(SecurityContextRepository.class)
     public SecurityContextRepository securityContextRepository(CacheService cacheService,
                                                                NimbusJwtDecoder jwtDecoder,
-                                                               TokenUserDetailsExtractor userDetailsExtractor) {
-        return new RedisSecurityContextRepository(cacheService, jwtDecoder, userDetailsExtractor);
+                                                               LoginUserDetailsService loginUserDetailsService) {
+        return new RedisSecurityContextRepository(cacheService, jwtDecoder, loginUserDetailsService);
     }
 
     @Bean

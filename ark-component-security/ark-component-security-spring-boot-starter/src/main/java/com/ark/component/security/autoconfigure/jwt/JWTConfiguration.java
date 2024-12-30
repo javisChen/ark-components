@@ -69,7 +69,6 @@ public class JWTConfiguration {
         JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(jwsAlgorithm, jwkSource);
 
         jwtProcessor.setJWSKeySelector(jwsKeySelector);
-        NimbusJwtDecoder nimbusJwtDecoder = new NimbusJwtDecoder(jwtProcessor);
-        return nimbusJwtDecoder;
+        return new NimbusJwtDecoder(jwtProcessor);
     }
 }

@@ -1,7 +1,5 @@
-package com.ark.component.security.core.context.repository;
+package com.ark.component.security.core.common;
 
-
-import com.ark.component.security.core.common.SecurityConstants;
 
 public class RedisKeyUtils {
 

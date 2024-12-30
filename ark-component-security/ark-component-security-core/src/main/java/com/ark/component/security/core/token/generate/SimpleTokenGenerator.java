@@ -1,4 +1,4 @@
-package com.ark.component.security.core.token.generator;
+package com.ark.component.security.core.token.generate;
 
 import cn.hutool.core.util.RandomUtil;
 import com.ark.component.security.base.user.LoginUser;

@@ -1,4 +1,4 @@
-package com.ark.component.security.core.authentication.exception;
+package com.ark.component.security.core.exception;
 
 import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
