@@ -1,6 +1,6 @@
 package com.ark.component.security.core.token.issuer;
 
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
 import com.ark.component.security.core.common.SecurityConstants;
 import com.ark.component.security.core.token.TokenMetadata;
@@ -38,14 +38,14 @@ public class TokenIssuer {
      * 为登录用户签发Token
      * 包含访问令牌和刷新令牌
      *
-     * @param loginUser 登录用户信息
+     * @param authUser 登录用户信息
      * @return 登录认证令牌，包含访问令牌和刷新令牌
      */
-    public LoginAuthenticationToken issueToken(LoginUser loginUser) {
-        Assert.notNull(loginUser, "LoginUser cannot be null");
+    public LoginAuthenticationToken issueToken(AuthUser authUser) {
+        Assert.notNull(authUser, "LoginUser cannot be null");
         
         if (log.isDebugEnabled()) {
-            log.debug("Begin issuing token for user: {}", loginUser.getUsername());
+            log.debug("Begin issuing token for user: {}", authUser.getUsername());
         }
         
         try {
@@ -57,28 +57,28 @@ public class TokenIssuer {
             }
             
             // 2. 生成访问令牌和刷新令牌
-            String accessToken = tokenGenerator.generateToken(metadata, loginUser);
+            String accessToken = tokenGenerator.generateToken(metadata, authUser);
             String refreshToken = tokenGenerator.generateRefreshToken();
             
             // 3. 返回认证信息
             LoginAuthenticationToken authToken = new LoginAuthenticationToken(
-                loginUser,
+                    authUser,
                 accessToken,
                 refreshToken,
                 metadata.getExpiresIn()
             );
             
-            log.info("Successfully issued token for user: {}", loginUser.getUsername());
+            log.info("Successfully issued token for user: {}", authUser.getUsername());
             
             if (log.isTraceEnabled()) {
                 log.trace("Token details - user: {}, expiresIn: {}s", 
-                    loginUser.getUsername(), metadata.getExpiresIn());
+                    authUser.getUsername(), metadata.getExpiresIn());
             }
             
             return authToken;
             
         } catch (Exception e) {
-            log.error("Failed to issue token for user: {}", loginUser.getUsername(), e);
+            log.error("Failed to issue token for user: {}", authUser.getUsername(), e);
             throw new IllegalStateException("Token generation failed", e);
         }
     }

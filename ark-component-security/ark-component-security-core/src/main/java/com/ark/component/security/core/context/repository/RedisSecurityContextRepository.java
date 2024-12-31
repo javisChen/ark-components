@@ -3,7 +3,7 @@ package com.ark.component.security.core.context.repository;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.ark.component.cache.CacheService;
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.authentication.LoginAuthenticationToken;
 import com.ark.component.security.core.common.RedisKeyUtils;
 import com.ark.component.security.core.common.SecurityConstants;
@@ -49,11 +49,11 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
      * LoginUser对象的属性列表，用于Redis hash结构存储
      */
     private final List<Object> hashKeys = List.of(
-            LoginUser.USER_ID,
-            LoginUser.USER_CODE,
-            LoginUser.IS_SUPER_ADMIN,
+            AuthUser.USER_ID,
+            AuthUser.USER_CODE,
+            AuthUser.IS_SUPER_ADMIN,
             "password",
-            LoginUser.USERNAME,
+            AuthUser.USERNAME,
             "authorities",
             "accountNonExpired",
             "accountNonLocked",
@@ -81,15 +81,15 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
 
         try {
             LoginAuthenticationToken loginAuthenticationToken = (LoginAuthenticationToken) authentication;
-            LoginUser loginUser = loginAuthenticationToken.getLoginUser();
+            AuthUser authUser = loginAuthenticationToken.getAuthUser();
             String accessToken = loginAuthenticationToken.getAccessToken();
 
             if (log.isDebugEnabled()) {
-                log.debug("Saving security context for user: {}", loginUser.getUsername());
+                log.debug("Saving security context for user: {}", authUser.getUsername());
             }
 
             // 将LoginUser对象转换为Map并存储到Redis
-            Map<String, Object> map = BeanUtil.beanToMap(loginUser, false, true);
+            Map<String, Object> map = BeanUtil.beanToMap(authUser, false, true);
             map.put("authorities", loginAuthenticationToken.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
@@ -98,11 +98,11 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
                     map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 
             // 存储用户ID到token的映射关系
-            cacheService.set(RedisKeyUtils.createUserIdKey(loginUser.getUserId()), 
+            cacheService.set(RedisKeyUtils.createUserIdKey(authUser.getUserId()),
                     accessToken, SecurityConstants.TOKEN_EXPIRES_SECONDS, TimeUnit.SECONDS);
 
             if (log.isDebugEnabled()) {
-                log.debug("Successfully saved security context for user: {}", loginUser.getUsername());
+                log.debug("Successfully saved security context for user: {}", authUser.getUsername());
             }
         } catch (Exception e) {
             log.error("Failed to save security context", e);
@@ -137,11 +137,11 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
                 return context;
             }
 
-            LoginUser loginUser = assemble(values);
-            context.setAuthentication(new LoginAuthenticationToken(loginUser, accessToken, "", 0L));
+            AuthUser authUser = assemble(values);
+            context.setAuthentication(new LoginAuthenticationToken(authUser, accessToken, "", 0L));
 
             if (log.isDebugEnabled()) {
-                log.debug("Successfully loaded security context for user: {}", loginUser.getUsername());
+                log.debug("Successfully loaded security context for user: {}", authUser.getUsername());
             }
 
             return context;
@@ -171,28 +171,28 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
     @Override
     public boolean containsContext(HttpServletRequest request) {
         String token = resolveToken(request);
-        return cacheService.get(RedisKeyUtils.createAccessTokenKey(token), LoginUser.class) != null;
+        return cacheService.get(RedisKeyUtils.createAccessTokenKey(token), AuthUser.class) != null;
     }
 
     /**
      * 将Redis中的数据组装成LoginUser对象
      */
-    private LoginUser assemble(List<Object> objects) {
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(Long.parseLong(objects.get(0).toString()));
-        loginUser.setUserCode(String.valueOf(objects.get(1)));
-        loginUser.setIsSuperAdmin((Boolean) objects.get(2));
-        loginUser.setUsername(String.valueOf(objects.get(4)));
+    private AuthUser assemble(List<Object> objects) {
+        AuthUser authUser = new AuthUser();
+        authUser.setUserId(Long.parseLong(objects.get(0).toString()));
+        authUser.setUserCode(String.valueOf(objects.get(1)));
+        authUser.setIsSuperAdmin((Boolean) objects.get(2));
+        authUser.setUsername(String.valueOf(objects.get(4)));
         
         JSONArray authorities = (JSONArray) objects.get(5);
-        loginUser.setAuthorities(authorities.stream()
+        authUser.setAuthorities(authorities.stream()
                 .map(item -> new SimpleGrantedAuthority((String) item))
                 .collect(Collectors.toUnmodifiableSet()));
                 
-        loginUser.setAccountNonExpired((Boolean) objects.get(6));
-        loginUser.setAccountNonLocked((Boolean) objects.get(7));
-        loginUser.setCredentialsNonExpired((Boolean) objects.get(8));
-        loginUser.setEnabled((Boolean) objects.get(9));
-        return loginUser;
+        authUser.setAccountNonExpired((Boolean) objects.get(6));
+        authUser.setAccountNonLocked((Boolean) objects.get(7));
+        authUser.setCredentialsNonExpired((Boolean) objects.get(8));
+        authUser.setEnabled((Boolean) objects.get(9));
+        return authUser;
     }
 }

@@ -1,6 +1,6 @@
 package com.ark.component.security.core.userdetails;
 
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,17 +17,17 @@ public class LoginUserDetailsService implements UserDetailsService {
 
     private final JwtDecoder jwtDecoder;
 
-    public LoginUser loadUserByCredential(String credential) throws UsernameNotFoundException {
+    public AuthUser loadUserByCredential(String credential) throws UsernameNotFoundException {
 
         Jwt jwt = decodeToken(credential);
 
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(Long.parseLong(jwt.getClaimAsString(LoginUser.USER_ID)));
-        loginUser.setUserCode(jwt.getClaimAsString(LoginUser.USER_CODE));
-        loginUser.setUsername(jwt.getClaimAsString(LoginUser.USERNAME));
-        loginUser.setIsSuperAdmin(jwt.getClaimAsBoolean(LoginUser.IS_SUPER_ADMIN));
+        AuthUser authUser = new AuthUser();
+        authUser.setUserId(Long.parseLong(jwt.getClaimAsString(AuthUser.USER_ID)));
+        authUser.setUserCode(jwt.getClaimAsString(AuthUser.USER_CODE));
+        authUser.setUsername(jwt.getClaimAsString(AuthUser.USERNAME));
+        authUser.setIsSuperAdmin(jwt.getClaimAsBoolean(AuthUser.IS_SUPER_ADMIN));
         // LoginUser loginUser = convert(values);
-        return loginUser;
+        return authUser;
     }
 
     private Jwt decodeToken(String token) {

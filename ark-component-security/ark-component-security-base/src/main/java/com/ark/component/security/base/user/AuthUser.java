@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Setter
 @Getter
-public class LoginUser implements UserDetails, CredentialsContainer {
+public class AuthUser implements UserDetails, CredentialsContainer {
 
     public final static String USER_ID = "userId";
     public final static String USER_CODE = "userCode";

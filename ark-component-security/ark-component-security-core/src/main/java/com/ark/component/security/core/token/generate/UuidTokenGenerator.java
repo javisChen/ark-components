@@ -1,6 +1,6 @@
 package com.ark.component.security.core.token.generate;
 
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.token.TokenMetadata;
 import org.springframework.stereotype.Component;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UuidTokenGenerator implements TokenGenerator {
     
     @Override
-    public String generateToken(TokenMetadata metadata, LoginUser loginUser) {
+    public String generateToken(TokenMetadata metadata, AuthUser authUser) {
         // 生成UUID并移除横线
         return UUID.randomUUID().toString().replace("-", "");
     }

@@ -1,8 +1,8 @@
 package com.ark.component.security.core.authentication;
 
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import lombok.Getter;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**
  * 登录认证令牌
@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
  * @since 2024-01-01
  */
 @Getter
-public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToken {
+public class LoginAuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * 访问令牌
@@ -42,25 +42,35 @@ public class LoginAuthenticationToken extends UsernamePasswordAuthenticationToke
      * 登录用户信息
      * 包含用户基本信息、权限等
      */
-    private final LoginUser loginUser;
+    private final AuthUser authUser;
 
     /**
      * 创建登录认证令牌
      *
-     * @param loginUser    登录用户信息
+     * @param authUser     登录用户信息
      * @param accessToken  访问令牌
      * @param refreshToken 刷新令牌
      * @param expiresIn    过期时间(秒)
      */
-    public LoginAuthenticationToken(LoginUser loginUser, 
-                                  String accessToken,
-                                  String refreshToken,
-                                  long expiresIn) {
-        super(loginUser, loginUser.getPassword(), loginUser.getAuthorities());
-        this.loginUser = loginUser;
+    public LoginAuthenticationToken(AuthUser authUser,
+                                    String accessToken,
+                                    String refreshToken,
+                                    Long expiresIn) {
+        super(authUser.getAuthorities());
+        this.authUser = authUser;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
         this.tokenType = "Bearer";
+    }
+
+    @Override
+    public Object getCredentials() {
+        return accessToken;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return getAuthUser().getUsername();
     }
 }

@@ -49,7 +49,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
             return;
         }
         LoginAuthenticationToken authentication = (LoginAuthenticationToken) context.getAuthentication();
-        ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getLoginUser());
+        ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getAuthUser());
     }
 
     @Override

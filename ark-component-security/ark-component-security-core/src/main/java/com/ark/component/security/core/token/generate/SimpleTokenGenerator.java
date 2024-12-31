@@ -1,7 +1,7 @@
 package com.ark.component.security.core.token.generate;
 
 import cn.hutool.core.util.RandomUtil;
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.token.TokenMetadata;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ public class SimpleTokenGenerator implements TokenGenerator {
     private static final int REFRESH_TOKEN_LENGTH = 64;
     
     @Override
-    public String generateToken(TokenMetadata metadata, LoginUser loginUser) {
+    public String generateToken(TokenMetadata metadata, AuthUser authUser) {
         // 生成指定长度的随机字符串，包含数字和字母
         return RandomUtil.randomString(TOKEN_LENGTH);
     }

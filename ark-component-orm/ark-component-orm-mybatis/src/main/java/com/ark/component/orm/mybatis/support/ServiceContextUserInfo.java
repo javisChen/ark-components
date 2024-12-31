@@ -1,15 +1,15 @@
 package com.ark.component.orm.mybatis.support;
 
 import com.ark.component.context.core.ServiceContext;
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 
 public class ServiceContextUserInfo implements UserInfo {
 
     @Override
     public Long getCurrentUserId() {
-        LoginUser loginUser = ServiceContext.getCurrentUser();
-        if (loginUser != null) {
-            return loginUser.getUserId();
+        AuthUser authUser = ServiceContext.getCurrentUser();
+        if (authUser != null) {
+            return authUser.getUserId();
         }
         return 0L;
     }

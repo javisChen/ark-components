@@ -1,6 +1,6 @@
 package com.ark.component.security.core.token.generate;
 
-import com.ark.component.security.base.user.LoginUser;
+import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.token.TokenMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,21 +25,21 @@ public class JwtTokenGenerator implements TokenGenerator {
     private final SignatureAlgorithm jwsAlgorithm = SignatureAlgorithm.RS256;
 
     @Override
-    public String generateToken(TokenMetadata metadata, LoginUser loginUser) {
+    public String generateToken(TokenMetadata metadata, AuthUser authUser) {
         JwtClaimsSet claims = JwtClaimsSet.builder()
             // 基础信息
             .issuer(metadata.getIssuer())
             .issuedAt(metadata.getIssuedAt())
             .expiresAt(metadata.getExpiresAt())
-            .subject(loginUser.getUsername())
+            .subject(authUser.getUsername())
             .audience(Collections.emptyList())
             // 用户信息
-            .claim(LoginUser.USER_CODE, loginUser.getUserCode())
-            .claim(LoginUser.USER_ID, loginUser.getUserId())
-            .claim(LoginUser.USERNAME, loginUser.getUsername())
-            .claim(LoginUser.IS_SUPER_ADMIN, loginUser.getIsSuperAdmin())
+//            .claim(LoginUser.USER_CODE, loginUser.getUserCode())
+            .claim(AuthUser.USER_ID, authUser.getUserId())
+            .claim(AuthUser.USERNAME, authUser.getUsername())
+            .claim(AuthUser.IS_SUPER_ADMIN, authUser.getIsSuperAdmin())
             // 权限信息
-            .claim("authorities", getAuthorities(loginUser))
+            .claim("authorities", getAuthorities(authUser))
             .build();
                 
         JwsHeader jwsHeader = JwsHeader.with(jwsAlgorithm).build();
@@ -55,8 +55,8 @@ public class JwtTokenGenerator implements TokenGenerator {
     /**
      * 提取用户权限列表
      */
-    private List<String> getAuthorities(LoginUser loginUser) {
-        return loginUser.getAuthorities().stream()
+    private List<String> getAuthorities(AuthUser authUser) {
+        return authUser.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
     }
