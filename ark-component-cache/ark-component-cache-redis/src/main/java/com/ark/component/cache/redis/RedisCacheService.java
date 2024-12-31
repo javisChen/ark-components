@@ -3,8 +3,12 @@ package com.ark.component.cache.redis;
 import com.alibaba.fastjson2.JSON;
 import com.ark.component.cache.core.AbstractCacheService;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class RedisCacheService extends AbstractCacheService {
@@ -13,6 +17,10 @@ public class RedisCacheService extends AbstractCacheService {
 
     public RedisCacheService(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+
+    public <T> T executeScript(RedisScript<T> script, List<String> keys, List<Object> args) {
+        return redisTemplate.execute(script, keys, args.toArray());
     }
 
     @Override
