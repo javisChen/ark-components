@@ -5,14 +5,14 @@ import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**
- * 登录认证令牌
- * 继承自UsernamePasswordAuthenticationToken，用于存储登录成功后的认证信息
+ * 已认证的令牌
+ * 用于存储认证成功后的认证信息
  *
  * @author JC
  * @since 2024-01-01
  */
 @Getter
-public class LoginAuthenticationToken extends AbstractAuthenticationToken {
+public class AuthenticatedToken extends AbstractAuthenticationToken {
 
     /**
      * 访问令牌
@@ -52,10 +52,10 @@ public class LoginAuthenticationToken extends AbstractAuthenticationToken {
      * @param refreshToken 刷新令牌
      * @param expiresIn    过期时间(秒)
      */
-    public LoginAuthenticationToken(AuthUser authUser,
-                                    String accessToken,
-                                    String refreshToken,
-                                    Long expiresIn) {
+    public AuthenticatedToken(AuthUser authUser,
+                              String accessToken,
+                              String refreshToken,
+                              Long expiresIn) {
         super(authUser.getAuthorities());
         this.authUser = authUser;
         this.accessToken = accessToken;
@@ -71,6 +71,6 @@ public class LoginAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return getAuthUser().getUsername();
+        return this.authUser;
     }
 }

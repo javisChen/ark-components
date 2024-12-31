@@ -3,6 +3,7 @@ package com.ark.component.security.core.token.generate;
 import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.token.TokenMetadata;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -56,7 +58,11 @@ public class JwtTokenGenerator implements TokenGenerator {
      * 提取用户权限列表
      */
     private List<String> getAuthorities(AuthUser authUser) {
-        return authUser.getAuthorities().stream()
+        Set<GrantedAuthority> authorities = authUser.getAuthorities();
+        if (CollectionUtils.isEmpty(authorities)) {
+            return Collections.emptyList();
+        }
+        return authorities.stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
     }

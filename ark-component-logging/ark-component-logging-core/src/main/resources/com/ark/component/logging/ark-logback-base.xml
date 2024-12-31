@@ -70,6 +70,12 @@
         <appender-ref ref="ROLLING_FILE"/>
     </appender>
 
+    <springProfile name="local,dev">
+        <root level="info">
+            <appender-ref ref="ASYNC_CONSOLE"/>
+        </root>
+    </springProfile>
+
     <springProfile name="local,dev,test,sit">
         <root level="info">
             <appender-ref ref="ASYNC_CONSOLE"/>

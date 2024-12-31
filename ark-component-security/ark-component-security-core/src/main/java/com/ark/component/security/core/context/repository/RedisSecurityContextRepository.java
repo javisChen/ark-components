@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.ark.component.cache.CacheService;
 import com.ark.component.security.base.user.AuthUser;
-import com.ark.component.security.core.authentication.LoginAuthenticationToken;
+import com.ark.component.security.core.authentication.AuthenticatedToken;
 import com.ark.component.security.core.common.RedisKeyUtils;
 import com.ark.component.security.core.common.SecurityConstants;
 import com.ark.component.security.core.userdetails.LoginUserDetailsService;
@@ -43,7 +43,6 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     private final BearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
     private final CacheService cacheService;
-    private final LoginUserDetailsService loginUserDetailsService;
 
     /**
      * LoginUser对象的属性列表，用于Redis hash结构存储
@@ -64,7 +63,6 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         Assert.notNull(cacheService, "CacheService must not be null");
         Assert.notNull(loginUserDetailsService, "LoginUserDetailsService must not be null");
         this.cacheService = cacheService;
-        this.loginUserDetailsService = loginUserDetailsService;
     }
 
     @Override
@@ -80,9 +78,9 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         }
 
         try {
-            LoginAuthenticationToken loginAuthenticationToken = (LoginAuthenticationToken) authentication;
-            AuthUser authUser = loginAuthenticationToken.getAuthUser();
-            String accessToken = loginAuthenticationToken.getAccessToken();
+            AuthenticatedToken authenticatedToken = (AuthenticatedToken) authentication;
+            AuthUser authUser = authenticatedToken.getAuthUser();
+            String accessToken = authenticatedToken.getAccessToken();
 
             if (log.isDebugEnabled()) {
                 log.debug("Saving security context for user: {}", authUser.getUsername());
@@ -90,7 +88,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
 
             // 将LoginUser对象转换为Map并存储到Redis
             Map<String, Object> map = BeanUtil.beanToMap(authUser, false, true);
-            map.put("authorities", loginAuthenticationToken.getAuthorities().stream()
+            map.put("authorities", authenticatedToken.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
 
@@ -138,7 +136,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             }
 
             AuthUser authUser = assemble(values);
-            context.setAuthentication(new LoginAuthenticationToken(authUser, accessToken, "", 0L));
+            context.setAuthentication(new AuthenticatedToken(authUser, accessToken, "", 0L));
 
             if (log.isDebugEnabled()) {
                 log.debug("Successfully loaded security context for user: {}", authUser.getUsername());

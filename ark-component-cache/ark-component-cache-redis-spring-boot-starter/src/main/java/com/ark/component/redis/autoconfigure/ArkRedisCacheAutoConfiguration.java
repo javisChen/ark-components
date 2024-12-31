@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.support.spring6.data.redis.FastJsonRedisSerializer;
 import com.ark.component.cache.CacheService;
 import com.ark.component.cache.redis.RedisCacheService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -17,10 +16,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @author JC
  */
 @Slf4j
-@AutoConfiguration
-public class RedisCacheAutoConfiguration {
+public class ArkRedisCacheAutoConfiguration {
 
-    public RedisCacheAutoConfiguration() {
+    public ArkRedisCacheAutoConfiguration() {
         log.info("Initialized Redis cache auto-configuration [ark-component-cache-redis-spring-boot-starter]");
     }
 
@@ -49,8 +47,25 @@ public class RedisCacheAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(CacheService.class)
-    public CacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
+    @ConditionalOnMissingBean
+    public RedisCacheService redisCacheService(RedisTemplate<String, Object> redisTemplate) {
         return new RedisCacheService(redisTemplate);
     }
+
+    @Bean
+    @ConditionalOnMissingBean(CacheService.class)
+    public CacheService cacheService(RedisCacheService redisCacheService) {
+        return redisCacheService;
+    }
+
+//    @ConditionalOnMissingBean(CacheService.class)
+//    public CacheService cacheService(RedisTemplate<String, Object> redisTemplate) {
+//        return new RedisCacheService(redisTemplate);
+//    }
+//
+//    @Bean("redisCacheService")
+//    @ConditionalOnMissingBean(CacheService.class)
+//    public RedisCacheService redisCacheService(RedisTemplate<String, Object> redisTemplate) {
+//        return new RedisCacheService(redisTemplate);
+//    }
 }

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ark.component.redis.autoconfigure.RedisCacheAutoConfiguration
+  com.ark.component.redis.autoconfigure.ArkRedisCacheAutoConfiguration

@@ -1,7 +1,7 @@
 package com.ark.component.security.core.token.issuer;
 
 import com.ark.component.security.base.user.AuthUser;
-import com.ark.component.security.core.authentication.LoginAuthenticationToken;
+import com.ark.component.security.core.authentication.AuthenticatedToken;
 import com.ark.component.security.core.common.SecurityConstants;
 import com.ark.component.security.core.token.TokenMetadata;
 import com.ark.component.security.core.token.generate.TokenGenerator;
@@ -41,7 +41,7 @@ public class TokenIssuer {
      * @param authUser 登录用户信息
      * @return 登录认证令牌，包含访问令牌和刷新令牌
      */
-    public LoginAuthenticationToken issueToken(AuthUser authUser) {
+    public AuthenticatedToken issueToken(AuthUser authUser) {
         Assert.notNull(authUser, "LoginUser cannot be null");
         
         if (log.isDebugEnabled()) {
@@ -61,7 +61,7 @@ public class TokenIssuer {
             String refreshToken = tokenGenerator.generateRefreshToken();
             
             // 3. 返回认证信息
-            LoginAuthenticationToken authToken = new LoginAuthenticationToken(
+            AuthenticatedToken authToken = new AuthenticatedToken(
                     authUser,
                 accessToken,
                 refreshToken,

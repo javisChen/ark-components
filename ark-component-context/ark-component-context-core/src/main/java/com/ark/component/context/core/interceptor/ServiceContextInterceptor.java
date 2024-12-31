@@ -3,7 +3,7 @@ package com.ark.component.context.core.interceptor;
 
 import com.ark.component.common.id.TraceIdUtils;
 import com.ark.component.context.core.ServiceContext;
-import com.ark.component.security.core.authentication.LoginAuthenticationToken;
+import com.ark.component.security.core.authentication.AuthenticatedToken;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
@@ -48,7 +48,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
         if (context == null || context.getAuthentication() == null) {
             return;
         }
-        LoginAuthenticationToken authentication = (LoginAuthenticationToken) context.getAuthentication();
+        AuthenticatedToken authentication = (AuthenticatedToken) context.getAuthentication();
         ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getAuthUser());
     }
 
