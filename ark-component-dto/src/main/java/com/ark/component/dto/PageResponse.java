@@ -1,7 +1,7 @@
 package com.ark.component.dto;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -13,15 +13,29 @@ import java.util.stream.Collectors;
  * @param <T>
  */
 @Data
+@Schema(description = "分页响应结果")
 public class PageResponse<T> {
 
-    @ApiModelProperty(value = "总页数", required = false, notes = "")
+    @Schema(description = "总记录数",
+            example = "100",
+            title = "总记录数",
+            defaultValue = "0")
     private Integer total = 0;
-    @ApiModelProperty(value = "每页显示数量", required = false, notes = "")
+
+    @Schema(description = "每页显示数量",
+            example = "10",
+            title = "页大小",
+            defaultValue = "1")
     private Integer size = 1;
-    @ApiModelProperty(value = "每页显示数量", required = false, notes = "")
+
+    @Schema(description = "当前页码",
+            example = "1",
+            title = "当前页",
+            defaultValue = "1")
     private Integer current = 1;
-    @ApiModelProperty(value = "数据", required = false, notes = "")
+
+    @Schema(description = "分页数据列表",
+            title = "数据列表")
     private List<T> records;
 
     public PageResponse(int current, int size, int total, List<T> records) {
@@ -46,9 +60,11 @@ public class PageResponse<T> {
     }
 
     public <R> PageResponse<R> convert(Function<? super T, ? extends R> mapper) {
-        List<R> collect = this.getRecords().stream().map(mapper).collect(Collectors.toList());
-        ((PageResponse<R>)this).setRecords(collect);
-        return (PageResponse<R>) this;
+        if (this.records == null) {
+            return new PageResponse<R>(this.current, this.size, this.total, null);
+        }
+        List<R> collect = this.records.stream().map(mapper).collect(Collectors.toList());
+        return new PageResponse<>(this.current, this.size, this.total, collect);
     }
 
 }

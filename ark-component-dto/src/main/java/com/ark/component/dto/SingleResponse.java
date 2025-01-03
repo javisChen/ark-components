@@ -1,17 +1,18 @@
 package com.ark.component.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-/*
+/**
+ * 单对象响应结果封装
+ *
  * @author jc
- * @desc 服务端响应结果封装
- * @date 2018/4/17 下午10:24
  */
+@Schema(description = "单对象响应结果")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString(callSuper = true)
@@ -19,9 +20,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class SingleResponse<T> extends ServerResponse {
 
-    private static final long serialVersionUID = -5409913864886373072L;
-
-    @ApiModelProperty(value = "对象")
+    @Schema(description = "响应数据对象",
+            title = "数据对象")
     private T data;
 
     public SingleResponse(String code, String msg, T data) {

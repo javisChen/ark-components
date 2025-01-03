@@ -54,10 +54,10 @@ public class BeanConvertor {
         } else {
             targetList = Collections.emptyList();
         }
-        PageResponse<T> pageResponse = new PageResponse<>();
-        pageResponse.setTotal((int) page.getTotal());
-        pageResponse.setSize((int) page.getSize());
-        pageResponse.setCurrent((int) page.getCurrent());
+        PageResponse<T> pageResponse = PageResponse.ok(targetList);
+        pageResponse.setTotal(page.getTotal());
+        pageResponse.setSize(page.getSize());
+        pageResponse.setCurrent(page.getCurrent());
         pageResponse.setRecords(targetList);
         return pageResponse;
     }

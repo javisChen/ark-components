@@ -1,30 +1,40 @@
 package com.ark.component.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-
-/*
+/**
+ * 服务端响应结果封装
+ *
  * @author JavisChen
- * @desc 服务端响应结果封装
- * @date 2018/4/17 下午10:24
  */
+@Schema(description = "服务端统一响应结果")
 @Data
 @ToString
 @Accessors(chain = true)
-public class ServerResponse implements Serializable {
+public class ServerResponse {
 
-    private static final long serialVersionUID = -5409913864886373072L;
-    @ApiModelProperty(value = "响应码（000000表示成功）")
+    @Schema(description = "响应码（0表示成功）",
+            example = "0",
+            title = "响应码",
+            defaultValue = "0")
     private String code;
-    @ApiModelProperty(value = "返回消息")
+    
+    @Schema(description = "响应消息", 
+            example = "操作成功",
+            title = "响应消息")
     private String msg;
-    @ApiModelProperty(value = "响应服务")
+    
+    @Schema(description = "响应服务名称", 
+            example = "user-service",
+            title = "服务名称")
     private String service;
-    @ApiModelProperty(value = "链路id")
+    
+    @Schema(description = "链路追踪ID", 
+            example = "trace-id-123456",
+            title = "链路ID")
     private String traceId;
 
     public ServerResponse() {
