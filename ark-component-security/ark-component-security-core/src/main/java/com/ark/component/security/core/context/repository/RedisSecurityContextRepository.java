@@ -136,7 +136,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             }
 
             AuthUser authUser = assemble(values);
-            context.setAuthentication(new AuthenticatedToken(authUser, accessToken, "", 0L));
+            context.setAuthentication(AuthenticatedToken.authenticated(authUser, accessToken, "", 0L));
 
             if (log.isDebugEnabled()) {
                 log.debug("Successfully loaded security context for user: {}", authUser.getUsername());

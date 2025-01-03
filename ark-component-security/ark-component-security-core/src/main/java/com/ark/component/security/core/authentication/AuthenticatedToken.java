@@ -62,6 +62,8 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
         this.tokenType = "Bearer";
+        super.setAuthenticated(true); // must use super, as we override
+
     }
 
     @Override
@@ -72,5 +74,16 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
     @Override
     public Object getPrincipal() {
         return this.authUser;
+    }
+
+//    public static AuthenticatedToken unauthenticated(String principal, String credentials) {
+//        return new AuthenticatedToken(principal, credentials);
+//    }
+
+    public static AuthenticatedToken authenticated(AuthUser authUser,
+                                                   String accessToken,
+                                                   String refreshToken,
+                                                   Long expiresIn) {
+        return new AuthenticatedToken(authUser, accessToken, refreshToken, expiresIn);
     }
 }
