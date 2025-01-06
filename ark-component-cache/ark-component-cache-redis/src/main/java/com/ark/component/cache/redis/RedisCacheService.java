@@ -94,6 +94,15 @@ public class RedisCacheService extends AbstractCacheService {
     protected List<Object> doHMGet(String key, Collection<Object> hashKeys) {
         return redisTemplate.opsForHash().multiGet(key, hashKeys);
     }
+    @Override
+    protected List<Object> doHVals(String key) {
+        return redisTemplate.opsForHash().values(key);
+    }
+
+    @Override
+    protected Map<Object, Object> doHGetAll(String key) {
+        return redisTemplate.opsForHash().entries(key);
+    }
 
     @Override
     protected void doDel(Collection<String> keys) {
@@ -114,4 +123,5 @@ public class RedisCacheService extends AbstractCacheService {
     protected boolean doSetIfAbsent(String key, Object value, Long expires, TimeUnit timeUnit) {
         return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value, expires, timeUnit));
     }
+
 }

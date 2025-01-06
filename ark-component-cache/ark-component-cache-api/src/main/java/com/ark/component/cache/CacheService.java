@@ -295,4 +295,30 @@ public interface CacheService {
      * @return 转换后的缓存值
      */
     <T> T get(String appPrefix, String key, Class<T> target);
+
+    /**
+     * 获取Hash表中所有字段的值列表
+     *
+     * @param appPrefix 应用前缀
+     * @param key Hash表的key
+     * @return Hash表中所有字段对应的值列表
+     */
+    List<Object> hVals(String appPrefix, String key);
+
+    /**
+     * 获取Hash表中所有的字段和值
+     *
+     * @param key Hash表的key
+     * @return Hash表中所有的字段和值的Map
+     */
+    Map<Object, Object> hGetAll(String key);
+
+    /**
+     * 获取Hash表中所有的字段和值，支持指定应用前缀
+     *
+     * @param appPrefix 应用前缀
+     * @param key Hash表的key
+     * @return Hash表中所有的字段和值的Map
+     */
+    Map<Object, Object> hGetAll(String appPrefix, String key);
 }

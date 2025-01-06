@@ -279,6 +279,21 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
         return doSetIfAbsent(wrapKey(appPrefix, key), value, expires, timeUnit);
     }
 
+    @Override
+    public List<Object> hVals(String appPrefix, String key) {
+        return doHVals(wrapKey(appPrefix, key));
+    }
+
+    @Override
+    public Map<Object, Object> hGetAll(String key) {
+        return doHGetAll(wrapKey(key));
+    }
+
+    @Override
+    public Map<Object, Object> hGetAll(String appPrefix, String key) {
+        return doHGetAll(wrapKey(appPrefix, key));
+    }
+
     protected abstract void doSAdd(String key, Object... values);
     protected abstract Set<Object> doSMembers(String key);
     protected abstract void doSet(String key, Object value);
@@ -293,6 +308,9 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
     protected abstract Object doGet(String key);
     protected abstract Object doHGet(String key, String hashKey);
     protected abstract List<Object> doHMGet(String key, Collection<Object> hashKeys);
+    protected abstract List<Object> doHVals(String key);
+    protected abstract Map<Object, Object> doHGetAll(String key);
+
     protected abstract void doDel(Collection<String> keys);
     protected abstract <T> T doConvert(Object value, Class<T> target);
     protected abstract boolean doSetIfAbsent(String key, Object value);
