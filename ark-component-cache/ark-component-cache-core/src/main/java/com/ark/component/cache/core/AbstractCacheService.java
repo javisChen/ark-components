@@ -294,6 +294,16 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
         return doHGetAll(wrapKey(appPrefix, key));
     }
 
+    @Override
+    public Long hDel(String key, Object... hashKeys) {
+        return doHDel(wrapKey(key), hashKeys);
+    }
+
+    @Override
+    public Long hDel(String appPrefix, String key, Object... hashKeys) {
+        return doHDel(wrapKey(appPrefix, key), hashKeys);
+    }
+
     protected abstract void doSAdd(String key, Object... values);
     protected abstract Set<Object> doSMembers(String key);
     protected abstract void doSet(String key, Object value);
@@ -310,6 +320,7 @@ public abstract class AbstractCacheService implements CacheService, EnvironmentA
     protected abstract List<Object> doHMGet(String key, Collection<Object> hashKeys);
     protected abstract List<Object> doHVals(String key);
     protected abstract Map<Object, Object> doHGetAll(String key);
+    protected abstract Long doHDel(String key, Object... hashKeys);
 
     protected abstract void doDel(Collection<String> keys);
     protected abstract <T> T doConvert(Object value, Class<T> target);

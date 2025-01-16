@@ -105,6 +105,11 @@ public class RedisCacheService extends AbstractCacheService {
     }
 
     @Override
+    protected Long doHDel(String key, Object... hashKeys) {
+        return redisTemplate.opsForHash().delete(key, hashKeys);
+    }
+
+    @Override
     protected void doDel(Collection<String> keys) {
         redisTemplate.delete(keys);
     }
