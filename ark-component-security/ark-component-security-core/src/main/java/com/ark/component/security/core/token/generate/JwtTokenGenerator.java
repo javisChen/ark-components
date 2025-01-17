@@ -45,8 +45,7 @@ public class JwtTokenGenerator implements TokenGenerator {
             .build();
                 
         JwsHeader jwsHeader = JwsHeader.with(jwsAlgorithm).build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims))
-                .getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
     @Override

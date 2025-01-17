@@ -8,8 +8,4 @@ public interface ContextConstants {
 
     String CONTEXT_KEY_TRACE_ID = "CTX_TRACE_ID";
 
-    /**
-     * JWT签名Secret
-     */
-    String JWT_SIGN_SECRET = "*$Y4F*$BdC4&tZJh";
 }

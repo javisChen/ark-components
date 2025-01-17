@@ -5,6 +5,7 @@ import com.ark.component.common.id.TraceIdUtils;
 import com.ark.component.context.core.ServiceContext;
 import com.ark.component.security.core.authentication.AuthenticatedToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,6 +25,7 @@ import static com.ark.component.context.core.contants.ContextConstants.*;
  * @author victor
  */
 @RequiredArgsConstructor
+@Slf4j
 public class ServiceContextInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -54,7 +56,21 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        ServiceContext.clearContext();
-        MDC.remove(HEADER_TRACE_ID);
+        // postHandle may not be called if an exception occurs
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        try {
+            // 清理上下文，防止内存泄漏
+            ServiceContext.clearContext();
+            MDC.clear();
+        } catch (Exception e) {
+            // 确保清理异常不会影响请求处理
+            // 但需要记录日志以便排查问题
+            if (log.isWarnEnabled()) {
+                log.warn("Error occurred while cleaning up context", e);
+            }
+        }
     }
 }

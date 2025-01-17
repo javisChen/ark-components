@@ -38,9 +38,8 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(SecurityContextRepository.class)
-    public SecurityContextRepository securityContextRepository(CacheService cacheService,
-                                                               LoginUserDetailsService loginUserDetailsService) {
-        return new RedisSecurityContextRepository(cacheService, loginUserDetailsService);
+    public SecurityContextRepository securityContextRepository(CacheService cacheService) {
+        return new RedisSecurityContextRepository(cacheService);
     }
 
     @Bean

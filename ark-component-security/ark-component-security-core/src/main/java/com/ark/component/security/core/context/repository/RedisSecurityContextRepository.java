@@ -7,7 +7,6 @@ import com.ark.component.security.base.user.AuthUser;
 import com.ark.component.security.core.authentication.AuthenticatedToken;
 import com.ark.component.security.core.common.RedisKeyUtils;
 import com.ark.component.security.core.common.SecurityConstants;
-import com.ark.component.security.core.userdetails.LoginUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +58,8 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             "credentialsNonExpired",
             "enabled");
 
-    public RedisSecurityContextRepository(CacheService cacheService, LoginUserDetailsService loginUserDetailsService) {
+    public RedisSecurityContextRepository(CacheService cacheService) {
         Assert.notNull(cacheService, "CacheService must not be null");
-        Assert.notNull(loginUserDetailsService, "LoginUserDetailsService must not be null");
         this.cacheService = cacheService;
     }
 
@@ -120,22 +118,11 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
         }
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Loading security context for token: {}", accessToken);
-            }
-
-            List<Object> values = cacheService.hMGet("auth", 
-                    RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
-            
-            if (CollectionUtils.isEmpty(values) || 
-                CollectionUtils.isEmpty(values.stream().filter(Objects::nonNull).collect(Collectors.toList()))) {
-                if (log.isDebugEnabled()) {
-                    log.debug("No security context found for token: {}", accessToken);
-                }
+            AuthUser authUser = loadAuthUserFromRedis(accessToken);
+            if (authUser == null) {
                 return context;
             }
 
-            AuthUser authUser = assemble(values);
             context.setAuthentication(AuthenticatedToken.authenticated(authUser, accessToken, "", 0L));
 
             if (log.isDebugEnabled()) {
@@ -147,6 +134,40 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
             log.error("Failed to load security context", e);
             return context;
         }
+    }
+
+    /**
+     * 从Redis加载认证用户信息
+     *
+     * @param accessToken 访问令牌
+     * @return 认证用户信息，如果未找到则返回null
+     */
+    private AuthUser loadAuthUserFromRedis(String accessToken) {
+        List<Object> values = cacheService.hMGet("auth", 
+                RedisKeyUtils.createAccessTokenKey(accessToken), hashKeys);
+        
+        if (!isValidValues(values)) {
+            log.warn("No security context found in Redis for token: {}", accessToken);
+            return null;
+        }
+
+        return assemble(values);
+    }
+
+    /**
+     * 验证Redis返回的值是否有效
+     *
+     * @param values Redis返回的值列表
+     * @return 如果值列表有效返回true，否则返回false
+     */
+    private boolean isValidValues(List<Object> values) {
+        if (CollectionUtils.isEmpty(values)) {
+            return false;
+        }
+        List<Object> nonNullValues = values.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        return CollectionUtils.isNotEmpty(nonNullValues);
     }
 
     /**
