@@ -3,11 +3,12 @@ package com.ark.component.security.core.configurers;
 import com.ark.component.security.core.authentication.AuthenticationErrorHandler;
 import com.ark.component.security.core.authentication.filter.AccessCheckFilter;
 import com.ark.component.security.core.authentication.filter.TraceFilter;
+import com.ark.component.security.core.context.repository.ClientSecurityContextRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.context.SecurityContextRepository;
 
 /**
  * ARK框架通用安全配置
@@ -34,10 +35,11 @@ public final class ArkServiceHttpConfigurer
     @Override
     public void init(HttpSecurity http) throws Exception {
         context = http.getSharedObject(ApplicationContext.class);
-        
-        SecurityContextRepository securityContextRepository = context.getBean(SecurityContextRepository.class);
+
+        JwtDecoder jwtDecoder = context.getBean(JwtDecoder.class);
+
         http.securityContext(configurer ->
-                configurer.securityContextRepository(securityContextRepository)
+                configurer.securityContextRepository(new ClientSecurityContextRepository(jwtDecoder))
         );
     }
 

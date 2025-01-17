@@ -44,7 +44,6 @@ public class JWTConfiguration {
 
         JWK rsaKey = new RSAKey.Builder((RSAPublicKey) rsa.getPublicKey())
                 .privateKey(rsa.getPrivateKey())
-                // .keyID("rsa-" + UUID.randomUUID())
                 .algorithm(jwsAlgorithm)
                 .build();
         

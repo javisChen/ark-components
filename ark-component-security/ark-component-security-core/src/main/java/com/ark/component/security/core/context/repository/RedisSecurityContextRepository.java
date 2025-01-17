@@ -90,7 +90,7 @@ public class RedisSecurityContextRepository extends AbstractSecurityContextRepos
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
 
-            cacheService.hMSet(RedisKeyUtils.createAccessTokenKey(accessToken), 
+            cacheService.hMSet(RedisKeyUtils.createAccessTokenKey(accessToken),
                     map, SecurityConstants.TOKEN_EXPIRES_SECONDS);
 
             // 存储用户ID到token的映射关系
