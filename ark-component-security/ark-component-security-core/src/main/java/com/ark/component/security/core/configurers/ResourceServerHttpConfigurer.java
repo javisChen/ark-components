@@ -3,7 +3,7 @@ package com.ark.component.security.core.configurers;
 import com.ark.component.security.core.authentication.AuthenticationErrorHandler;
 import com.ark.component.security.core.authentication.filter.AccessCheckFilter;
 import com.ark.component.security.core.authentication.filter.TraceFilter;
-import com.ark.component.security.core.context.repository.ClientSecurityContextRepository;
+import com.ark.component.security.core.context.repository.ResourceServerContextRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,8 +24,8 @@ import org.springframework.security.web.context.SecurityContextHolderFilter;
  *
  * @author JC
  */
-public final class ArkServiceHttpConfigurer
-        extends AbstractHttpConfigurer<ArkServiceHttpConfigurer, HttpSecurity> {
+public final class ResourceServerHttpConfigurer
+        extends AbstractHttpConfigurer<ResourceServerHttpConfigurer, HttpSecurity> {
 
     private ApplicationContext context;
 
@@ -39,7 +39,7 @@ public final class ArkServiceHttpConfigurer
         JwtDecoder jwtDecoder = context.getBean(JwtDecoder.class);
 
         http.securityContext(configurer ->
-                configurer.securityContextRepository(new ClientSecurityContextRepository(jwtDecoder))
+                configurer.securityContextRepository(new ResourceServerContextRepository(jwtDecoder))
         );
     }
 
@@ -71,6 +71,7 @@ public final class ArkServiceHttpConfigurer
         TraceFilter traceFilter = new TraceFilter();
         http.addFilterBefore(traceFilter, AccessCheckFilter.class);
     }
+
     /**
      * 注册统一的错误处理器
      */
@@ -82,32 +83,4 @@ public final class ArkServiceHttpConfigurer
         );
     }
 
-//    /**
-//     * 获取JWT解码器
-//     */
-//    private JwtDecoder getJwtDecoder() {
-//        Set<JWSAlgorithm> jwsAlg = new HashSet<>();
-//        jwsAlg.addAll(JWSAlgorithm.Family.RSA);
-//        jwsAlg.addAll(JWSAlgorithm.Family.EC);
-//        jwsAlg.addAll(JWSAlgorithm.Family.HMAC_SHA);
-//
-//        ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
-//        JWSKeySelector<SecurityContext> jwsKeySelector =
-//            new JWSVerificationKeySelector<>(jwsAlg, jwkSource());
-//        jwtProcessor.setJWSKeySelector(jwsKeySelector);
-//        return new NimbusJwtDecoder(jwtProcessor);
-//    }
-
-//    /**
-//     * 获取JWT密钥源
-//     */
-//    private JWKSource<SecurityContext> jwkSource() {
-//        OctetSequenceKey key = new OctetSequenceKey.Builder(
-//                JWT_SIGN_SECRET.getBytes(StandardCharsets.UTF_8))
-//                .keyID(JWT_KEY_ID)
-//                .algorithm(JWSAlgorithm.HS256)
-//                .build();
-//        JWKSet jwkSet = new JWKSet(key);
-//        return new ImmutableJWKSet<>(jwkSet);
-//    }
 }

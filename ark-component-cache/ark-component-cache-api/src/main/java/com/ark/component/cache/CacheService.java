@@ -260,8 +260,8 @@ public interface CacheService {
     List<Object> hMGet(String appPrefix, String key, Collection<Object> hashKeys);
     Long hIncrBy(String appPrefix, String key, String hashField, long delta);
     Double hIncrBy(String appPrefix, String key, String hashField, double delta);
-    Long hDel(String key, Object... hashKeys);
-    Long hDel(String appPrefix, String key, Object... hashKeys);
+    Long hDel(String key, Collection<Object> hashKeys);
+    Long hDel(String appPrefix, String key, Collection<Object> hashKeys);
 
     /**
      * 集合操作相关方法重载

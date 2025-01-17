@@ -23,7 +23,6 @@ public class TraceFilter extends OncePerRequestFilter {
         try {
 
             traceId = request.getHeader(HEADER_TRACE_ID);
-            
 
             if (StringUtils.isEmpty(traceId)) {
                 traceId = TraceIdUtils.getId();
@@ -33,8 +32,7 @@ public class TraceFilter extends OncePerRequestFilter {
             
             filterChain.doFilter(request, response);
         } finally {
-
-            MDC.remove(HEADER_TRACE_ID);
+            MDC.clear();
         }
     }
 

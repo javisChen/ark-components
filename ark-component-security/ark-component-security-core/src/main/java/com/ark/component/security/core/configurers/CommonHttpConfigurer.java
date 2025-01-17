@@ -36,7 +36,7 @@ public final class CommonHttpConfigurer extends AbstractHttpConfigurer<CommonHtt
     public void init(HttpSecurity http) throws Exception {
         context = http.getSharedObject(ApplicationContext.class);
 
-        configureContextRepository(http);
+        // configureContextRepository(http);
 
         http
                 // 禁用Session - 使用JWT Token认证
