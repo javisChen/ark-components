@@ -1,4 +1,4 @@
-package com.ark.component.security.base.user;
+package com.ark.component.security.base.authentication;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +11,10 @@ import java.util.Set;
 @Getter
 public class AuthUser implements UserDetails, CredentialsContainer {
 
-    public final static String USER_ID = "userId";
-    public final static String USER_CODE = "userCode";
-    public final static String USERNAME = "username";
-    public final static String IS_SUPER_ADMIN = "isSuperAdmin";
-
+    public static final String USER_ID = "userId";
+    public static final String USER_CODE = "userCode";
+    public static final String USERNAME = "username";
+    
     private Long userId;
     private String userCode;
     private Boolean isSuperAdmin;

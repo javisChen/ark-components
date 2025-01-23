@@ -1,7 +1,7 @@
 package com.ark.component.orm.mybatis.support;
 
 import com.ark.component.context.core.ServiceContext;
-import com.ark.component.security.base.user.AuthUser;
+import com.ark.component.security.base.authentication.AuthUser;
 
 public class ServiceContextUserInfo implements UserInfo {
 

@@ -1,6 +1,6 @@
 package com.ark.component.security.core.context.repository;
 
-import com.ark.component.security.base.user.AuthUser;
+import com.ark.component.security.base.authentication.AuthUser;
 import com.ark.component.security.core.authentication.AuthenticatedToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,7 +73,7 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
         try {
             // JWT解析包含了签名验证，确保token未被篡改
             AuthUser authUser = extractAuthUserFromJwt(accessToken);
-            context.setAuthentication(AuthenticatedToken.authenticated(authUser, accessToken, "", 0L));
+            context.setAuthentication(AuthenticatedToken.authenticated(authUser, null));
 
             if (log.isDebugEnabled()) {
                 log.debug("Successfully loaded security context for user: {}", authUser.getUsername());
@@ -99,7 +99,6 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
             authUser.setUserId(Long.parseLong(jwt.getClaimAsString(AuthUser.USER_ID)));
             authUser.setUserCode(jwt.getClaimAsString(AuthUser.USER_CODE));
             authUser.setUsername(jwt.getClaimAsString(AuthUser.USERNAME));
-            authUser.setIsSuperAdmin(jwt.getClaimAsBoolean(AuthUser.IS_SUPER_ADMIN));
             return authUser;
         } catch (JwtException e) {
             log.error("Failed to decode JWT", e);

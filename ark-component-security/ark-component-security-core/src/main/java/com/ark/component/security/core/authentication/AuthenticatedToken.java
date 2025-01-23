@@ -1,6 +1,7 @@
 package com.ark.component.security.core.authentication;
 
-import com.ark.component.security.base.user.AuthUser;
+import com.ark.component.security.base.authentication.AuthUser;
+import com.ark.component.security.base.authentication.Token;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
@@ -15,28 +16,10 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 public class AuthenticatedToken extends AbstractAuthenticationToken {
 
     /**
-     * 访问令牌
-     * 用于后续请求的身份验证
+     * 令牌信息
+     * 包含访问令牌、刷新令牌等信息
      */
-    private final String accessToken;
-
-    /**
-     * 刷新令牌
-     * 用于在访问令牌过期时获取新的访问令牌
-     */
-    private final String refreshToken;
-
-    /**
-     * 访问令牌过期时间
-     * 单位：秒
-     */
-    private final Long expiresIn;
-
-    /**
-     * 令牌类型
-     * 固定值："Bearer"，符合OAuth2规范
-     */
-    private final String tokenType;
+    private final Token token;
 
     /**
      * 登录用户信息
@@ -47,28 +30,19 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
     /**
      * 创建登录认证令牌
      *
-     * @param authUser     登录用户信息
-     * @param accessToken  访问令牌
-     * @param refreshToken 刷新令牌
-     * @param expiresIn    过期时间(秒)
+     * @param authUser 登录用户信息
+     * @param token   令牌信息
      */
-    public AuthenticatedToken(AuthUser authUser,
-                              String accessToken,
-                              String refreshToken,
-                              Long expiresIn) {
+    public AuthenticatedToken(AuthUser authUser, Token token) {
         super(authUser.getAuthorities());
         this.authUser = authUser;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.expiresIn = expiresIn;
-        this.tokenType = "Bearer";
+        this.token = token;
         super.setAuthenticated(true); // must use super, as we override
-
     }
 
     @Override
     public Object getCredentials() {
-        return accessToken;
+        return token.getAccessToken();
     }
 
     @Override
@@ -76,14 +50,7 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
         return this.authUser;
     }
 
-//    public static AuthenticatedToken unauthenticated(String principal, String credentials) {
-//        return new AuthenticatedToken(principal, credentials);
-//    }
-
-    public static AuthenticatedToken authenticated(AuthUser authUser,
-                                                   String accessToken,
-                                                   String refreshToken,
-                                                   Long expiresIn) {
-        return new AuthenticatedToken(authUser, accessToken, refreshToken, expiresIn);
+    public static AuthenticatedToken authenticated(AuthUser authUser, Token token) {
+        return new AuthenticatedToken(authUser, token);
     }
 }

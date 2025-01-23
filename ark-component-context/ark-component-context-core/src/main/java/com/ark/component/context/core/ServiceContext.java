@@ -1,7 +1,7 @@
 package com.ark.component.context.core;
 
 import com.ark.component.context.core.contants.ContextConstants;
-import com.ark.component.security.base.user.AuthUser;
+import com.ark.component.security.base.authentication.AuthUser;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;

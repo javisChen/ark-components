@@ -1,4 +1,4 @@
-package com.ark.component.security.base.user;
+package com.ark.component.security.base.authentication;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 当前用户上下文
  */
 @Data
-public class LoginUserContext {
+public class AuthUserContext {
 
     /**
      * 用户id

@@ -1,13 +1,13 @@
 package com.ark.component.orm.mybatis.autoconfigure;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.ark.component.orm.mybatis.handlers.BaseFieldAutoFillObjectHandler;
 import com.ark.component.orm.mybatis.support.DefaultUserInfo;
 import com.ark.component.orm.mybatis.support.ServiceContextUserInfo;
 import com.ark.component.orm.mybatis.support.UserInfo;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +37,7 @@ public class OrmMybatisAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(UserInfo.class)
-    @ConditionalOnClass(name = "com.ark.component.security.base.user.LoginUserContext")
+    @ConditionalOnClass(name = "com.ark.component.security.base.authentication.AuthUserContext")
     public UserInfo serviceContextUserInfo() {
         return new ServiceContextUserInfo();
     }
