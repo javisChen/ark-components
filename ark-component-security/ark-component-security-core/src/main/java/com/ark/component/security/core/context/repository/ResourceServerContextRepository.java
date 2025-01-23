@@ -1,6 +1,7 @@
 package com.ark.component.security.core.context.repository;
 
 import com.ark.component.security.base.authentication.AuthUser;
+import com.ark.component.security.base.authentication.Token;
 import com.ark.component.security.core.authentication.AuthenticatedToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.util.Assert;
 
@@ -71,14 +71,11 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
         }
 
         try {
-            // JWT解析包含了签名验证，确保token未被篡改
-            AuthUser authUser = extractAuthUserFromJwt(accessToken);
-            context.setAuthentication(AuthenticatedToken.authenticated(authUser, null));
-
-            if (log.isDebugEnabled()) {
-                log.debug("Successfully loaded security context for user: {}", authUser.getUsername());
-            }
-
+            Jwt jwt = jwtDecoder.decode(accessToken);
+            // 分别提取用户信息和令牌信息
+            AuthUser authUser = extractAuthUserFromJwt(jwt);
+            Token token = extractTokenFromJwt(jwt, accessToken);
+            context.setAuthentication(AuthenticatedToken.authenticated(authUser, token));
             return context;
         } catch (Exception e) {
             log.error("Failed to load security context from JWT", e);
@@ -87,22 +84,39 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
     }
 
     /**
-     * 从JWT token中提取用户信息
-     * JWT中包含了基本的用户信息（userId、userCode、username、isSuperAdmin等）
-     * 由于JWT已经过认证中心签名，可以信任其中的信息
+     * 从JWT中提取用户信息
+     * JWT中包含了基本的用户信息（userId、userCode、username等）
      */
-    private AuthUser extractAuthUserFromJwt(String token) {
+    private AuthUser extractAuthUserFromJwt(Jwt jwt) {
         try {
-            Jwt jwt = jwtDecoder.decode(token);
-            
             AuthUser authUser = new AuthUser();
             authUser.setUserId(Long.parseLong(jwt.getClaimAsString(AuthUser.USER_ID)));
             authUser.setUserCode(jwt.getClaimAsString(AuthUser.USER_CODE));
             authUser.setUsername(jwt.getClaimAsString(AuthUser.USERNAME));
+            authUser.setIsSuperAdmin(jwt.getClaimAsBoolean("isSuperAdmin"));
             return authUser;
-        } catch (JwtException e) {
-            log.error("Failed to decode JWT", e);
-            throw new BadCredentialsException("Invalid token");
+        } catch (Exception e) {
+            log.error("Failed to extract user info from JWT", e);
+            throw new BadCredentialsException("Invalid user info in token");
+        }
+    }
+
+    /**
+     * 从JWT中提取令牌信息
+     * 包括访问令牌、刷新令牌、过期时间、应用信息等
+     */
+    private Token extractTokenFromJwt(Jwt jwt, String accessToken) {
+        try {
+            return Token.of(
+                accessToken,
+                jwt.getClaimAsString("refresh_token"),
+                jwt.getExpiresAt() != null ? jwt.getExpiresAt().getEpochSecond() : null,
+                jwt.getClaimAsString(Token.APP_CODE),
+                jwt.getClaimAsString(Token.APP_TYPE)
+            );
+        } catch (Exception e) {
+            log.error("Failed to extract token info from JWT", e);
+            throw new BadCredentialsException("Invalid token info");
         }
     }
 
