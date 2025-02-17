@@ -1,5 +1,8 @@
 package com.ark.component.security.autoconfigure;
 
+import com.ark.component.security.base.password.DefaultPasswordService;
+import com.ark.component.security.base.password.PasswordConstants;
+import com.ark.component.security.base.password.PasswordService;
 import com.ark.component.security.core.configurers.CommonHttpConfigurer;
 import com.ark.component.security.core.configurers.ResourceServerHttpConfigurer;
 import com.ark.component.security.core.context.repository.ResourceServerContextRepository;
@@ -28,6 +31,11 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PasswordService passwordService() {
+        return new DefaultPasswordService(PasswordConstants.DEFAULT_PASSWORD_SALT);
     }
 
 }
