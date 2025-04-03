@@ -1,7 +1,7 @@
 package com.ark.component.context.core;
 
 import com.ark.component.context.core.contants.ContextConstants;
-import com.ark.component.security.base.authentication.AuthUser;
+import com.ark.component.security.base.authentication.AuthPrincipal;
 import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
@@ -40,10 +40,10 @@ public class ServiceContext {
         }
     }
 
-    public static AuthUser getCurrentUser() {
+    public static AuthPrincipal getPrincipal() {
         Map<String, Object> context = getContext();
         return MapUtils.isNotEmpty(context)
-                ? (AuthUser) context.get(ContextConstants.CONTEXT_KEY_LOGIN_USER) : null;
+                ? (AuthPrincipal) context.get(ContextConstants.CONTEXT_KEY_LOGIN_USER) : null;
     }
 
     public static String getTraceId() {

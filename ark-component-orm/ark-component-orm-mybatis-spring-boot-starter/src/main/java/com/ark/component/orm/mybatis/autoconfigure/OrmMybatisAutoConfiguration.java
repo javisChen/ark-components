@@ -37,7 +37,7 @@ public class OrmMybatisAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(UserInfo.class)
-    @ConditionalOnClass(name = "com.ark.component.security.base.authentication.AuthUserContext")
+    @ConditionalOnClass(name = "com.ark.component.security.base.authentication.AuthPrincipal")
     public UserInfo serviceContextUserInfo() {
         return new ServiceContextUserInfo();
     }

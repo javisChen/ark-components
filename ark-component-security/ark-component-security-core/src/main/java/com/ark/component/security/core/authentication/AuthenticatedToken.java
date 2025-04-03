@@ -1,6 +1,6 @@
 package com.ark.component.security.core.authentication;
 
-import com.ark.component.security.base.authentication.AuthUser;
+import com.ark.component.security.base.authentication.AuthPrincipal;
 import com.ark.component.security.base.authentication.Token;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -25,17 +25,17 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
      * 登录用户信息
      * 包含用户基本信息、权限等
      */
-    private final AuthUser authUser;
+    private final AuthPrincipal authPrincipal;
 
     /**
      * 创建登录认证令牌
      *
-     * @param authUser 登录用户信息
+     * @param authPrincipal 登录用户信息
      * @param token   令牌信息
      */
-    public AuthenticatedToken(AuthUser authUser, Token token) {
-        super(authUser.getAuthorities());
-        this.authUser = authUser;
+    public AuthenticatedToken(AuthPrincipal authPrincipal, Token token) {
+        super(authPrincipal.getAuthorities());
+        this.authPrincipal = authPrincipal;
         this.token = token;
         super.setAuthenticated(true); // must use super, as we override
     }
@@ -47,10 +47,10 @@ public class AuthenticatedToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return this.authUser;
+        return this.authPrincipal;
     }
 
-    public static AuthenticatedToken authenticated(AuthUser authUser, Token token) {
-        return new AuthenticatedToken(authUser, token);
+    public static AuthenticatedToken authenticated(AuthPrincipal authPrincipal, Token token) {
+        return new AuthenticatedToken(authPrincipal, token);
     }
 }

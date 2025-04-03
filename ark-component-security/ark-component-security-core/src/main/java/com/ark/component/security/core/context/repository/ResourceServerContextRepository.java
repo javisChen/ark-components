@@ -1,6 +1,6 @@
 package com.ark.component.security.core.context.repository;
 
-import com.ark.component.security.base.authentication.AuthUser;
+import com.ark.component.security.base.authentication.AuthPrincipal;
 import com.ark.component.security.base.authentication.Token;
 import com.ark.component.security.core.authentication.AuthenticatedToken;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,9 +73,9 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
         try {
             Jwt jwt = jwtDecoder.decode(accessToken);
             // 分别提取用户信息和令牌信息
-            AuthUser authUser = extractAuthUserFromJwt(jwt);
+            AuthPrincipal authPrincipal = extractAuthUserFromJwt(jwt);
             Token token = extractTokenFromJwt(jwt, accessToken);
-            context.setAuthentication(AuthenticatedToken.authenticated(authUser, token));
+            context.setAuthentication(AuthenticatedToken.authenticated(authPrincipal, token));
             return context;
         } catch (Exception e) {
             log.error("Failed to load security context from JWT", e);
@@ -87,14 +87,14 @@ public class ResourceServerContextRepository extends AbstractSecurityContextRepo
      * 从JWT中提取用户信息
      * JWT中包含了基本的用户信息（userId、userCode、username等）
      */
-    private AuthUser extractAuthUserFromJwt(Jwt jwt) {
+    private AuthPrincipal extractAuthUserFromJwt(Jwt jwt) {
         try {
-            AuthUser authUser = new AuthUser();
-            authUser.setUserId(Long.parseLong(jwt.getClaimAsString(AuthUser.USER_ID)));
-            authUser.setUserCode(jwt.getClaimAsString(AuthUser.USER_CODE));
-            authUser.setUsername(jwt.getClaimAsString(AuthUser.USERNAME));
-            authUser.setIsSuperAdmin(jwt.getClaimAsBoolean("isSuperAdmin"));
-            return authUser;
+            AuthPrincipal authPrincipal = new AuthPrincipal();
+            authPrincipal.setPrincipalId(Long.parseLong(jwt.getClaimAsString(AuthPrincipal.PRINCIPAL_ID)));
+            authPrincipal.setPrincipalCode(jwt.getClaimAsString(AuthPrincipal.PRINCIPAL_CODE));
+            authPrincipal.setPrincipalName(jwt.getClaimAsString(AuthPrincipal.PRINCIPAL_NAME));
+            authPrincipal.setIsAdmin(jwt.getClaimAsBoolean("isSuperAdmin"));
+            return authPrincipal;
         } catch (Exception e) {
             log.error("Failed to extract user info from JWT", e);
             throw new BadCredentialsException("Invalid user info in token");

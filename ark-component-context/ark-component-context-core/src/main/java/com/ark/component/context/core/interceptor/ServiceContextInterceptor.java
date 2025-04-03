@@ -51,7 +51,7 @@ public class ServiceContextInterceptor implements HandlerInterceptor {
             return;
         }
         AuthenticatedToken authentication = (AuthenticatedToken) context.getAuthentication();
-        ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getAuthUser());
+        ServiceContext.addContext(CONTEXT_KEY_LOGIN_USER, authentication.getAuthPrincipal());
     }
 
     @Override

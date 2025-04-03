@@ -37,7 +37,7 @@ public class RedisLockService implements LockService {
     }
 
     @Override
-    public <T> T tryLock(String key, long waitTime, long leaseTime, TimeUnit timeUnit, Supplier<T> callback) {
+    public <T> T tryLockAndExecute(String key, long waitTime, long leaseTime, TimeUnit timeUnit, Supplier<T> callback) {
         boolean locked = false;
         try {
             log.info("Trying to acquire lock with callback: {}, waitTime: {}, leaseTime: {}, timeUnit: {}", key, waitTime, leaseTime, timeUnit);
@@ -57,7 +57,7 @@ public class RedisLockService implements LockService {
     }
 
     @Override
-    public void tryLock(String key, long waitTime, long leaseTime, TimeUnit timeUnit, Runnable callback) {
+    public void tryLockAndExecute(String key, long waitTime, long leaseTime, TimeUnit timeUnit, Runnable callback) {
         boolean locked = false;
         try {
             log.info("Trying to acquire lock with runnable: {}, waitTime: {}, leaseTime: {}, timeUnit: {}", key, waitTime, leaseTime, timeUnit);
@@ -95,7 +95,7 @@ public class RedisLockService implements LockService {
     }
 
     @Override
-    public <T> T lock(String key, long leaseTime, TimeUnit timeUnit, Supplier<T> callback) {
+    public <T> T lockAndExecute(String key, long leaseTime, TimeUnit timeUnit, Supplier<T> callback) {
         boolean locked = false;
         try {
             log.info("Trying to acquire immediate lock with callback: {}, leaseTime: {}, timeUnit: {}", key, leaseTime, timeUnit);
@@ -115,7 +115,7 @@ public class RedisLockService implements LockService {
     }
 
     @Override
-    public void lock(String key, long leaseTime, TimeUnit timeUnit, Runnable callback) {
+    public void lockAndExecute(String key, long leaseTime, TimeUnit timeUnit, Runnable callback) {
         boolean locked = false;
         try {
             log.info("Trying to acquire immediate lock with runnable: {}, leaseTime: {}, timeUnit: {}", key, leaseTime, timeUnit);
