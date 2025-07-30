@@ -20,6 +20,7 @@ public class AliYunObjectStorageServiceTest {
         aliYunOssProperties.setEndPoint("oss-cn-guangzhou.aliyuncs.com");
         aliYunOssProperties.setAccessKey("");
         aliYunOssProperties.setSecretKey("");
+
         ossStrategy = new AliYunOssStrategy(aliYunOssProperties);
     }
 
